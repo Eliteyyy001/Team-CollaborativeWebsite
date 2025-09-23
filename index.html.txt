@@ -21,4 +21,10 @@
   <p>This is where we showcase our collaborative work!</p>
 
 </body>
+
+<footer>
+  <p>&copy; 2025 Team Collaborative Website. All rights reserved.</p>
+</footer>
+
 </html>
+
