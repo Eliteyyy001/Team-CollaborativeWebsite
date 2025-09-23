@@ -22,5 +22,10 @@
 
 </body>
 
+<footer>
+  <p>&copy; 2025 Team Collaborative Website. All rights reserved.</p>
+</footer>
+
 </html>
+
 
