@@ -151,30 +151,30 @@ INSERT INTO Role (roleName) VALUES
 ('Owner'),
 ('Customer');
 
-INSERT INTO User (userName, userPasscode, roleID, activityStatus, userEmail)VALUES
-('freshfold_admin1', 'admin321', 1, 'Active', 'admin1@freshfold.com'),
-('main_manager', 'manage123', 2, 'Active', 'management@freshfold.com'),
-('freshfold_admin2', 'notadmin', 1, 'Inactive', 'admin2@freshfold.com'),
-('cashier1', 'cashout123', 3, 'Active', 'checkout@freshfold.com'),
-('fresh_owner', 'fresh321', 4, 'Active', 'ownership@freshfold.com'),
-('manager2', 'manage456', 2, 'Active', 'management2@freshfold.com');
-('John Brown', 'fold123', 5, 'Active', 'johnbrown@gmail.com');
+INSERT INTO User (userName, userPasscode, roleID, activityStatus, userEmail) VALUES
+('freshfold_admin1', 'admin321', 1, TRUE, 'admin1@freshfold.com'),
+('main_manager', 'manage123', 2, TRUE, 'management@freshfold.com'),
+('freshfold_admin2', 'notadmin', 1, FALSE, 'admin2@freshfold.com'),
+('cashier1', 'cashout123', 3, TRUE, 'checkout@freshfold.com'),
+('fresh_owner', 'fresh321', 4, TRUE, 'ownership@freshfold.com'),
+('manager2', 'manage456', 2, TRUE, 'management2@freshfold.com'),
+('John Brown', 'fold123', 5, TRUE, 'johnbrown@gmail.com');
 
 INSERT INTO Customer (custName, custEmail, custPasscode, custAddress, custActiveStatus) VALUES
-('Jane Doe', 'janedoe@icloud.com', 'doe123', '1214 Grand Ave', 'Active'),
-('Anne Smith', 'annsmith@gmail.com', 'smithpasswrd', '1417 Arnold St', 'Active'),
-('Johnathon Lee', 'leejohn@gmail.com', 'notapassword', '1609 Main St', 'Inactive');
+('Jane Doe', 'janedoe@icloud.com', 'doe123', '1214 Grand Ave', TRUE),
+('Anne Smith', 'annsmith@gmail.com', 'smithpasswrd', '1417 Arnold St', TRUE),
+('Johnathon Lee', 'leejohn@gmail.com', 'notapassword', '1609 Main St', FALSE);
 
 INSERT INTO Supplier (supName, supEmail, supPhone, supAddress, supZip, supActiveStatus) VALUES
-('Detergent World' 'detergentworld@contact.com', '301-223-6098', '1304 Sunrise Dr.', '14706', 'Active'),
-('CleanFreaks', 'cleanfreaks@support.com', '917-789-0086', '312 Business Ave.', '78405', 'Active'),
-('Laundrobuddy', 'laundrobuddy@support.com', '615-777-0965', '211 Allen St.', '56901', 'Active');
+('Detergent World', 'detergentworld@contact.com', '301-223-6098', '1304 Sunrise Dr.', '14706', TRUE),
+('CleanFreaks', 'cleanfreaks@support.com', '917-789-0086', '312 Business Ave.', '78405', TRUE),
+('Laundrobuddy', 'laundrobuddy@support.com', '615-777-0965', '211 Allen St.', '56901', TRUE);
 
 INSERT INTO Category (catName) VALUES
 ('detergent'),
 ('dryer supplies'),
 ('folding'),
-('fabric softener',),
+('fabric softener'),
 ('bleaches'),
 ('stain remover'),
 ('laundry bags');
@@ -195,38 +195,36 @@ INSERT INTO ProductThreshold (prodID, targetLevel, reorderPoint) VALUES
 (4, 30, 5),
 (5, 50, 10),
 (6, 150, 30),
-(7, 100, 20),
-(8, 80, 15),
-(9, 60, 12);
+(7, 100, 20);
 
 INSERT INTO LowStockAlert (prodID, quantityOnHand, resolveStatus) VALUES
-(4, 3, 'Unresolved'),
-(2, 8, 'Resolved');
+(4, 3, FALSE),
+(2, 8, TRUE);
 
 INSERT INTO Service (servName, servPrice, taxRate, servOffering, servDiscount) VALUES
-('Wash & Dry', 15.00, 6.00,TRUE 0.00),
-('Dry Clean - Shirt', 10.00, 5.00,TRUE, 0.50),
+('Wash & Dry', 15.00, 6.00, TRUE, 0.00),
+('Dry Clean - Shirt', 10.00, 5.00, TRUE, 0.50),
 ('Dry Clean - Pants', 12.00, 4.00, TRUE, 1.00),
 ('Wash & Dry & Fold', 20.00, 6.00, TRUE, 1.25),
-('Bulk Wash & Dry (up to 10lbs)', 22.00, 2.00,TRUE, 2.00),
-('Sensitive Wash', 16.00, 5.00,TRUE, 0.00);
+('Bulk Wash & Dry (up to 10lbs)', 22.00, 2.00, TRUE, 2.00),
+('Sensitive Wash', 16.00, 5.00, TRUE, 0.00);
 
 INSERT INTO Sale (userID, saleDateTime, totalAmount) VALUES
 (2, '2025-08-23 10:25:00', 34.76),
 (4, '2026-01-03 9:37:00', 29.99),
-(11,'2025-12-14 11:08:00', 31.75),
-(9, '2025-07-12 8:30:00', 25.65);
+(6, '2025-12-14 11:08:00', 31.75),
+(5, '2025-07-12 8:30:00', 25.65);
 
-INSERT INTO SaleItem (saleID, prodID, quantity, itemPrice)VALUES
+INSERT INTO SaleItem (saleID, prodID, quantity, itemPrice) VALUES
 (4, 2, 1, 10.75),
 (1, 4, 3, 25.00);
 
-INSERT INTO InventoryMovement (prodID, transType, transID, quantityChange, unitCost, movedAt, movedBy, prodActivityStatus)VALUES
+INSERT INTO InventoryMovement (prodID, transType, transID, quantityChange, unitCost, movedAt, movedBy, prodActivityStatus) VALUES
 (1, 'Sale', 102, -3, 12.99, '2025-08-23 10:25:00', 2, TRUE),
-(6, 'Return', 110, -1, 4.99, '2025-07-12 8:30:00', 3, TRUE),
-(9, 'Sale', 208, -2, 8.99, '2025-12-14 11:08:00', 5, TRUE);
+(6, 'Return', 110, 1, 4.99, '2025-07-12 8:30:00', 3, TRUE),
+(7, 'Sale', 208, -2, 8.99, '2025-12-14 11:08:00', 5, TRUE);
 
-INSERT INTO AuditLog (userID, actionType, affected Entity, actionTime) VALUES
+INSERT INTO AuditLog (userID, actionType, affectedEntity, actionTime) VALUES
 (2, 'LOGIN', 'System', '2024-01-26 09:00:00'),
 (2, 'CREATE_SALE', 'Sale 1001', '2024-01-26 09:30:00'),
 (3, 'LOGIN', 'System', '2024-01-26 11:00:00'),
@@ -234,7 +232,5 @@ INSERT INTO AuditLog (userID, actionType, affected Entity, actionTime) VALUES
 (1, 'VIEW_REPORT', 'Daily Sales Report', '2024-01-26 17:15:00');
 
 
-GRANT SELECT, INSERT, UPDATE, DELETE
-ON freshfold_system.*
-TO root@localhost
-IDENTIFIED BY '';
+SELECT 'FreshFold database created successfully!' AS Message;
+
