@@ -3,14 +3,14 @@ CREATE DATABASE freshfold_system;
 USE freshfold_system;
 
 
-CREATE TABLE Role(
+CREATE TABLE Roles(
     roleID          INT             NOT NULL    AUTO_INCREMENT,
     roleName        VARCHAR(50)     NOT NULL,
     PRIMARY KEY (roleID)
 );
 
 
-CREATE TABLE User(
+CREATE TABLE Users(
     userID          INT             NOT NULL    AUTO_INCREMENT,
     userName        VARCHAR(100)    NOT NULL,
     userPasscode    VARCHAR(100)    NOT NULL,
@@ -18,7 +18,7 @@ CREATE TABLE User(
     roleID          INT             NOT NULL,
     activityStatus  BOOLEAN         NOT NULL DEFAULT TRUE,
     PRIMARY KEY (userID),
-    FOREIGN KEY (roleID) REFERENCES Role(roleID)
+    FOREIGN KEY (roleID) REFERENCES Roles(roleID)
 );
 
 
@@ -28,7 +28,7 @@ CREATE TABLE Customer(
     custEmail       VARCHAR(200)    UNIQUE,
     custPasscode    VARCHAR(100)    UNIQUE,
     custAddress     VARCHAR(255),
-    custActiveStatus BOOLEAN        DEFAULT TRUE,
+    custActiveStatus BOOLEAN   NOT NULL    DEFAULT TRUE,
     PRIMARY KEY (custID)
 );
 
@@ -40,7 +40,7 @@ CREATE TABLE Supplier(
     supPhone        VARCHAR(25),
     supAddress      VARCHAR(255),
     supZip          VARCHAR(20),
-    supActiveStatus BOOLEAN         DEFAULT TRUE,
+    supActiveStatus BOOLEAN   NOT NULL     DEFAULT TRUE,
     PRIMARY KEY (supID)
 );
 
@@ -77,7 +77,7 @@ CREATE TABLE LowStockAlert(
     alertID         INT         NOT NULL    AUTO_INCREMENT,
     prodID          INT         NOT NULL,
     quantityOnHand  INT         NOT NULL,
-    resolveStatus   BOOLEAN     NOT NULL,
+    resolveStatus   BOOLEAN     NOT NULL    DEFAULT FALSE,
     PRIMARY KEY (alertID),
     FOREIGN KEY (prodID) REFERENCES Product(prodID)
 );
@@ -88,7 +88,7 @@ CREATE TABLE Service(
     servName        VARCHAR(100),
     servPrice       DECIMAL(10,2),
     taxRate         DECIMAL(5,2),
-    servOffering    BOOLEAN         DEFAULT TRUE,
+    servOffering    BOOLEAN    NOT NULL     DEFAULT TRUE,
     servDiscount    DECIMAL(10,2),
     PRIMARY KEY (servID)
 );
@@ -100,7 +100,7 @@ CREATE TABLE Sale(
     saleDateTime    DATETIME        NOT NULL,
     totalAmount     DECIMAL(10,2)   NOT NULL,
     PRIMARY KEY (saleID),
-    FOREIGN KEY (userID) REFERENCES User(userID)
+    FOREIGN KEY (userID) REFERENCES Users(userID)
 );
 
 
@@ -125,40 +125,40 @@ CREATE TABLE InventoryMovement(
     unitCost            DECIMAL(10,2),
     movedAt             DATETIME        NOT NULL,
     movedBy             INT             NOT NULL,
-    prodActivityStatus  BOOLEAN         NOT NULL,
+    prodActivityStatus  BOOLEAN        NOT NULL    DEFAULT TRUE, 
     PRIMARY KEY (movementID),
     FOREIGN KEY (prodID) REFERENCES Product(prodID),
-    FOREIGN KEY (movedBy) REFERENCES User(userID)
+    FOREIGN KEY (movedBy) REFERENCES Users(userID)
 );
 
 
 CREATE TABLE AuditLog(
     auditID         INT             NOT NULL    AUTO_INCREMENT,
-    userID          INT             NOT NULL,
+    performedByUserID          INT  NOT NULL,
     actionType      VARCHAR(100)    NOT NULL,
     affectedEntity  VARCHAR(100),
-    actionTime      DATETIME        NOT NULL,
+    actionTime      DATETIME   NOT NULL   DEFAULT CURRENT_TIMESTAMP, 
     PRIMARY KEY (auditID),
-    FOREIGN KEY (userID) REFERENCES User(userID)
+    FOREIGN KEY (performedByUserID) REFERENCES Users(userID)
 );
 
 -- test data insertion
 
-INSERT INTO Role (roleName) VALUES
+INSERT INTO Roles (roleName) VALUES
 ('Administrator'),
 ('Manager'), 
 ('Cashier'), 
 ('Owner'),
 ('Customer');
 
-INSERT INTO User (userName, userPasscode, roleID, activityStatus, userEmail) VALUES
-('freshfold_admin1', 'admin321', 1, TRUE, 'admin1@freshfold.com'),
-('main_manager', 'manage123', 2, TRUE, 'management@freshfold.com'),
-('freshfold_admin2', 'notadmin', 1, FALSE, 'admin2@freshfold.com'),
-('cashier1', 'cashout123', 3, TRUE, 'checkout@freshfold.com'),
-('fresh_owner', 'fresh321', 4, TRUE, 'ownership@freshfold.com'),
-('manager2', 'manage456', 2, TRUE, 'management2@freshfold.com'),
-('John Brown', 'fold123', 5, TRUE, 'johnbrown@gmail.com');
+INSERT INTO Users (userName, roleID, userPasscode, activityStatus, userEmail) VALUES
+('freshfold_admin1', 1, 'admin321', TRUE, 'admin1@freshfold.com'),
+('main_manager', 2, 'manage123', TRUE, 'management@freshfold.com'),
+('freshfold_admin2', 1,'notadmin', FALSE, 'admin2@freshfold.com'),
+('cashier1', 3, 'cashout123', TRUE, 'checkout@freshfold.com'),
+('fresh_owner', 4, 'fresh321', TRUE, 'ownership@freshfold.com'),
+('manager2', 2, 'manage456', TRUE, 'management2@freshfold.com'),
+('John Brown', 5, 'fold123', TRUE, 'johnbrown@gmail.com');
 
 INSERT INTO Customer (custName, custEmail, custPasscode, custAddress, custActiveStatus) VALUES
 ('Jane Doe', 'janedoe@icloud.com', 'doe123', '1214 Grand Ave', TRUE),
@@ -224,7 +224,7 @@ INSERT INTO InventoryMovement (prodID, transType, transID, quantityChange, unitC
 (6, 'Return', 110, 1, 4.99, '2025-07-12 8:30:00', 3, TRUE),
 (7, 'Sale', 208, -2, 8.99, '2025-12-14 11:08:00', 5, TRUE);
 
-INSERT INTO AuditLog (userID, actionType, affectedEntity, actionTime) VALUES
+INSERT INTO AuditLog (performedByUserID, actionType, affectedEntity, actionTime) VALUES
 (2, 'LOGIN', 'System', '2024-01-26 09:00:00'),
 (2, 'CREATE_SALE', 'Sale 1001', '2024-01-26 09:30:00'),
 (3, 'LOGIN', 'System', '2024-01-26 11:00:00'),
