@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Dashboard - SystemSync</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f5f5f5; }
+        header { background: #1f2933; color: white; padding: 16px 24px; }
+        h1 { margin: 0; font-size: 22px; }
+        .container { padding: 20px; }
+        .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+        .card { background: white; padding: 16px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        .card-title { font-size: 14px; color: #6b7280; margin-bottom: 8px; text-transform: uppercase; }
+        .card-value { font-size: 24px; font-weight: bold; }
+        .note { margin-top: 24px; font-size: 13px; color: #6b7280; }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>SystemSync Dashboard – Key Metrics</h1>
+    </header>
+
+    <div class="container">
+        <div class="cards">
+            <div class="card">
+                <div class="card-title">Total Inventory Items</div>
+                <div class="card-value">1,250</div>
+            </div>
+            <div class="card">
+                <div class="card-title">Products Low in Stock</div>
+                <div class="card-value">18</div>
+            </div>
+            <div class="card">
+                <div class="card-title">Today’s Sales</div>
+                <div class="card-value">$4,320</div>
+            </div>
+            <div class="card">
+                <div class="card-title">Monthly Profit Margin</div>
+                <div class="card-value">27%</div>
+            </div>
+        </div>
+
+        <p class="note">
+            Note: These values are <strong>placeholder data</strong> for the sprint. In a future sprint, they will be replaced with real-time data from the backend.
+        </p>
+    </div>
+</body>
+</html>
