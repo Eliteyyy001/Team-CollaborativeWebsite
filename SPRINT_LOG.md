@@ -5,6 +5,9 @@
 - Build the Reporting UI with placeholder data
 - Create a dedicated feature branch for the work
 - Submit a pull request for review into develop
+- Translate ERD to MySQL tables (create all tables and define PKs, FKs, and constraints)
+- Connect database to a server (XAMPP)
+- Create seed data for testing in database
 
 ## Completed Tasks
 - Added dashboard.html with basic layout and placeholder metrics
@@ -12,6 +15,9 @@
 - Created branch: feature/dashboard-ui
 - Opened pull request into develop
 - Verified no merge conflicts
+- Successfully converted ERD to a running MySQL file that contains database, defining all PKs, FKs, and constraints
+- Defined all data types within freshfold system database
+- Created INSERT statements for testing data
 
 ## Test Results
 - Dashboard loads correctly in browser
