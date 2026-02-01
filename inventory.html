@@ -1,9 +1,7 @@
-<!-- inventory.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Inventory Levels</title>
   <style>
     body {
@@ -17,43 +15,39 @@
       color: #333;
     }
     table {
-      width: 80%;
-      margin: 30px auto;
+      width: 100%;
       border-collapse: collapse;
-      background: white;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      margin-top: 30px;
+      background-color: #fff;
     }
     th, td {
-      padding: 12px;
-      border: 1px solid #ccc;
+      border: 1px solid #ddd;
+      padding: 10px;
       text-align: left;
     }
     th {
-      background-color: #eee;
+      background-color: #0077cc;
+      color: white;
     }
-    .back-link {
-      display: block;
-      text-align: center;
+    a {
+      display: inline-block;
       margin-top: 20px;
-      font-size: 18px;
       color: #0077cc;
       text-decoration: none;
     }
-    .back-link:hover {
+    a:hover {
       text-decoration: underline;
     }
   </style>
 </head>
-
 <body>
-
   <h1>Inventory Levels</h1>
 
   <table>
     <tr>
       <th>Product</th>
       <th>Category</th>
-      <th>Stock</th>
+      <th>In Stock</th>
     </tr>
     <tr>
       <td>FlipFolds</td>
@@ -81,18 +75,17 @@
       <td>100</td>
     </tr>
     <tr>
-      <td>Downy Fabric Softener</td>
-      <td>Fabric Softener</td>
+      <td>Downey Fabric Softner</td>
+      <td>Fabric Softner</td>
       <td>200</td>
     </tr>
     <tr>
-      <td>Downy Sensitive Detergent</td>
+      <td>Downey Sensitive Detergent</td>
       <td>Detergent</td>
       <td>120</td>
     </tr>
   </table>
 
-  <a href="dashboard.html" class="back-link">← Back to Dashboard</a>
-
+  <a href="dashboard.html">Back to Dashboard</a>
 </body>
 </html>
