@@ -56,3 +56,40 @@ This database contains seed data for each table, used for testing queries, realt
     -Selection the database using the following command: USE freshfold_db;
     -Run test queries such as the following: SELECT * FROM Product;
                                              SELECT * FROM Users;
+
+## Backend Authentication & Authorization
+
+This section contains the backend logic responsible for user authentication and role-based access control within the Freshfold system.
+
+### Authentication
+- Users can sign up and log in using a username and password
+- Passwords are securely hashed before being stored in the database
+- Login credentials are validated against stored user records
+- Authentication is handled entirely on the backend
+
+### Authorization (Roles)
+Role-based access is enforced using the `Users` and `Roles` tables in the database.
+
+Supported roles include:
+- **Admin** – full access to administrative functionality
+- **Employee** – restricted access to employee-level functionality
+
+User roles determine what actions and features are accessible within the system.
+
+### Test Accounts
+The following test accounts are available for authentication and authorization testing.
+
+#### Admin Account
+- Username: `admin`
+- Password: `admin123`
+
+#### Employee Account
+- Username: `employee`
+- Password: `employee123`
+
+
+
+
+
+
+     
