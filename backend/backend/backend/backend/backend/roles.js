@@ -1,3 +1,8 @@
-// Role-based access
-// - if user.role !== 'admin'
-//   deny access to admin routes
+function requireAdmin(req, res, next) {
+  if (req.user.role !== "admin") {
+    return res.status(403).json({ message: "Admins only" });
+  }
+  next();
+}
+
+module.exports = requireAdmin;
