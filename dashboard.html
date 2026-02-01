@@ -1,0 +1,76 @@
+<!-- dashboard.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f6f8;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+    .dashboard {
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      margin-top: 30px;
+    }
+    .card {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      padding: 20px;
+      margin: 10px;
+      width: 250px;
+      text-align: center;
+    }
+    .card h2 {
+      margin-bottom: 10px;
+      color: #555;
+    }
+    .card p {
+      font-size: 24px;
+      font-weight: bold;
+      color: #0077cc;
+    }
+    a {
+      text-decoration: none;
+      color: #0077cc;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>System Dashboard</h1>
+
+  <div class="dashboard">
+
+    <div class="card">
+      <h2><a href="inventory.html">Inventory Levels</a></h2>
+      <p>—</p>
+    </div>
+
+    <div class="card">
+      <h2>Sales</h2>
+      <p>—</p>
+    </div>
+
+    <div class="card">
+      <h2>Profit Margins</h2>
+      <p>—</p>
+    </div>
+
+  </div>
+
+</body>
+</html>
