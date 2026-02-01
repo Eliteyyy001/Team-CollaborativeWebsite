@@ -7,9 +7,9 @@
 | Item | Details |
 |-----|--------|
 | Sprint # | Sprint 1 |
-| Sprint Dates | [Add start date] – [Add end date] |
-| Team Name | Freshfold |
-| Members Present | [List team members present for planning/review] |
+| Sprint Dates | January 20,2026 – February 1,2026 |
+| Team Name | SystemSync |
+| Members Present | Godspower Ogide, Hamza Yalouli, Hannah Injety, Trevor Lovet |
 
 ---
 
