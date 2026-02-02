@@ -87,3 +87,77 @@ Testing was performed using browser-based manual testing and MySQL queries via p
 - Work is ready for peer review and merge into the `develop` branch.
 
 ---
+
+## Authentication Module
+Planned Tasks
+
+Implement user signup with form validation
+
+Implement user login with session handling
+
+Hash passwords before storing in the database
+
+Set up role-based access control (admin vs employee)
+
+Create feature branch for authentication work
+
+Submit pull request into develop branch
+
+## Completed Tasks
+
+Signup and login pages added (signup.html, login.html)
+
+Password hashing implemented using bcrypt in backend
+
+Session management set up to keep users logged in
+
+Role-based access control implemented for admin vs employee
+
+Created branch: feature/authentication
+
+Opened pull request into develop
+
+Verified no merge conflicts
+
+Incomplete Tasks
+
+None
+All planned tasks for authentication were completed
+
+### Test Report
+Unit Testing
+
+Manual verification of form validation, password hashing, and role assignment
+
+Individual backend routes tested with Postman for expected responses
+
+## Integration Testing
+
+### Tested login and signup flow end-to-end with MySQL database
+
+Confirmed role-based redirects (admin pages restricted to admins)
+
+## Manual Testing
+Test Case	Result
+Signup stores hashed password in database	Passed
+Login authenticates valid users	Passed
+Login rejects invalid credentials	Passed
+Admin-only page access restricted to admins	Passed
+Employee page access restricted to employees	Passed
+Session persists across page reloads	Passed
+Bug Tracking
+High-Severity Bugs
+
+None found
+
+Issues Identified
+
+Minor CSS styling needed on login/signup forms
+
+## Notes
+
+Authentication is fully functional with role-based access control
+
+Backend integration with dashboard and reporting pages is ready for next sprint
+
+Module is ready for peer review and merge into develop branch
