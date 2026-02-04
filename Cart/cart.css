@@ -1,0 +1,134 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    min-height: 100vh;
+}
+
+.navbar {
+    background-color: #4a4a4a;
+    padding: 12px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.nav-brand {
+    color: #fff;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 24px;
+}
+
+.nav-links a {
+    color: #fff;
+    text-decoration: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+}
+
+.nav-links a:hover {
+    background-color: #666;
+}
+
+.nav-links a.active {
+    background-color: #d4840d;
+}
+
+.nav-user {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    color: #fff;
+}
+
+.btn-exit {
+    background-color: #666;
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.cart-items {
+    margin-top: 20px;
+}
+
+.cart-items h3 {
+    font-size: 16px;
+    color: #5a5a5a;
+    margin-bottom: 10px;
+}
+.cart-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 16px;
+}
+
+.cart-table th {
+    background-color: #e8d4a8;
+    padding: 8px;
+    text-align: left;
+    border: 1px solid #d4a574;
+    font-size: 13px;
+    color: #5a5a5a;
+}
+
+.cart-table td {
+    padding: 8px;
+    border: 1px solid #d4a574;
+    background-color: #fefaf2;
+    font-size: 13px;
+}
+
+.cart-table tr:hover td {
+    background-color: #f5e6c8;
+}
+
+.cart-table input[type="number"] {
+    width: 60px;
+    padding: 6px;
+    border: 2px solid #d4a574;
+    border-radius: 6px;
+    font-size: 13px;
+    background-color: #fefaf2;
+}
+
+.btn-remove {
+    background-color: #c0392b;
+    color: #fff;
+    border: none;
+    padding: 4px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.btn-remove:hover {
+    background-color: #a93226;
+}
+
+.warning {
+    color: #8b5a2b;
+    background-color: #f5e6c8;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    margin-bottom: 16px;
+}
+
+
+.btn-exit:hover {
+    background-color: #555;
+}
