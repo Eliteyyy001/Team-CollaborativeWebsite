@@ -129,12 +129,14 @@ if (!empty($_SESSION['cart'])) {
   </table>
   
   <!--update cart button-->
+  <button type="submit" name="update" class="btn-submit">Update Cart</button>
+
+  <!--remove cart item button-->
   
-  <button type="submit" name="update">Update Cart</button>
   
   <!--checkout button -->
   
-  <button type="submit" name="checkout" onclick="return validateCheckout();">Checkout</button>
+ <button type="submit" name="checkout" class="btn-cancel" onclick="return validateCheckout();">Checkout</button>
 </form>
 
 <script src="cart.js"></script>
