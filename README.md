@@ -38,8 +38,10 @@ This feature provides the foundational user interface for the Freshfold dashboar
 
 The dashboard and reporting pages are currently built using placeholder data to establish layout, navigation, and visual structure. These pages are designed to be easily integrated with real backend data in future sprints.
 
+**Cart Page**
 
-  
+This feature provides the ability to add items to the cart through the "Make Sale" page.  Users can update the item quanitity inside of the cart.  Items can be removed and users have the ability to navigate back to the "Make Sale" page to update the cart items.  Price is displayed. Frontend validation includes ensuring that item quantity is greater than 0. Additionally, cart will display a warning when clicking the checkout button with an empty cart.
+_Note: Cannot checkout yet, as this logic has not been set up yet._
   ## Usage Instructions
 
   **Freshfold Database**
@@ -78,6 +80,13 @@ The dashboard and reporting pages are currently built using placeholder data to 
 - Review reporting sections designed to display sales, inventory, and performance data.
 - Use these pages as a visual framework for future backend data integration.
 
+**Cart Page**
+- Add products via the product panel in "Make Sale" page.
+- View cart via link provided near user's name.
+- View cart items within the cart page along with their quanitity, price, and total price.
+- Click "Remove" to delete any unwanted cart items.
+- Click "Update Cart" to be directed back to "Make Sale" page and add new items to cart.
+  
   ## Setup Steps
 
 **Freshfold Database**
@@ -155,6 +164,10 @@ The dashboard and reporting pages are currently built using placeholder data to 
 5. Verify that pages load correctly and display placeholder content.
 6. Confirm that navigation works without errors.
 
-
+**Cart Page**
+1. Start XAMPP and ensure that **Apache** and **MySQL** are running.
+2. Open the cart page via localhost connection and ensure that it is successfully connected.
+3. Add desired products from product table.
+4. Click "View Cart" at the top located in the navigation bar.
 
      
