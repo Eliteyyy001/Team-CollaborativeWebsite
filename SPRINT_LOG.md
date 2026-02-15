@@ -154,4 +154,97 @@ _All planned tasks for Sprint 1 were completed._
 - Backend integration with dashboard and reporting pages is ready for next sprint
 - Module is ready for peer review and merge into develop branch
 
+---
+
+## Sprint Summary
+
+| Item | Details |
+|-----|--------|
+| Sprint # | Sprint 2 |
+| Sprint Dates | February 2, 2026 – February 15, 2026 |
+| Team Name | SystemSync |
+| Members Present | Godspower Ogide, Hamza Yalouli, Hannah Injety, Trevor Lovet |
+
+---
+
+## Tasks vs. Reality
+
+### Planned Tasks
+
+**Cart Page**
+- Build basic cart structure with "Update Cart" and "Checkout" buttons
+- Create ablity to add and remove items to cart
+- Create ability to change the quantities of each cart item **inside** of cart
+- Frontend validation for quantity to be greater than 0
+- Empty cart warnings when clicking the checkout button with no cart items
+
+### Completed Tasks
+
+**Cart Page**
+- Added cart.js, cart.php, and cart.css to develop branch
+- Built ability to checkout and update the cart to add more items or purchase items
+- Display total price in the cart
+- Created the ability for pos.php to add selected products to cart.php
+- Created the ability to change the quantity of products within the cart
+
+
+### Incomplete Tasks
+
+**Cart Page**
+- None  
+_All planned tasks for Sprint 1 were completed._
+
+
+## Test Report
+
+### POS Cart Functionality Model
+
+**Unit Testing:**  
+Unit testing was conducted on individual cart functions such as adding items, removing items, updating item quantities, validating quantity input, and recalculating cart totals. 
+**Integration Testing:**  
+Integration testing was performed to ensure the cart.php file functioned correctly with pos.php. This included ensuring that items added from the pos.php page were correctly being added to cart.php or deleted from pos.php and synving with cart.php. Additionally, total price display on pos.php was tested to ensure that the price is being updated within the cart page. 
+
+**Manual Testing:**  
+ Manual testing was performed by adding multiple items, adjusting quantities, removing items, testing invalid input, and verifying empty cart warnings. Cart responsiveness and good workflow was accurate to what as planned.
+
+---
+
+## Manual, Unit & Integration Testing
+
+**Cart Page**
+
+| Test Case | Test Type | Result |
+|---------|-----------|--------|
+| Cart loads correctly when POS page opens | Manual | Passed |
+| User can add item to cart | Integration | Passed |
+| Added item displays correct name, price, and quantity | Integration | Passed |
+| User can add multiple different items | Integration | Passed |
+| User can increase item quantity | Unit | Passed |
+| User can decrease item quantity | Unit | Passed |
+| Cart total updates correctly when quantity changes | Unit | Passed |
+| Cart prevents quantity from being set to 0 | Unit | Passed |
+| Cart prevents negative quantity values | Unit | Passed |
+| Frontend validation prevents invalid quantity input | Unit | Passed |
+| User can remove item from cart | Integration | Passed |
+| Cart updates correctly after item removal | Integration | Passed |
+| Cart total recalculates correctly after item removal | Unit | Passed |
+| Checkout button shows warning when cart is empty | Manual | Passed |
+| Empty cart warning message displays correctly | Manual | Passed |
+| Cart handles multiple add/remove/update operations correctly | Integration | Passed |
+| No console errors occur during cart operations | Manual | Passed |
+| Cart UI updates correctly in real time | Manual | Passed |
+
+
+---
+
+## Bug Tracking
+
+**Cart Page**
+
+### High-Severity Bugs
+- No high-severity bugs were found during Sprint 2.
+
+### Issues Identified
+- No UI conflicts with existing pages.
+- No database constraint or import errors encountered.
 
