@@ -1,10 +1,10 @@
-<!-- dashboard.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dashboard</title>
+
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -12,16 +12,19 @@
       margin: 0;
       padding: 20px;
     }
+
     h1 {
       text-align: center;
       color: #333;
     }
+
     .dashboard {
       display: flex;
       justify-content: space-around;
       flex-wrap: wrap;
       margin-top: 30px;
     }
+
     .card {
       background-color: white;
       border-radius: 8px;
@@ -30,45 +33,62 @@
       margin: 10px;
       width: 250px;
       text-align: center;
+      transition: 0.3s;
     }
+
+    .card:hover {
+      background-color: #eef3f7;
+      cursor: pointer;
+    }
+
     .card h2 {
       margin-bottom: 10px;
       color: #555;
     }
+
     .card p {
       font-size: 24px;
       font-weight: bold;
       color: #0077cc;
     }
+
     a {
       text-decoration: none;
-      color: #0077cc;
-    }
-    a:hover {
-      text-decoration: underline;
+      color: inherit;
     }
   </style>
 </head>
 
 <body>
+
   <h1>System Dashboard</h1>
 
   <div class="dashboard">
 
-    <div class="card">
-      <h2><a href="inventory.html">Inventory Levels</a></h2>
-      <p>—</p>
-    </div>
+    <!-- Inventory Card -->
+    <a href="inventory.html">
+      <div class="card">
+        <h2>Inventory Levels</h2>
+        <p>80</p>
+      </div>
+    </a>
 
-    <div class="card">
-      <h2>Sales</h2>
-      <p>—</p>
-    </div>
+    <!-- Sales Card -->
+    <a href="sales.html">
+      <div class="card">
+        <h2>Sales</h2>
+        <p>$5,500</p>
+      </div>
+    </a>
 
-    <div class="card">
-      <h2>Profit Margins</h2>
-      <p>—</p>
-    </div>
+    <!-- Profit Card -->
+    <a href="profit.html">
+  <div class="card">
+    <h2>Profit Margins</h2>
+    <p>30.4%</p>
+  </div>
+</a>
+
 
   </div>
 
