@@ -103,7 +103,7 @@ _All planned tasks for Sprint 1 were completed._
 **POS UI Design**
 - **Unit Testing:** Unit testing was minimal for this sprint, as the work primarily involved UI layout and static screen components. Individual UI components were visually verified for correct rendering.
 - **Integration Testing:** Integration testing was performed to ensure that navigation between POS screens functioned correctly and that UI sections interacted as expected.
-- **Manual Testing:** Manual testing was conducted to verify layout consistency, screen flow, and usability from a cashier’s perspective.
+- **Manual Testing:** Manual testing was conducted to verify layout consistency, screen flow, and usability from a cashier's perspective.
 
 
 ### Manual & Integration Testing
@@ -178,6 +178,16 @@ _All planned tasks for Sprint 1 were completed._
 - Frontend validation for quantity to be greater than 0
 - Empty cart warnings when clicking the checkout button with no cart items
 
+**Admin User Management**
+- Create admin login page with session handling
+- Create admin dashboard to display all users
+- Create ability for admin to add new users
+- Create ability for admin to edit existing users
+- Create ability for admin to deactivate/activate users
+- Enforce admin-only access through role-based login
+- Create feature branch for admin user management work
+- Submit pull request into develop branch
+
 ### Completed Tasks
 
 **Cart Page**
@@ -187,12 +197,28 @@ _All planned tasks for Sprint 1 were completed._
 - Created the ability for pos.php to add selected products to cart.php
 - Created the ability to change the quantity of products within the cart
 
+**Admin User Management**
+- Added `admin-login.php` with session handling and credential validation
+- Added `admin-dashboard.php` with user list and management forms
+- Added `admin-styles.css` matching POS theme
+- Added `admin-logout.php` for session logout
+- Implemented add user functionality with role assignment
+- Implemented edit user functionality
+- Implemented activate/deactivate user functionality
+- Enforced admin-only access via roleName session check
+- Created branch: `feature/admin-user-managemen`
+- Opened pull request into `develop`
+- Verified no merge conflicts
 
 ### Incomplete Tasks
 
 **Cart Page**
 - None  
-_All planned tasks for Sprint 1 were completed._
+_All planned tasks for Sprint 2 were completed._
+
+**Admin User Management**
+- None  
+_All planned tasks for Sprint 2 were completed._
 
 
 ## Test Report
@@ -201,11 +227,23 @@ _All planned tasks for Sprint 1 were completed._
 
 **Unit Testing:**  
 Unit testing was conducted on individual cart functions such as adding items, removing items, updating item quantities, validating quantity input, and recalculating cart totals. 
+
 **Integration Testing:**  
 Integration testing was performed to ensure the cart.php file functioned correctly with pos.php. This included ensuring that items added from the pos.php page were correctly being added to cart.php or deleted from pos.php and synving with cart.php. Additionally, total price display on pos.php was tested to ensure that the price is being updated within the cart page. 
 
 **Manual Testing:**  
- Manual testing was performed by adding multiple items, adjusting quantities, removing items, testing invalid input, and verifying empty cart warnings. Cart responsiveness and good workflow was accurate to what as planned.
+Manual testing was performed by adding multiple items, adjusting quantities, removing items, testing invalid input, and verifying empty cart warnings. Cart responsiveness and good workflow was accurate to what as planned.
+
+### Admin User Management
+
+**Unit Testing:**  
+Unit-level testing was performed on form validation, session handling, and database queries for adding, editing, and toggling user status to ensure correct behavior for valid and invalid inputs.
+
+**Integration Testing:**  
+Integration testing was performed to ensure admin-login.php correctly validates credentials against the Users table and enforces Administrator role check. Dashboard displays users from database and all CRUD operations update the database correctly.
+
+**Manual Testing:**  
+Manual testing was performed by logging in with admin and non-admin accounts, adding new users, editing user details, and deactivating/activating users. Role-based access was verified by confirming non-admin users are redirected to login page.
 
 ---
 
@@ -234,6 +272,24 @@ Integration testing was performed to ensure the cart.php file functioned correct
 | No console errors occur during cart operations | Manual | Passed |
 | Cart UI updates correctly in real time | Manual | Passed |
 
+**Admin User Management**
+
+| Test Case | Test Type | Result |
+|---------|-----------|--------|
+| Admin login page loads correctly | Manual | Passed |
+| Admin can log in with valid credentials | Integration | Passed |
+| Login fails with invalid credentials | Unit | Passed |
+| Non-admin users are denied access | Integration | Passed |
+| Deactivated users cannot log in | Integration | Passed |
+| Admin dashboard displays all users | Integration | Passed |
+| Admin can add new user | Integration | Passed |
+| Duplicate username/email is rejected | Unit | Passed |
+| Admin can edit existing user | Integration | Passed |
+| Admin can deactivate user | Integration | Passed |
+| Admin can activate user | Integration | Passed |
+| Admin cannot deactivate own account | Unit | Passed |
+| Logout clears session and redirects | Integration | Passed |
+| Styling matches POS theme | Manual | Passed |
 
 ---
 
@@ -248,3 +304,19 @@ Integration testing was performed to ensure the cart.php file functioned correct
 - No UI conflicts with existing pages.
 - No database constraint or import errors encountered.
 
+**Admin User Management**
+
+### High-Severity Bugs
+- No high-severity bugs were found during Sprint 2.
+
+### Issues Identified
+- No UI conflicts with existing pages.
+- No database constraint or import errors encountered.
+
+---
+
+## Notes
+- Cart page is fully functional with quantity validation and empty cart warnings
+- Admin user management is fully functional with role-based access control
+- Admin dashboard uses existing POS styling for visual consistency
+- Work is ready for peer review and merge into the `develop` branch

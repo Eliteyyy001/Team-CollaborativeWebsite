@@ -1,6 +1,6 @@
 # Team#CollaborativeWebsite
 
-Our group aims to leverage each member’s individual skills and knowledge to efficiently complete all assignments and achieve top quality results, using our respectful, productive, and  collaborative working environment.
+Our group aims to leverage each member's individual skills and knowledge to efficiently complete all assignments and achieve top quality results, using our respectful, productive, and  collaborative working environment.
 
 ## Project Board
 
@@ -42,6 +42,11 @@ The dashboard and reporting pages are currently built using placeholder data to 
 
 This feature provides the ability to add items to the cart through the "Make Sale" page.  Users can update the item quanitity inside of the cart.  Items can be removed and users have the ability to navigate back to the "Make Sale" page to update the cart items.  Price is displayed. Frontend validation includes ensuring that item quantity is greater than 0. Additionally, cart will display a warning when clicking the checkout button with an empty cart.
 _Note: Cannot checkout yet, as this logic has not been set up yet._
+
+**Admin User Management**
+
+This feature provides admin-only access to manage system users. Admins can log in through a dedicated admin login page and access a dashboard to view, add, edit, and deactivate users. Role-based access is enforced through session validation to ensure only users with the Administrator role can access admin functionality.
+
   ## Usage Instructions
 
   **Freshfold Database**
@@ -86,6 +91,15 @@ _Note: Cannot checkout yet, as this logic has not been set up yet._
 - View cart items within the cart page along with their quanitity, price, and total price.
 - Click "Remove" to delete any unwanted cart items.
 - Click "Update Cart" to be directed back to "Make Sale" page and add new items to cart.
+
+**Admin User Management**
+- Access admin login page via `admin-login.php`.
+- Log in with Administrator credentials (e.g., `freshfold_admin1` / `admin321`).
+- View all users in the system with their roles and status.
+- Add new users with username, email, password, and role assignment.
+- Edit existing user details.
+- Deactivate or activate user accounts.
+- Non-admin users are redirected to login page.
   
   ## Setup Steps
 
@@ -169,5 +183,22 @@ _Note: Cannot checkout yet, as this logic has not been set up yet._
 2. Open the cart page via localhost connection and ensure that it is successfully connected.
 3. Add desired products from product table.
 4. Click "View Cart" at the top located in the navigation bar.
+
+**Admin User Management**
+
+#### Prerequisites
+- XAMPP installed
+- Apache and MySQL services running
+- Freshfold database imported with Users and Roles tables
+- Web browser (Chrome, Firefox, etc.)
+
+#### Steps
+1. Start XAMPP and ensure **Apache** and **MySQL** are running.
+2. Place admin files (`admin-login.php`, `admin-dashboard.php`, `admin-styles.css`, `admin-logout.php`) in the project directory.
+3. Open the admin login page in a browser via `localhost/admin-login.php`.
+4. Log in with Administrator credentials.
+5. Verify access to admin dashboard with user list.
+6. Test add, edit, and deactivate user functions.
+7. Verify non-admin users cannot access admin pages.
 
      
