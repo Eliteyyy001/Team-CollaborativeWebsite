@@ -1,91 +1,126 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Inventory Levels</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background-color: #f4f6f8;
-      margin: 0;
-      padding: 20px;
-    }
-    h1 {
-      text-align: center;
-      color: #333;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 30px;
-      background-color: #fff;
-    }
-    th, td {
-      border: 1px solid #ddd;
-      padding: 10px;
-      text-align: left;
-    }
-    th {
-      background-color: #0077cc;
-      color: white;
-    }
-    a {
-      display: inline-block;
-      margin-top: 20px;
-      color: #0077cc;
-      text-decoration: none;
-    }
-    a:hover {
-      text-decoration: underline;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory Levels</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            background: white;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: center;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #333;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .status-in {
+            color: green;
+            font-weight: bold;
+        }
+
+        .status-low {
+            color: orange;
+            font-weight: bold;
+        }
+
+        .status-out {
+            color: red;
+            font-weight: bold;
+        }
+
+        a {
+            display: block;
+            text-align: center;
+            margin-top: 25px;
+            font-size: 18px;
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
+
 <body>
-  <h1>Inventory Levels</h1>
 
-  <table>
-    <tr>
-      <th>Product</th>
-      <th>Category</th>
-      <th>In Stock</th>
-    </tr>
-    <tr>
-      <td>FlipFolds</td>
-      <td>Folding</td>
-      <td>80</td>
-    </tr>
-    <tr>
-      <td>Box Legend Folding Board</td>
-      <td>Folding</td>
-      <td>95</td>
-    </tr>
-    <tr>
-      <td>Wool Dryer Balls</td>
-      <td>Dryer Supplies</td>
-      <td>150</td>
-    </tr>
-    <tr>
-      <td>Tide Dryer Sheets</td>
-      <td>Dryer Supplies</td>
-      <td>300</td>
-    </tr>
-    <tr>
-      <td>Tide Stain Fighting Detergent</td>
-      <td>Detergent</td>
-      <td>100</td>
-    </tr>
-    <tr>
-      <td>Downey Fabric Softner</td>
-      <td>Fabric Softner</td>
-      <td>200</td>
-    </tr>
-    <tr>
-      <td>Downey Sensitive Detergent</td>
-      <td>Detergent</td>
-      <td>120</td>
-    </tr>
-  </table>
+    <h1>Inventory Levels</h1>
 
-  <a href="dashboard.html">Back to Dashboard</a>
+    <table>
+        <tr>
+            <th>Product Name</th>
+            <th>Category</th>
+            <th>Quantity</th>
+            <th>Status</th>
+        </tr>
+
+        <tr>
+            <td>Bleach</td>
+            <td>Cleaning Supplies</td>
+            <td>25</td>
+            <td class="status-in">In Stock</td>
+        </tr>
+
+        <tr>
+            <td>Floor Cleaner</td>
+            <td>Cleaning Supplies</td>
+            <td>10</td>
+            <td class="status-low">Low Stock</td>
+        </tr>
+
+        <tr>
+            <td>Glass Cleaner</td>
+            <td>Cleaning Supplies</td>
+            <td>0</td>
+            <td class="status-out">Out of Stock</td>
+        </tr>
+
+        <tr>
+            <td>Toilet Cleaner</td>
+            <td>Cleaning Supplies</td>
+            <td>40</td>
+            <td class="status-in">In Stock</td>
+        </tr>
+
+        <tr>
+            <td>Dish Soap</td>
+            <td>Cleaning Supplies</td>
+            <td>5</td>
+            <td class="status-low">Low Stock</td>
+        </tr>
+
+    </table>
+
+    <a href="dashboard.html">Back to Dashboard</a>
+
 </body>
 </html>
