@@ -1,7 +1,6 @@
 <?php
 session_start();
 
-// Redirect if logged in
 if (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true) {
     header("Location: admin-dashboard.php");
     exit();
@@ -9,14 +8,12 @@ if (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true
 
 $error = "";
 
-// Handle login
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     require_once 'freshfoldDatabase/dbconnect.php';
     
     $username = trim($_POST['username']);
     $password = trim($_POST['password']);
     
-    // Check credentials
     $sql = "SELECT u.userID, u.userName, u.userPasscode, u.activityStatus, r.roleName 
             FROM Users u 
             JOIN Roles r ON u.roleID = r.roleID 
@@ -30,17 +27,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($result->num_rows === 1) {
         $user = $result->fetch_assoc();
         
-        // Check active status
         if ($user['activityStatus'] == 0) {
             $error = "This account has been deactivated.";
         }
-        // Check password
         elseif ($password === $user['userPasscode']) {
-            // Verify admin role
             if ($user['roleName'] === 'Administrator') {
                 $_SESSION['admin_logged_in'] = true;
                 $_SESSION['admin_user_id'] = $user['userID'];
                 $_SESSION['admin_username'] = $user['userName'];
+                $_SESSION['roleName'] = $user['roleName'];
                 header("Location: admin-dashboard.php");
                 exit();
             } else {

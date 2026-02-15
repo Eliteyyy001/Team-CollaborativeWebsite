@@ -1,8 +1,7 @@
 <?php
 session_start();
 
-// Check admin login
-if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
+if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true || $_SESSION['roleName'] !== 'Administrator') {
     header("Location: admin-login.php");
     exit();
 }
@@ -12,7 +11,6 @@ require_once 'freshfoldDatabase/dbconnect.php';
 $message = "";
 $messageType = "";
 
-// Handle form actions
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['action'])) {
     
     if ($_POST['action'] === 'add_user') {
@@ -21,7 +19,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['action'])) {
         $userPasscode = trim($_POST['userPasscode']);
         $roleID = intval($_POST['roleID']);
         
-        // Check duplicates
         $checkSql = "SELECT userID FROM Users WHERE userName = ? OR userEmail = ?";
         $checkStmt = $conn->prepare($checkSql);
         $checkStmt->bind_param("ss", $userName, $userEmail);
@@ -54,7 +51,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['action'])) {
         $userEmail = trim($_POST['userEmail']);
         $roleID = intval($_POST['roleID']);
         
-        // Check other users
         $checkSql = "SELECT userID FROM Users WHERE (userName = ? OR userEmail = ?) AND userID != ?";
         $checkStmt = $conn->prepare($checkSql);
         $checkStmt->bind_param("ssi", $userName, $userEmail, $userID);
@@ -65,7 +61,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['action'])) {
             $message = "Username or email already exists for another user.";
             $messageType = "error";
         } else {
-            // Update user
             if (!empty($_POST['userPasscode'])) {
                 $userPasscode = trim($_POST['userPasscode']);
                 $sql = "UPDATE Users SET userName = ?, userEmail = ?, userPasscode = ?, roleID = ? WHERE userID = ?";
@@ -93,7 +88,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['action'])) {
         $userID = intval($_POST['userID']);
         $newStatus = intval($_POST['newStatus']);
         
-        // Block self-deactivation
         if ($userID == $_SESSION['admin_user_id'] && $newStatus == 0) {
             $message = "You cannot deactivate your own account.";
             $messageType = "error";
@@ -115,14 +109,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['action'])) {
     }
 }
 
-// Fetch all users
 $usersSql = "SELECT u.userID, u.userName, u.userEmail, u.activityStatus, u.roleID, r.roleName 
              FROM Users u 
              JOIN Roles r ON u.roleID = r.roleID 
              ORDER BY u.userID";
 $usersResult = $conn->query($usersSql);
 
-// Fetch roles
 $rolesSql = "SELECT roleID, roleName FROM Roles ORDER BY roleID";
 $rolesResult = $conn->query($rolesSql);
 $roles = [];
@@ -130,7 +122,6 @@ while ($role = $rolesResult->fetch_assoc()) {
     $roles[] = $role;
 }
 
-// Check edit mode
 $editUser = null;
 if (isset($_GET['edit'])) {
     $editID = intval($_GET['edit']);
@@ -171,7 +162,6 @@ if (isset($_GET['edit'])) {
         <?php endif; ?>
 
         <div class="admin-grid">
-            <!-- User List Panel -->
             <div class="panel user-list-panel">
                 <div class="panel-header">
                     <h2>All Users</h2>
@@ -217,7 +207,6 @@ if (isset($_GET['edit'])) {
                 </table>
             </div>
 
-            <!-- Add/Edit User Panel -->
             <div class="panel user-form-panel">
                 <div class="panel-header">
                     <h2><?php echo $editUser ? 'Edit User' : 'Add New User'; ?></h2>
