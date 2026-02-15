@@ -155,3 +155,115 @@ _All planned tasks for Sprint 1 were completed._
 - Module is ready for peer review and merge into develop branch
 
 
+
+# SPRINT LOG
+
+---
+
+## Sprint #1
+**Dates:** Feb 1 – Feb 7, 2026  
+**Team Name:** Inventory Masters  
+**Members Present (Planning/Review):**
+- Godspower Ogide
+
+---
+
+## Sprint Goal
+Set up the basic inventory system and implement core product management features.
+
+---
+
+## Tasks vs Reality
+
+| Planned Task | Completed? | Notes |
+|--------------|------------|-------|
+| Create Product class/model | Yes | Includes name, price, quantity |
+| Implement Add Product feature | Yes | Saves product to system |
+| Implement Delete Product feature | Yes | Working correctly |
+| Build basic UI layout | No | Styling incomplete, backend logic prioritized |
+
+### Incomplete Tasks Explanation
+- **UI layout styling** – Backend logic needed to be completed first, delayed visual design.
+
+---
+
+## Test Report
+
+### Unit Tests
+| Test Case | Result |
+|------------|--------|
+| Add product increases inventory count | Passed |
+| Delete product removes from inventory | Passed |
+| Price cannot be negative | Passed |
+
+### Integration Tests
+| Test Case | Result |
+|------------|--------|
+| Add product then retrieve from inventory list | Passed |
+
+### Manual Tests
+| Test Case | Result |
+|------------|--------|
+| User adds product via interface | Passed |
+| User deletes product via interface | Passed |
+
+---
+
+## Bug Tracking
+
+### High Severity Bugs
+
+**Bug #1 – Quantity not updating correctly**  
+- Description: Stock quantity was not decreasing after a simulated sale.  
+- Cause: Incorrect variable reference in inventory update function.  
+- Fix: Corrected logic to update inventory after operations.  
+- Status: Resolved
+
+---
+
+## Sprint #2
+**Dates:** Feb 8 – Feb 14, 2026  
+**Sprint Goal:** Implement sales processing, inventory updates, and basic reporting.
+
+---
+
+## Tasks vs Reality
+
+| Planned Task | Completed? | Notes |
+|--------------|------------|-------|
+| Create Sales class to track transactions | Yes | Tracks item, quantity, total price |
+| Deduct inventory after sale | Yes | Working correctly |
+| Generate sales receipt | Yes | Console output format |
+| Add daily sales report | No | Needs data aggregation logic |
+
+### Incomplete Tasks Explanation
+- **Daily sales report** – Requires additional data structure for transaction history.
+
+---
+
+## Test Report
+
+### Unit Tests
+| Test Case | Result |
+|------------|--------|
+| Sale reduces stock quantity | Passed |
+| Total price calculation correct | Passed |
+
+### Integration Tests
+| Test Case | Result |
+|------------|--------|
+| Complete sale updates inventory and records transaction | Passed |
+
+### Manual Tests
+| Test Case | Result |
+|------------|--------|
+| Multiple sales update stock correctly | Passed |
+
+---
+
+## Bug Tracking
+
+**Bug #2 – Negative inventory allowed**  
+- Description: System allowed sales exceeding available stock.  
+- Fix: Added stock validation before processing sale to prevent negative inventory.  
+- Status: Resolved
