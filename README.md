@@ -47,6 +47,13 @@ _Note: Cannot checkout yet, as this logic has not been set up yet._
 
 This feature provides admin-only access to manage system users. Admins can log in through a dedicated admin login page and access a dashboard to view, add, edit, and deactivate users. Role-based access is enforced through session validation to ensure only users with the Administrator role can access admin functionality.
 
+**Inventory UI**
+
+This feature provides a user-friendly interface for viewing and managing the inventory in the Freshfold system. It includes a sortable inventory list, search functionality, and visual indicators for low-stock items. Displays all products in the inventory with details such as product name, category, quantity, supplier, and stock status; allows users can sort inventory by columns, search for specific products using a search bar that filters results in real time, and give low stock indications when product quantities are below threshold. 
+
+**Inventory Backend**
+This feature provides the backend logic for adding prodcuts, creating a way for admins to view products and stock levels, the ability to edit product details, adjust stock quantities, delete inactive products, and create inventory updates when admins make changes to products. This logic also blocks negative stock. 
+
   ## Usage Instructions
 
   **Freshfold Database**
@@ -100,7 +107,18 @@ This feature provides admin-only access to manage system users. Admins can log i
 - Edit existing user details.
 - Deactivate or activate user accounts.
 - Non-admin users are redirected to login page.
-  
+
+**Inventory UI**
+- Open the inventory page in your browser via localhost/inventory.php.
+- Browse the list of all inventory items.
+- Click column headers to sort inventory by product name, category, quantity, or supplier.
+- Use the search bar to filter items by name or category.
+- Low-stock items are highlighted for easy identification.
+- Combine sorting and search features to quickly locate specific products.
+
+**Inventory Backend**
+- _Cannot be used till this is connected to a php and html file (incomplete)_
+
   ## Setup Steps
 
 **Freshfold Database**
@@ -201,4 +219,21 @@ This feature provides admin-only access to manage system users. Admins can log i
 6. Test add, edit, and deactivate user functions.
 7. Verify non-admin users cannot access admin pages.
 
-     
+**Inventory UI**
+
+####Prerequisities 
+- XAMPP installed
+- Apache and MySQL services running
+- Freshfold database imported with Users and Roles tables
+- Web browser (Chrome, Firefox, etc.)
+
+#### Steps
+1. Start XAMPP and ensure Apache and MySQL are running.
+2. Open the inventory page in a browser via http://localhost/inventory.php.
+3. Confirm that the inventory table loads all products from the database.
+4. Test table sorting by clicking column headers.
+5. Test the search bar by typing product names or categories and confirming results are filtered.
+6. Verify low-stock indicators are displayed for products with quantity below the threshold in the ProductThreshold table.
+
+**Inventory Backend**
+_Cannot be set up for usage till this is connected to a php and html file_
