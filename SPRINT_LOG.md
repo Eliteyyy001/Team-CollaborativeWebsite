@@ -188,6 +188,24 @@ _All planned tasks for Sprint 1 were completed._
 - Create feature branch for admin user management work
 - Submit pull request into develop branch
 
+**Inventory Backend**
+- Create the logic for admin adding a new product (name, category, price, etc.)  
+- Create a way for admin to view all products and view stock levels  
+- Add the ability to edit product details and adjust stock quantities manually for admins  
+- Add the ability to delete products by marking them as inactive  
+- Create and ensure that inventory updates when admin makes changes to products via product logic  
+- Prevent stock from being set to negative values
+
+**Inventory UI**
+- Create inventory list page to display all products  
+- Display product name, category, price, and stock quantity  
+- Ensure layout is readable and consistent with system design  
+- Implement sorting functionality for inventory table columns  
+- Implement search functionality to allow users to search inventory  
+- Add low stock indicators for products with low quantity  
+- Ensure visual indicators are clear and easy to understand  
+
+
 ### Completed Tasks
 
 **Cart Page**
@@ -210,6 +228,24 @@ _All planned tasks for Sprint 1 were completed._
 - Opened pull request into `develop`
 - Verified no merge conflicts
 
+**Inventory Backend**
+- Implemented `/api/products` POST route to add new products with name, category, price, quantity, and active flag  
+- Implemented `/api/products` GET route to view all active products and stock levels  
+- Implemented `/api/products/:id` PUT route to edit product details and adjust stock quantities  
+- Implemented soft delete functionality by marking products as inactive
+-  Inventory updates correctly within the in-memory array when products are added or edited
+-  Implemented validation to prevent price or quantity from being set to negative values
+
+**Inventory UI**
+- Created inventory list page displaying all products  
+- Displayed product name, category, price, and stock quantity in table format  
+- Ensured layout is readable, structured, and consistent with system UI  
+- Implemented table sorting functionality  
+- Implemented search functionality to allow users to search inventory items  
+- Search updates results dynamically based on user input  
+- Implemented low stock labels for products with low quantity  
+- Low stock indicators display clearly and improve inventory visibility
+  
 ### Incomplete Tasks
 
 **Cart Page**
@@ -219,6 +255,19 @@ _All planned tasks for Sprint 2 were completed._
 **Admin User Management**
 - None  
 _All planned tasks for Sprint 2 were completed._
+
+**Inventory Backend**
+- Product data is stored in a temporary in-memory array (`let products = []`) instead of a persistent database  
+- Data does not persist after server restart  
+- No integration with MySQL or phpMyAdmin
+- Inventory updates are not saved to a real database  
+- Does not meet requirement that inventory must update correctly in the database
+- Admin-only restriction is not fully enforced (no role-based check such as `req.user.role === "admin"`)  
+- Any authenticated user can perform product management actions  
+
+**Inventory UI**  
+- None  
+_All planned tasks for Inventory UI were completed successfully._  
 
 
 ## Test Report
@@ -244,6 +293,29 @@ Integration testing was performed to ensure admin-login.php correctly validates 
 
 **Manual Testing:**  
 Manual testing was performed by logging in with admin and non-admin accounts, adding new users, editing user details, and deactivating/activating users. Role-based access was verified by confirming non-admin users are redirected to login page.
+
+### Inventory Backend  
+
+**Unit Testing:**  
+Unit testing was performed on validation logic to ensure price and quantity cannot be negative. Product creation, editing, and soft delete functionality were tested to ensure correct behavior within the in-memory array.  
+
+**Integration Testing:**  
+Integration testing confirmed API endpoints function correctly when authenticated. Product creation, editing, retrieval, and soft deletion operate correctly within the temporary storage array.  
+
+**Manual Testing:**  
+Manual testing included adding products, editing stock quantities, marking products inactive, and verifying negative values are rejected. Testing confirmed functionality works during runtime but resets after server restart due to lack of database persistence.  
+
+### Inventory UI  
+
+**Unit Testing:**  
+Unit testing was conducted on search functionality, sorting logic, and UI indicator conditions to ensure correct behavior based on product data.  
+
+**Integration Testing:**  
+Integration testing was performed to ensure inventory data loads correctly into the UI and displays accurate product information, stock levels, and low stock indicators.  
+
+**Manual Testing:**  
+Manual testing was performed by loading the inventory page, searching for products, sorting table columns, and verifying low stock indicators display correctly. UI readability and usability were verified.  
+
 
 ---
 
@@ -291,6 +363,43 @@ Manual testing was performed by logging in with admin and non-admin accounts, ad
 | Logout clears session and redirects | Integration | Passed |
 | Styling matches POS theme | Manual | Passed |
 
+**Inventory Backend**
+
+| Test Case | Test Type | Result |
+|---------|-----------|--------|
+| Admin can add new product | Integration | Passed |
+| Product includes name, category, price, quantity | Unit | Passed |
+| Product defaults to active status | Unit | Passed |
+| Admin can view all active products | Integration | Passed |
+| Product list shows correct stock levels | Integration | Passed |
+| Admin can edit product details | Integration | Passed |
+| Admin can adjust stock quantity | Integration | Passed |
+| Admin can mark product as inactive | Integration | Passed |
+| Inactive products are not returned in GET request | Unit | Passed |
+| System blocks negative quantity values | Unit | Passed |
+| System blocks negative price values | Unit | Passed |
+| Data persists after server restart | Manual | Failed |
+| Products saved in MySQL database | Integration | Failed |
+| Admin-only role enforcement verified | Integration | Failed |
+
+**Inventory UI**
+
+| Test Case | Test Type | Result |
+|---------|-----------|--------|
+| Inventory page loads correctly | Manual | Passed |
+| All products display in inventory list | Integration | Passed |
+| Product name displays correctly | Integration | Passed |
+| Product category displays correctly | Integration | Passed |
+| Product price displays correctly | Integration | Passed |
+| Product quantity displays correctly | Integration | Passed |
+| Inventory table is readable and properly formatted | Manual | Passed |
+| User can search for products | Integration | Passed |
+| Search results update correctly | Unit | Passed |
+| User can sort inventory table columns | Integration | Passed |
+| Sorting displays correct order | Unit | Passed |
+| Low stock indicator displays when quantity is low | Unit | Passed |
+| Low stock indicator displays correctly in UI | Manual | Passed |
+| No UI errors occur during use | Manual | Passed |
 ---
 
 ## Bug Tracking
@@ -312,6 +421,25 @@ Manual testing was performed by logging in with admin and non-admin accounts, ad
 ### Issues Identified
 - No UI conflicts with existing pages.
 - No database constraint or import errors encountered.
+
+**Inventory Backend**
+
+### High-Severity Bugs  
+- Inventory data is not persisted in a database and is lost on server restart  
+- No role-based enforcement restricting product management to admin users  
+
+### Issues Identified  
+- Uses in-memory array instead of MySQL database  
+- Does not meet Definition of Done due to missing database persistence  
+- Missing explicit admin role verification middleware
+
+**Inventory UI**
+### High-Severity Bugs  
+- No high-severity bugs were found during this sprint.  
+
+### Issues Identified  
+- No UI conflicts with existing pages.  
+- Inventory UI meets readability and usability requirements. 
 
 ---
 
