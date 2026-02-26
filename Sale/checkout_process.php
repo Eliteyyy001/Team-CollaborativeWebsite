@@ -1,5 +1,5 @@
 <?php
-// This script completes a checkout using the existing Session cart
+// This script completes a checkout using the  Session cart
 
 //start session
 session_start();
