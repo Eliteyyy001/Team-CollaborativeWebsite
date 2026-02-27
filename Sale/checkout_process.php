@@ -1,5 +1,5 @@
 <?php
-// This script will complete the checkout process using the  cart session 
+// checkout process
 
 session_start();
 include __DIR__ . '/dbconnect.php';
@@ -32,14 +32,14 @@ if (empty($_SESSION['cart'])) {
         }
     }
 
-  //validate if cart is empty or not
+    // validate cart
     if (empty($checkoutItems) || $cartTotal <= 0) {
         $message = 'Could not load cart items or total is 0. Try again.';
     } else {
         $conn->begin_transaction();
         $ok = true;
 
-        // creat sale header
+        // create sale header
         $saleSql = "INSERT INTO Sale (userID, saleDateTime, totalAmount)
                     VALUES (" . $userID . ", NOW(), " . $cartTotal . ")";
         if (!$conn->query($saleSql)) {
@@ -67,7 +67,7 @@ if (empty($_SESSION['cart'])) {
                     break;
                 }
 
-                // insert in saleitem table
+                // insert sale item
                 $saleItemSql = "INSERT INTO SaleItem (saleID, prodID, quantity, itemPrice)
                                 VALUES (" . $saleID . ", " . $prodID . ", " . $quantity . ", " . $unitPrice . ")";
                 if (!$conn->query($saleItemSql)) {
@@ -75,7 +75,7 @@ if (empty($_SESSION['cart'])) {
                     break;
                 }
 
-                // subtract product from inventory
+                // deduct inventory
                 $updateSql = "UPDATE Product
                               SET quantityStocked = quantityStocked - " . $quantity . "
                               WHERE prodID = " . $prodID;
@@ -84,7 +84,7 @@ if (empty($_SESSION['cart'])) {
                     break;
                 }
 
-                //log inventory movement
+                // log movement
                 $movementSql = "INSERT INTO InventoryMovement
                                 (prodID, transType, transID, quantityChange, unitCost, movedAt, movedBy, prodActivityStatus)
                                 VALUES (" . $prodID . ", 'Sale', " . $saleID . ", -" . $quantity . ", " . $unitPrice . ", NOW(), " . $userID . ", TRUE)";
@@ -97,9 +97,10 @@ if (empty($_SESSION['cart'])) {
 
         if ($ok) {
             $conn->commit();
-            // Clear cart after successful sale
+            // clear cart
             $_SESSION['cart'] = [];
-            $message = 'Sale completed successfully. Sale ID: ' . $saleID;
+            header('Location: receipt.php?saleID=' . $saleID);
+            exit;
         } else {
             $conn->rollback();
             if (!$message) {
