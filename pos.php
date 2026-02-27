@@ -1,8 +1,8 @@
 <?php
 // pos.php - FreshFold POS - Make Sale
-// This is now a proper PHP file.
-// You can add PHP code here later (session, database, etc.)
-// For now it's empty - your page is 100% identical to before
+
+
+
 ?>
 
 <!DOCTYPE html>

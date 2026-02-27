@@ -2,13 +2,12 @@
 // login.php - handles login for FreshFold POS
 // Checks username "hamza" and password "hamza123"
 
-session_start();  // This lets us remember the user is logged in
-
+session_start();  
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = trim($_POST["username"] ?? '');
     $password = trim($_POST["password"] ?? '');
 
-    // Your real credentials (hard-coded for now)
+    // credentials 
     $real_username = "hamza";
     $real_password = "hamza123";
 
