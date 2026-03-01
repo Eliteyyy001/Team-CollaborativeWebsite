@@ -767,16 +767,36 @@ function addToCart() {
 }
 
 function addFromProducts(name, price) {
-    // Find stock from the table row
+    // Find stock from row status
     let stockQty = 0;
     document.querySelectorAll("#product-body tr").forEach(row => {
-        if (row.cells[1].textContent === name) {
-            const statusText = row.cells[6].textContent.trim();  // status column
+        if (row.cells[1].textContent.trim() === name.trim()) {
+            const statusText = row.cells[6].textContent.trim();
             const match = statusText.match(/\d+/);
             stockQty = match ? parseInt(match[0]) : 0;
             if (statusText.includes("Out of Stock")) stockQty = 0;
         }
     });
+
+    const lowThreshold = 10;
+
+    if (stockQty <= lowThreshold) {
+        let message = (stockQty <= 0)
+            ? "OUT OF STOCK! Override and add anyway?"
+            : `Low stock (${stockQty} left). Override and add anyway?`;
+
+        if (!confirm(message)) {
+            alert("Cancelled - not added.");
+            return;
+        }
+    }
+
+    // Add to cart
+    const select = document.getElementById("productSelect");
+    select.value = name;
+    document.getElementById("qtyInput").value = 1;
+    addToCart();
+}
 
     const lowThreshold = 10;
 
@@ -939,3 +959,4 @@ function logout() {
 </script>
 </body>
 </html>
+
