@@ -1,4 +1,6 @@
 <?php
+
+//this script allows users to click onto a sale detail from the sales.php page and view the details of a single sale
 include __DIR__ . '/dbconnect.php';
 
 $saleID = isset($_GET['saleID']) ? (int) $_GET['saleID'] : 0;
