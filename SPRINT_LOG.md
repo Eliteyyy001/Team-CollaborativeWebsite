@@ -529,3 +529,110 @@ Manual testing was performed by completing multiple transactions, verifying tota
 ### Issues Identified
 - No issues identified.
 - All sale processing, inventory deduction, and data storage functions operate as expected.
+
+
+# Sprint Log
+
+## Sprint 1 – Backend Foundation
+
+### Goals
+- Implement authentication
+- Add product management API
+- Add role-based middleware
+
+### Completed
+- JWT auth middleware
+- Signup with bcrypt hashing
+- Login validation
+- Admin role middleware
+- CRUD product routes
+- Input validation
+- Soft delete implementation
+
+### Outcome
+Backend API secured and functional.
+
+---
+
+## Sprint 2 – Sales History UI
+
+### Goals
+- Build Sales History page
+- Display revenue metrics
+- Render dynamic table
+
+### Completed
+- Created sales.html
+- Implemented sales.js rendering
+- Added total revenue calculation
+- Added total orders summary
+
+### Outcome
+Sales data visually structured and understandable.
+
+---
+
+## Sprint 3 – Receipt Preview UI
+
+### Goals
+- Create receipt page
+- Display item breakdown
+- Add print support
+
+### Completed
+- receipt.html layout
+- Itemized product list
+- Total calculation
+- Print functionality
+- Navigation from sales page
+
+### Outcome
+Receipts can be previewed and printed cleanly.
+
+---
+
+## Sprint 4 – UI Refinement
+
+### Goals
+- Improve layout consistency
+- Enhance readability
+- Make design responsive
+
+### Completed
+- Styled table headers
+- Added summary cards
+- Improved spacing
+- Standardized button styling
+- Added mobile-friendly adjustments
+
+### Outcome
+UI polished and presentation-ready.
+
+---
+
+## Sprint 5 – Security & Role Protection
+
+### Goals
+- Protect report routes
+- Restrict admin access
+
+### Completed
+- Integrated requireAdmin middleware
+- Protected sensitive routes
+- Verified correct status codes
+
+### Outcome
+Sales data secured with role-based access control.
+
+---
+
+## Overall Sprint Result
+
+- Authentication implemented
+- Authorization enforced
+- Product management operational
+- Sales reporting UI complete
+- Receipt preview functional
+- Clean Git workflow with feature branches
+
+System is stable and meets Definition of Done.
