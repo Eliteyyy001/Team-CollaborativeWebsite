@@ -448,3 +448,84 @@ Manual testing was performed by loading the inventory page, searching for produc
 - Admin user management is fully functional with role-based access control
 - Admin dashboard uses existing POS styling for visual consistency
 - Work is ready for peer review and merge into the `develop` branch
+
+
+## Sprint Summary
+
+| Item | Details |
+|-----|--------|
+| Sprint # | Sprint 3 |
+| Sprint Dates | February 16,2026 – March 1,2026 |
+| Team Name | SystemSync |
+| Members Present | Godspower Ogide, Hamza Yalouli, Hannah Injety, Trevor Lovet |
+
+---
+
+### Planned Tasks
+
+**Sales Backend**
+- Create Sale and SaleItem backend logic
+- Store saleDateTime, totalAmount, and userID when checkout is completed
+- Store prodID, quantity, itemPrice, and inventoryMovement at time of sale
+- Deduct inventory automatically when a sale is made
+- Create ability to view completed sales
+- Create ability to view total transaction amounts
+- Create ability to view line items within a sale
+
+### Completed Tasks
+
+**Sales Backend**
+- Implemented Sale creation logic triggered at checkout
+- Implemented automatic SaleItem creation for each cart item
+- Stored saleDateTime, totalAmount, and userID in Sale table
+- Stored prodID, quantity, itemPrice, and inventoryMovement in SaleItem table
+- Built functionality to view list of completed sales
+- Built functionality to view total transaction amounts
+- Built functionality to view individual sale line items (product, quantity, price)
+
+### Incomplete Tasks
+
+**Sales Backend**
+- None
+_All planned tasks were successfully completed.__
+
+## Test Report
+
+### Sales Backend
+**Unit Testing:**  
+Unit testing was performed on individual sale processing logic, including sale creation, sale item insertion, and total calculation. All data fields were verified for correct storage.
+
+**Integration Testing:**  
+Integration testing confirmed that completing checkout from the POS system correctly inserts records into the Sale and SaleItem tables and updates Product inventory in real time. 
+
+**Manual Testing:**  
+Manual testing was performed by completing multiple transactions, verifying total amounts, viewing line items inside individual sales, and confirming inventory deductions after each sale. All functionality behaved as expected.
+
+## Manual, Unit & Integration Testing
+
+**Sales Backend**
+
+| Test Case | Test Type | Result |
+|----------|----------|--------|
+| Sale record created upon checkout | Integration | Passed |
+| Sale item records created for each cart item | Integration | Passed |
+| saleDateTime stored correctly | Unit | Passed |
+| totalAmount calculated and stored correctly | Unit | Passed |
+| prodID, quantity, and itemPrice stored correctly in SaleItem | Unit | Passed |
+| Inventory deducts correctly after sale | Integration | Passed |
+| Multiple item checkout processes correctly | Integration | Passed |
+| Viewing completed sales list works | Manual | Passed |
+| Viewing line items within a sale works | Manual | Passed |
+| No database constraint violations during sale | Integration | Passed |
+| No console or server errors during checkout | Manual | Passed |
+
+## Bug Tracking
+
+**Sales Backend**
+
+### High-Severity Bugs
+- No high-severity bugs were found during Sprint 2.
+
+### Issues Identified
+- No issues identified.
+- All sale processing, inventory deduction, and data storage functions operate as expected.
