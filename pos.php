@@ -1,5 +1,5 @@
 <?php
-// pos.php - FreshFold POS - Make Sale issue #55
+// pos.php - FreshFold POS - Make Sale - issue #55 
 ?>
 
 <!DOCTYPE html>
@@ -328,6 +328,35 @@
     <div class="left-side">
         <div class="box">
             <h2>All Products</h2>
+
+            <!-- Top warning banner for low stock - issue #55 -->
+            <?php
+            // Hard-coded low stock check 
+            $lowStock = [];
+            $lowThreshold = 10;
+
+            // Your low-stock products from the table (name + stock)
+            $lowProducts = [
+                ['name' => 'Deep Cleaning Solution', 'stock' => 7],
+                ['name' => 'Hypoallergenic Cleaning Product', 'stock' => 6],
+                ['name' => 'Baby-Safe Home Cleaner', 'stock' => 3],
+                ['name' => 'Floor Deep-Care Product', 'stock' => 5],
+                ['name' => 'Bathroom Power Cleaner', 'stock' => 4],
+            ];
+            foreach ($lowProducts as $item) {
+                if ($item['stock'] > 0 && $item['stock'] <= $lowThreshold) {
+                    $lowStock[] = $item['name'] . ' (' . $item['stock'] . ')';
+                }
+            }
+            if (!empty($lowStock)):
+            ?>
+            <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4 mb-4 rounded-r">
+                <p class="text-yellow-700 font-medium">
+                    <strong>⚠️ Warning:</strong> Low stock on <?= implode(', ', $lowStock) ?>. Please restock soon!
+                </p>
+            </div>
+            <?php endif; ?>
+
             <table>
                 <thead>
                     <tr>
@@ -798,26 +827,6 @@ function addFromProducts(name, price) {
     addToCart();
 }
 
-    const lowThreshold = 10;
-
-    if (stockQty <= lowThreshold) {
-        let message = (stockQty <= 0)
-            ? "OUT OF STOCK! Override and add to cart anyway?"
-            : `Low stock (${stockQty} left). Override and add anyway?`;
-
-        if (!confirm(message)) {
-            alert("Cancelled - not added.");
-            return;
-        }
-    }
-
-    // Proceed
-    const select = document.getElementById("productSelect");
-    select.value = name;
-    document.getElementById("qtyInput").value = 1;
-    addToCart();
-}
-
 function updateQty(index, value) {
     const qty = parseInt(value);
     if (qty > 0) {
@@ -959,4 +968,3 @@ function logout() {
 </script>
 </body>
 </html>
-
