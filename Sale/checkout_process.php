@@ -124,9 +124,10 @@ if (empty($_SESSION['cart'])) {
 
         if ($ok) {
             $conn->commit();
-            // Clear cart after successful sale
+            // clear cart
             $_SESSION['cart'] = [];
-            $message = 'Sale completed successfully. Sale ID: ' . $saleID;
+            header('Location: receipt.php?saleID=' . $saleID);
+            exit;
         } else {
             $conn->rollback();
             if (!$message) {
