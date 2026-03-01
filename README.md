@@ -54,6 +54,22 @@ This feature provides a user-friendly interface for viewing and managing the inv
 **Inventory Backend**
 This feature provides the backend logic for adding prodcuts, creating a way for admins to view products and stock levels, the ability to edit product details, adjust stock quantities, delete inactive products, and create inventory updates when admins make changes to products. This logic also blocks negative stock. 
 
+**Sales Backend**
+This feature provides the complete backend logic for processing and storing completed sales transactions. It connects the POS checkout process directly to the database and ensures inventory updates occur in real time.
+
+The Sales Backend includes:
+
+- Creation of `Sale` records when a cashier completes checkout
+  - Stores `saleDateTime`, `totalAmount`, and `userID`
+- Automatic creation of `SaleItem` records at the same time as the sale
+  - Stores `prodID`, `quantity`, `itemPrice`, and `inventoryMovement`
+- Real-time inventory deduction when a sale is completed
+- Logging of inventory movement tied directly to each sale
+- Ability to view a list of completed sales
+- Ability to view total transaction amounts
+- Ability to view line items inside a sale (product, quantity, and price)
+- Prevention of inconsistent inventory data through immediate database updates
+
   ## Usage Instructions
 
   **Freshfold Database**
@@ -118,6 +134,18 @@ This feature provides the backend logic for adding prodcuts, creating a way for 
 
 **Inventory Backend**
 - _Cannot be used till this is connected to a php and html file (incomplete)_
+
+**Sales Backend**
+- Add products to cart via the POS interface.
+- Click the checkout button to complete a sale.
+- Upon checkout:
+  - A new record is created in the `Sale` table.
+  - Corresponding records are created in the `SaleItem` table.
+  - Product inventory is automatically deducted.
+  - Inventory movement is logged.
+- View completed sales in the sales.php page.
+- Select a sale to view its line items including product, quantity, and price in sale_detail.php page.
+
 
   ## Setup Steps
 
@@ -234,6 +262,25 @@ This feature provides the backend logic for adding prodcuts, creating a way for 
 4. Test table sorting by clicking column headers.
 5. Test the search bar by typing product names or categories and confirming results are filtered.
 6. Verify low-stock indicators are displayed for products with quantity below the threshold in the ProductThreshold table.
+
+**Sales Backend**
+#### Prerequisites
+- XAMPP installed
+- Apache and MySQL services running
+- Freshfold database imported
+- `Sale`, `SaleItem`, and `Product` tables properly configured
+- POS and checkout files connected to the database
+
+#### Steps
+1. Start XAMPP and ensure **Apache** and **MySQL** are running.
+2. Confirm database connection in `config.php` or database connection file.
+3. Open the POS system in your browser via `localhost`.
+4. Add products to the cart.
+5. Click checkout to complete a sale.
+6. Verify:
+   - A new entry appears in the `Sale` table.
+   - Related entries appear in the `SaleItem` table.
+
 
 **Inventory Backend**
 _Cannot be set up for usage till this is connected to a php and html file_
