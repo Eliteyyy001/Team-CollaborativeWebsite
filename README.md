@@ -284,3 +284,66 @@ The Sales Backend includes:
 
 **Inventory Backend**
 _Cannot be set up for usage till this is connected to a php and html file_
+
+
+
+# Sales Management System
+
+A role-based sales and product management system built with Node.js, Express, and a structured frontend UI for reporting and receipt previews.
+
+This project demonstrates authentication, authorization, product management, and sales reporting with a clean user interface.
+
+---
+
+##  Features
+
+###  Authentication & Authorization
+- User signup with hashed passwords (bcrypt)
+- Login authentication
+- JWT-based authorization middleware
+- Role-based access control (Admin / Employee)
+- Protected API routes
+
+###  Product Management
+- Add new products
+- View active products
+- Update product details
+- Soft delete (mark inactive)
+- Validation for negative price/quantity
+
+###  Sales Reporting UI
+- Sales History page
+- Revenue summary (Total Sales, Total Orders)
+- Clean table layout
+- Receipt preview page
+- Printable receipt format
+- Refined and responsive layout
+
+
+---
+
+##  Architecture Overview
+
+### Backend
+- Express.js REST API
+- JWT verification middleware
+- Role-based route protection
+- In-memory mock database (products & users)
+
+### Frontend
+- Vanilla HTML, CSS, JavaScript
+- Dynamic table rendering
+- Receipt generation
+- Clean UI layout with responsive design
+
+---
+
+##  Authentication Flow
+
+1. User signs up with username, password, and role.
+2. Password is hashed using bcrypt.
+3. User logs in.
+4. JWT token is generated.
+5. Protected routes require:
+   - `Authorization: Bearer <token>`
+6. Middleware verifies token and attaches `req.user`.
