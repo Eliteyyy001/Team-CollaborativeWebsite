@@ -1,8 +1,5 @@
 <?php
-// pos.php - FreshFold POS - Make Sale
-
-
-
+// pos.php - FreshFold POS - Make Sale issue #55
 ?>
 
 <!DOCTYPE html>
@@ -120,9 +117,6 @@
             font-size: 16px;
             text-align: left;
         }
-        .status-green { color: #2ecc71; font-weight: bold; }
-        .status-orange { color: #f39c12; font-weight: bold; }
-        .status-red { color: #e74c3c; font-weight: bold; }
         .input, .value-box {
             width: 100%;
             height: 45px;
@@ -348,24 +342,258 @@
                     </tr>
                 </thead>
                 <tbody id="product-body">
-                    <tr><td>91001</td><td>Luxury Surface Cleaner</td><td>24 oz</td><td>Premium</td><td>$9.99</td><td>18</td><td class="status-green">In Stock</td><td><button onclick="addFromProducts('Luxury Surface Cleaner',9.99)">Add</button></td></tr>
-                    <tr><td>91002</td><td>Premium Scented Cleaner</td><td>20 oz</td><td>Premium</td><td>$8.49</td><td>12</td><td class="status-green">In Stock</td><td><button onclick="addFromProducts('Premium Scented Cleaner',8.49)">Add</button></td></tr>
-                    <tr><td>91003</td><td>Deep Cleaning Solution</td><td>32 oz</td><td>Deep Clean</td><td>$10.99</td><td>7</td><td class="status-orange">Low Stock</td><td><button onclick="addFromProducts('Deep Cleaning Solution',10.99)">Add</button></td></tr>
-                    <tr><td>91004</td><td>Anti-Bacterial Home Cleaner</td><td>28 oz</td><td>Disinfectant</td><td>$7.99</td><td>0</td><td class="status-red">Out of Stock</td><td><button disabled>Add</button></td></tr>
-                    <tr><td>91005</td><td>Long-Lasting Disinfectant</td><td>30 oz</td><td>Disinfectant</td><td>$11.49</td><td>9</td><td class="status-green">In Stock</td><td><button onclick="addFromProducts('Long-Lasting Disinfectant',11.49)">Add</button></td></tr>
-                    <tr><td>91006</td><td>All-in-One Multi-Surface Cleaner</td><td>22 oz</td><td>Multi-Surface</td><td>$6.99</td><td>20</td><td class="status-green">In Stock</td><td><button onclick="addFromProducts('All-in-One Multi-Surface Cleaner',6.99)">Add</button></td></tr>
-                    <tr><td>91007</td><td>Stain Removal Specialist</td><td>18 oz</td><td>Laundry</td><td>$5.49</td><td>14</td><td class="status-green">In Stock</td><td><button onclick="addFromProducts('Stain Removal Specialist',5.49)">Add</button></td></tr>
-                    <tr><td>91008</td><td>Odor Eliminator Product</td><td>16 oz</td><td>Air Care</td><td>$4.99</td><td>11</td><td class="status-green">In Stock</td><td><button onclick="addFromProducts('Odor Eliminator Product',4.99)">Add</button></td></tr>
-                    <tr><td>91009</td><td>Hypoallergenic Cleaning Product</td><td>20 oz</td><td>Allergy-Safe</td><td>$7.49</td><td>6</td><td class="status-orange">Low Stock</td><td><button onclick="addFromProducts('Hypoallergenic Cleaning Product',7.49)">Add</button></td></tr>
-                    <tr><td>91010</td><td>Baby-Safe Home Cleaner</td><td>24 oz</td><td>Baby-Safe</td><td>$8.99</td><td>3</td><td class="status-orange">Low Stock</td><td><button onclick="addFromProducts('Baby-Safe Home Cleaner',8.99)">Add</button></td></tr>
-                    <tr><td>91011</td><td>Pet-Safe Cleaning Product</td><td>22 oz</td><td>Pet-Safe</td><td>$7.99</td><td>0</td><td class="status-red">Out of Stock</td><td><button disabled>Add</button></td></tr>
-                    <tr><td>91012</td><td>Eco-Friendly Home Cleaner</td><td>26 oz</td><td>Eco-Friendly</td><td>$9.49</td><td>16</td><td class="status-green">In Stock</td><td><button onclick="addFromProducts('Eco-Friendly Home Cleaner',9.49)">Add</button></td></tr>
-                    <tr><td>91013</td><td>Natural / Plant-Based Cleaner</td><td>28 oz</td><td>Eco-Friendly</td><td>$8.99</td><td>10</td><td class="status-green">In Stock</td><td><button onclick="addFromProducts('Natural / Plant-Based Cleaner',8.99)">Add</button></td></tr>
-                    <tr><td>91014</td><td>Floor Deep-Care Product</td><td>1 Gallon</td><td>Floor Care</td><td>$12.99</td><td>5</td><td class="status-orange">Low Stock</td><td><button onclick="addFromProducts('Floor Deep-Care Product',12.99)">Add</button></td></tr>
-                    <tr><td>91015</td><td>Kitchen Degreasing Specialist</td><td>18 oz</td><td>Kitchen</td><td>$6.49</td><td>13</td><td class="status-green">In Stock</td><td><button onclick="addFromProducts('Kitchen Degreasing Specialist',6.49)">Add</button></td></tr>
-                    <tr><td>91016</td><td>Bathroom Power Cleaner</td><td>32 oz</td><td>Bathroom</td><td>$7.49</td><td>4</td><td class="status-orange">Low Stock</td><td><button onclick="addFromProducts('Bathroom Power Cleaner',7.49)">Add</button></td></tr>
-                    <tr><td>91017</td><td>Glass & Mirror Shine Product</td><td>20 oz</td><td>Glass Care</td><td>$5.99</td><td>17</td><td class="status-green">In Stock</td><td><button onclick="addFromProducts('Glass & Mirror Shine Product',5.99)">Add</button></td></tr>
-                    <tr><td>91018</td><td>Furniture Protection & Polish</td><td>16 oz</td><td>Furniture Care</td><td>$8.49</td><td>9</td><td class="status-green">In Stock</td><td><button onclick="addFromProducts('Furniture Protection & Polish',8.49)">Add</button></td></tr>
+                    <tr>
+                        <td>91001</td>
+                        <td>Luxury Surface Cleaner</td>
+                        <td>24 oz</td>
+                        <td>Premium</td>
+                        <td>$9.99</td>
+                        <td>18</td>
+                        <td class="text-center font-medium">
+                            <span class="px-3 py-1 rounded-full text-sm font-semibold bg-green-100 text-green-800 border border-green-300">
+                                In Stock (18)
+                            </span>
+                        </td>
+                        <td><button onclick="addFromProducts('Luxury Surface Cleaner',9.99)">Add</button></td>
+                    </tr>
+                    <tr>
+                        <td>91002</td>
+                        <td>Premium Scented Cleaner</td>
+                        <td>20 oz</td>
+                        <td>Premium</td>
+                        <td>$8.49</td>
+                        <td>12</td>
+                        <td class="text-center font-medium">
+                            <span class="px-3 py-1 rounded-full text-sm font-semibold bg-green-100 text-green-800 border border-green-300">
+                                In Stock (12)
+                            </span>
+                        </td>
+                        <td><button onclick="addFromProducts('Premium Scented Cleaner',8.49)">Add</button></td>
+                    </tr>
+                    <tr>
+                        <td>91003</td>
+                        <td>Deep Cleaning Solution</td>
+                        <td>32 oz</td>
+                        <td>Deep Clean</td>
+                        <td>$10.99</td>
+                        <td>7</td>
+                        <td class="text-center font-medium">
+                            <span class="px-3 py-1 rounded-full text-sm font-semibold bg-yellow-100 text-yellow-800 border border-yellow-300">
+                                Low Stock (7 left)
+                            </span>
+                        </td>
+                        <td><button onclick="addFromProducts('Deep Cleaning Solution',10.99)">Add</button></td>
+                    </tr>
+                    <tr>
+                        <td>91004</td>
+                        <td>Anti-Bacterial Home Cleaner</td>
+                        <td>28 oz</td>
+                        <td>Disinfectant</td>
+                        <td>$7.99</td>
+                        <td>0</td>
+                        <td class="text-center font-medium">
+                            <span class="px-3 py-1 rounded-full text-sm font-semibold bg-red-100 text-red-800 border border-red-300">
+                                Out of Stock
+                            </span>
+                        </td>
+                        <td><button disabled>Add</button></td>
+                    </tr>
+                    <tr>
+                        <td>91005</td>
+                        <td>Long-Lasting Disinfectant</td>
+                        <td>30 oz</td>
+                        <td>Disinfectant</td>
+                        <td>$11.49</td>
+                        <td>9</td>
+                        <td class="text-center font-medium">
+                            <span class="px-3 py-1 rounded-full text-sm font-semibold bg-green-100 text-green-800 border border-green-300">
+                                In Stock (9)
+                            </span>
+                        </td>
+                        <td><button onclick="addFromProducts('Long-Lasting Disinfectant',11.49)">Add</button></td>
+                    </tr>
+                    <tr>
+                        <td>91006</td>
+                        <td>All-in-One Multi-Surface Cleaner</td>
+                        <td>22 oz</td>
+                        <td>Multi-Surface</td>
+                        <td>$6.99</td>
+                        <td>20</td>
+                        <td class="text-center font-medium">
+                            <span class="px-3 py-1 rounded-full text-sm font-semibold bg-green-100 text-green-800 border border-green-300">
+                                In Stock (20)
+                            </span>
+                        </td>
+                        <td><button onclick="addFromProducts('All-in-One Multi-Surface Cleaner',6.99)">Add</button></td>
+                    </tr>
+                    <tr>
+                        <td>91007</td>
+                        <td>Stain Removal Specialist</td>
+                        <td>18 oz</td>
+                        <td>Laundry</td>
+                        <td>$5.49</td>
+                        <td>14</td>
+                        <td class="text-center font-medium">
+                            <span class="px-3 py-1 rounded-full text-sm font-semibold bg-green-100 text-green-800 border border-green-300">
+                                In Stock (14)
+                            </span>
+                        </td>
+                        <td><button onclick="addFromProducts('Stain Removal Specialist',5.49)">Add</button></td>
+                    </tr>
+                    <tr>
+                        <td>91008</td>
+                        <td>Odor Eliminator Product</td>
+                        <td>16 oz</td>
+                        <td>Air Care</td>
+                        <td>$4.99</td>
+                        <td>11</td>
+                        <td class="text-center font-medium">
+                            <span class="px-3 py-1 rounded-full text-sm font-semibold bg-green-100 text-green-800 border border-green-300">
+                                In Stock (11)
+                            </span>
+                        </td>
+                        <td><button onclick="addFromProducts('Odor Eliminator Product',4.99)">Add</button></td>
+                    </tr>
+                    <tr>
+                        <td>91009</td>
+                        <td>Hypoallergenic Cleaning Product</td>
+                        <td>20 oz</td>
+                        <td>Allergy-Safe</td>
+                        <td>$7.49</td>
+                        <td>6</td>
+                        <td class="text-center font-medium">
+                            <span class="px-3 py-1 rounded-full text-sm font-semibold bg-yellow-100 text-yellow-800 border border-yellow-300">
+                                Low Stock (6 left)
+                            </span>
+                        </td>
+                        <td><button onclick="addFromProducts('Hypoallergenic Cleaning Product',7.49)">Add</button></td>
+                    </tr>
+                    <tr>
+                        <td>91010</td>
+                        <td>Baby-Safe Home Cleaner</td>
+                        <td>24 oz</td>
+                        <td>Baby-Safe</td>
+                        <td>$8.99</td>
+                        <td>3</td>
+                        <td class="text-center font-medium">
+                            <span class="px-3 py-1 rounded-full text-sm font-semibold bg-yellow-100 text-yellow-800 border border-yellow-300">
+                                Low Stock (3 left)
+                            </span>
+                        </td>
+                        <td><button onclick="addFromProducts('Baby-Safe Home Cleaner',8.99)">Add</button></td>
+                    </tr>
+                    <tr>
+                        <td>91011</td>
+                        <td>Pet-Safe Cleaning Product</td>
+                        <td>22 oz</td>
+                        <td>Pet-Safe</td>
+                        <td>$7.99</td>
+                        <td>0</td>
+                        <td class="text-center font-medium">
+                            <span class="px-3 py-1 rounded-full text-sm font-semibold bg-red-100 text-red-800 border border-red-300">
+                                Out of Stock
+                            </span>
+                        </td>
+                        <td><button disabled>Add</button></td>
+                    </tr>
+                    <tr>
+                        <td>91012</td>
+                        <td>Eco-Friendly Home Cleaner</td>
+                        <td>26 oz</td>
+                        <td>Eco-Friendly</td>
+                        <td>$9.49</td>
+                        <td>16</td>
+                        <td class="text-center font-medium">
+                            <span class="px-3 py-1 rounded-full text-sm font-semibold bg-green-100 text-green-800 border border-green-300">
+                                In Stock (16)
+                            </span>
+                        </td>
+                        <td><button onclick="addFromProducts('Eco-Friendly Home Cleaner',9.49)">Add</button></td>
+                    </tr>
+                    <tr>
+                        <td>91013</td>
+                        <td>Natural / Plant-Based Cleaner</td>
+                        <td>28 oz</td>
+                        <td>Eco-Friendly</td>
+                        <td>$8.99</td>
+                        <td>10</td>
+                        <td class="text-center font-medium">
+                            <span class="px-3 py-1 rounded-full text-sm font-semibold bg-green-100 text-green-800 border border-green-300">
+                                In Stock (10)
+                            </span>
+                        </td>
+                        <td><button onclick="addFromProducts('Natural / Plant-Based Cleaner',8.99)">Add</button></td>
+                    </tr>
+                    <tr>
+                        <td>91014</td>
+                        <td>Floor Deep-Care Product</td>
+                        <td>1 Gallon</td>
+                        <td>Floor Care</td>
+                        <td>$12.99</td>
+                        <td>5</td>
+                        <td class="text-center font-medium">
+                            <span class="px-3 py-1 rounded-full text-sm font-semibold bg-yellow-100 text-yellow-800 border border-yellow-300">
+                                Low Stock (5 left)
+                            </span>
+                        </td>
+                        <td><button onclick="addFromProducts('Floor Deep-Care Product',12.99)">Add</button></td>
+                    </tr>
+                    <tr>
+                        <td>91015</td>
+                        <td>Kitchen Degreasing Specialist</td>
+                        <td>18 oz</td>
+                        <td>Kitchen</td>
+                        <td>$6.49</td>
+                        <td>13</td>
+                        <td class="text-center font-medium">
+                            <span class="px-3 py-1 rounded-full text-sm font-semibold bg-green-100 text-green-800 border border-green-300">
+                                In Stock (13)
+                            </span>
+                        </td>
+                        <td><button onclick="addFromProducts('Kitchen Degreasing Specialist',6.49)">Add</button></td>
+                    </tr>
+                    <tr>
+                        <td>91016</td>
+                        <td>Bathroom Power Cleaner</td>
+                        <td>32 oz</td>
+                        <td>Bathroom</td>
+                        <td>$7.49</td>
+                        <td>4</td>
+                        <td class="text-center font-medium">
+                            <span class="px-3 py-1 rounded-full text-sm font-semibold bg-yellow-100 text-yellow-800 border border-yellow-300">
+                                Low Stock (4 left)
+                            </span>
+                        </td>
+                        <td><button onclick="addFromProducts('Bathroom Power Cleaner',7.49)">Add</button></td>
+                    </tr>
+                    <tr>
+                        <td>91017</td>
+                        <td>Glass & Mirror Shine Product</td>
+                        <td>20 oz</td>
+                        <td>Glass Care</td>
+                        <td>$5.99</td>
+                        <td>17</td>
+                        <td class="text-center font-medium">
+                            <span class="px-3 py-1 rounded-full text-sm font-semibold bg-green-100 text-green-800 border border-green-300">
+                                In Stock (17)
+                            </span>
+                        </td>
+                        <td><button onclick="addFromProducts('Glass & Mirror Shine Product',5.99)">Add</button></td>
+                    </tr>
+                    <tr>
+                        <td>91018</td>
+                        <td>Furniture Protection & Polish</td>
+                        <td>16 oz</td>
+                        <td>Furniture Care</td>
+                        <td>$8.49</td>
+                        <td>9</td>
+                        <td class="text-center font-medium">
+                            <span class="px-3 py-1 rounded-full text-sm font-semibold bg-green-100 text-green-800 border border-green-300">
+                                In Stock (9)
+                            </span>
+                        </td>
+                        <td><button onclick="addFromProducts('Furniture Protection & Polish',8.49)">Add</button></td>
+                    </tr>
                 </tbody>
             </table>
         </div>
@@ -539,6 +767,31 @@ function addToCart() {
 }
 
 function addFromProducts(name, price) {
+    // Find stock from the table row
+    let stockQty = 0;
+    document.querySelectorAll("#product-body tr").forEach(row => {
+        if (row.cells[1].textContent === name) {
+            const statusText = row.cells[6].textContent.trim();  // status column
+            const match = statusText.match(/\d+/);
+            stockQty = match ? parseInt(match[0]) : 0;
+            if (statusText.includes("Out of Stock")) stockQty = 0;
+        }
+    });
+
+    const lowThreshold = 10;
+
+    if (stockQty <= lowThreshold) {
+        let message = (stockQty <= 0)
+            ? "OUT OF STOCK! Override and add to cart anyway?"
+            : `Low stock (${stockQty} left). Override and add anyway?`;
+
+        if (!confirm(message)) {
+            alert("Cancelled - not added.");
+            return;
+        }
+    }
+
+    // Proceed
     const select = document.getElementById("productSelect");
     select.value = name;
     document.getElementById("qtyInput").value = 1;
