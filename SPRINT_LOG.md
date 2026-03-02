@@ -472,14 +472,6 @@ Manual testing was performed by loading the inventory page, searching for produc
 - Create ability to view total transaction amounts
 - Create ability to view line items within a sale
 
-**Receipt Generation & Secure Access**
-- Generate a receipt page automatically after a completed sale
-- Display itemized sale details: product, quantity, unit price, and total
-- Add Print / Save as PDF functionality using the browser's native print dialog
-- Enforce session-based access control restricting receipt access to authorized users only
-- Return 403 Forbidden for unauthorized access attempts
-- Redirect unauthenticated users to login
-
 ### Completed Tasks
 
 **Sales Backend**
@@ -491,23 +483,11 @@ Manual testing was performed by loading the inventory page, searching for produc
 - Built functionality to view total transaction amounts
 - Built functionality to view individual sale line items (product, quantity, price)
 
-**Receipt Generation & Secure Access**
-- Implemented `receipt.php` to generate a receipt page after checkout
-- Receipt displays sale ID, date/time, cashier name, itemized products, quantities, unit prices, and total
-- Added Print / Save as PDF button using the browser's native print dialog
-- Implemented session-based access control for admin, database user, and cashier accounts
-- Unauthorized users receive a 403 Forbidden response
-- Unauthenticated users are redirected to login
-
 ### Incomplete Tasks
 
 **Sales Backend**
 - None
-_All planned tasks were successfully completed._
-
-**Receipt Generation & Secure Access**
-- Receipt preview panel on the right side of `pos.php` does not dynamically update
-- The JavaScript to populate the receipt panel in `pos.php` was not implemented this sprint and is planned for a future sprint
+_All planned tasks were successfully completed.__
 
 ## Test Report
 
@@ -518,19 +498,8 @@ Unit testing was performed on individual sale processing logic, including sale c
 **Integration Testing:**  
 Integration testing confirmed that completing checkout from the POS system correctly inserts records into the Sale and SaleItem tables and updates Product inventory in real time. 
 
-**Manual Testing:**
+**Manual Testing:**  
 Manual testing was performed by completing multiple transactions, verifying total amounts, viewing line items inside individual sales, and confirming inventory deductions after each sale. All functionality behaved as expected.
-
-### Receipt Generation & Secure Access
-
-**Unit Testing:**
-Unit testing was performed on access control logic, verifying that admin, database user, and cashier sessions are each correctly authorized. Receipt data output was verified for correct formatting of sale ID, date/time, cashier name, line items, and total.
-
-**Integration Testing:**
-Integration testing confirmed that completing checkout redirects correctly to `receipt.php` and that sale header and line item data loads accurately from the `Sale` and `SaleItem` tables. Ownership validation was tested across all three session types.
-
-**Manual Testing:**
-Manual testing was performed by completing a sale end-to-end and verifying the receipt page displayed correct information. The Print / Save as PDF button was tested and confirmed to trigger the browser print dialog. Unauthorized access was tested by navigating to `receipt.php` without a valid session, which correctly returned a 403 response.
 
 ## Manual, Unit & Integration Testing
 
@@ -550,25 +519,6 @@ Manual testing was performed by completing a sale end-to-end and verifying the r
 | No database constraint violations during sale | Integration | Passed |
 | No console or server errors during checkout | Manual | Passed |
 
-**Receipt Generation & Secure Access**
-
-| Test Case | Test Type | Result |
-|----------|----------|--------|
-| Receipt page loads after checkout redirect | Integration | Passed |
-| Sale ID displays correctly on receipt | Unit | Passed |
-| Sale date and time displays correctly | Unit | Passed |
-| Cashier name displays correctly | Unit | Passed |
-| Itemized products display correctly | Integration | Passed |
-| Quantities display correctly | Unit | Passed |
-| Unit prices display correctly | Unit | Passed |
-| Total amount displays correctly | Unit | Passed |
-| Print / Save as PDF button triggers browser print dialog | Manual | Passed |
-| Authorized admin user can view receipt | Integration | Passed |
-| Authorized cashier session can view receipt | Integration | Passed |
-| Unauthorized user receives 403 response | Integration | Passed |
-| Unauthenticated user is redirected to login | Integration | Passed |
-| Receipt panel on pos.php updates dynamically | Manual | Failed |
-
 ## Bug Tracking
 
 **Sales Backend**
@@ -579,20 +529,6 @@ Manual testing was performed by completing a sale end-to-end and verifying the r
 ### Issues Identified
 - No issues identified.
 - All sale processing, inventory deduction, and data storage functions operate as expected.
-
-**Receipt Generation & Secure Access**
-
-### High-Severity Bugs
-- No high-severity bugs were found.
-
-### Issues Identified
-- Receipt preview panel on the right side of `pos.php` does not dynamically update. The JavaScript to populate the panel was not implemented this sprint and is planned for a future sprint.
-
-## Notes
-- Receipt generation is fully functional and accessible after checkout
-- Session-based access control correctly enforces authorization for admin, database user, and cashier accounts
-- Receipt preview panel on pos.php does not yet update dynamically; this is a known limitation planned for a future sprint
-- Work is ready for peer review and merge into the `develop` branch
 
 
 # Sprint Log
