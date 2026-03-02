@@ -70,6 +70,16 @@ The Sales Backend includes:
 - Ability to view line items inside a sale (product, quantity, and price)
 - Prevention of inconsistent inventory data through immediate database updates
 
+**Receipt Generation & Secure Access**
+
+This feature generates a receipt page automatically after a completed sale and enforces session-based access control to ensure only authorized users can view receipts.
+
+After checkout is complete, the cashier is redirected to a receipt page (`receipt.php`) displaying the sale ID, date and time, cashier name, itemized products, quantities, unit prices, and a grand total. A "Print / Save as PDF" button is provided using the browser's native print dialog.
+
+Access is restricted to administrators, logged-in database users, and the default cashier account. Unauthorized users receive a 403 Forbidden response and unauthenticated users are redirected to login.
+
+_Note: The receipt preview panel on the right side of pos.php does not dynamically update. The JavaScript to populate that panel was not implemented this sprint and is planned for a future sprint._
+
   ## Usage Instructions
 
   **Freshfold Database**
@@ -145,6 +155,14 @@ The Sales Backend includes:
   - Inventory movement is logged.
 - View completed sales in the sales.php page.
 - Select a sale to view its line items including product, quantity, and price in sale_detail.php page.
+
+**Receipt Generation & Secure Access**
+- Complete a sale through the POS checkout flow.
+- After checkout, you will be automatically redirected to the receipt page.
+- Receipt displays sale ID, date/time, cashier name, itemized products, quantities, unit prices, and total.
+- Click "Print / Save as PDF" to print or save the receipt using the browser's print dialog.
+- To view a past receipt, navigate to `receipt.php?saleID=<id>` while logged in as an authorized user.
+- Unauthorized users are denied access with a 403 response; unauthenticated users are redirected to login.
 
 
   ## Setup Steps
@@ -281,6 +299,21 @@ The Sales Backend includes:
    - A new entry appears in the `Sale` table.
    - Related entries appear in the `SaleItem` table.
 
+**Receipt Generation & Secure Access**
+#### Prerequisites
+- XAMPP installed
+- Apache and MySQL services running
+- Freshfold database imported with `Sale`, `SaleItem`, and `Users` tables
+- POS and checkout files connected to the database
+- Active session (admin login, database user login, or cashier login)
+
+#### Steps
+1. Start XAMPP and ensure **Apache** and **MySQL** are running.
+2. Complete a sale through the POS system at `localhost/freshfold/pos.php`.
+3. Upon successful checkout, verify you are redirected to `receipt.php?saleID=X`.
+4. Confirm the receipt displays correct sale ID, date/time, cashier name, line items, and total.
+5. Click "Print / Save as PDF" and verify the browser print dialog opens.
+6. Test access control by navigating to `receipt.php?saleID=1` without a valid session and confirm a 403 or redirect response.
 
 **Inventory Backend**
 _Cannot be set up for usage till this is connected to a php and html file_
