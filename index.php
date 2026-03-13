@@ -1,23 +1,15 @@
 <?php
-// PHP login check 
-$error = ''; // variable for error message
+// index.php - main entry point (shows login form or redirects)
+session_start();
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $username = trim($_POST["username"] ?? '');
-    $password = trim($_POST["password"] ?? '');
-
-    // Your real credentials
-    if ($username === "hamza" && $password === "hamza123") {
-        // Success - redirect to POS page
-        header("Location: pos.php");
-        exit();
-    } else {
-        
-        $error = "Wrong username or password!";
-    }
+// If already logged in, go to POS
+if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true) {
+    header("Location: pos.php");
+    exit();
 }
-?>
 
+// Otherwise show login form
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -28,43 +20,47 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         body {
             margin: 0;
             height: 100vh;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f0f4f8;
             display: flex;
-            justify-content: center;
             align-items: center;
-            font-family: Arial, sans-serif;
-            background-image: url('image.png');
-            background-size: cover;
-            background-position: center;
+            justify-content: center;
         }
-
         .login-container {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(10px);
+            background: white;
             padding: 40px 50px;
-            border-radius: 16px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
             width: 100%;
             max-width: 400px;
             text-align: center;
         }
-
         h1 {
             color: #2c3e50;
             margin-bottom: 30px;
+            font-size: 28px;
         }
-
+        .subtitle {
+            color: #555;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+        .error {
+            color: #e74c3c;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
         .form-group {
             margin-bottom: 20px;
             text-align: left;
         }
-
         label {
             display: block;
             margin-bottom: 8px;
             font-weight: bold;
             color: #333;
+            font-size: 15px;
         }
-
         input {
             width: 100%;
             padding: 14px;
@@ -73,7 +69,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             font-size: 16px;
             box-sizing: border-box;
         }
-
         .login-btn {
             background: #27ae60;
             color: white;
@@ -83,43 +78,33 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             width: 100%;
             border-radius: 8px;
             cursor: pointer;
+            margin-top: 10px;
         }
-
         .login-btn:hover {
             background: #219653;
-        }
-
-        .error {
-            color: #e74c3c;
-            margin-top: 10px;
-            font-size: 14px;
         }
     </style>
 </head>
 <body>
-
     <div class="login-container">
         <h1>FreshFold POS</h1>
-        <p style="color: #555; margin-bottom: 30px;">Sign in to start selling</p>
+        <p class="subtitle">Sign in to start selling</p>
 
-        <?php if ($error) { ?>
-            <p class="error"><?php echo $error; ?></p>
-        <?php } ?>
+        <?php if (isset($_GET['error']) && $_GET['error'] === 'wrong'): ?>
+            <div class="error">Wrong username or password!</div>
+        <?php endif; ?>
 
-        <form method="post">
+        <form method="post" action="login.php">
             <div class="form-group">
                 <label for="username">Username</label>
                 <input type="text" id="username" name="username" required placeholder="hamza">
             </div>
-
             <div class="form-group">
                 <label for="password">Password</label>
                 <input type="password" id="password" name="password" required placeholder="hamza123">
             </div>
-
             <button type="submit" class="login-btn">Login</button>
         </form>
     </div>
-
 </body>
 </html>
