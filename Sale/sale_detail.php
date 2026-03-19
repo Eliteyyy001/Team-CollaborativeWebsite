@@ -1,7 +1,15 @@
 <?php
+// this script allows users to click onto a sale detail from the sales.php page
+// and view the details of a single sale
+session_start();
 
-//this script allows users to click onto a sale detail from the sales.php page and view the details of a single sale
-include __DIR__ . '/dbconnect.php';
+require_once __DIR__ . '/dbconnect.php';
+require_once __DIR__ . '/audit_helpers.php';
+
+if (!isset($_SESSION['userID'])) {
+    header('Location: login.php');
+    exit;
+}
 
 $saleID = isset($_GET['saleID']) ? (int) $_GET['saleID'] : 0;
 
