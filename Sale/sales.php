@@ -1,11 +1,18 @@
 <?php
+// this script gives a list of all sales made and their details
 
-//this script gives a list of all sales made and their details
+// connect database
+session_start();
 
-//connect database
-include __DIR__ . '/dbconnect.php';
+require_once __DIR__ . '/dbconnect.php';
+require_once __DIR__ . '/audit_helpers.php';
 
-// Load all sales
+if (!isset($_SESSION['userID'])) {
+    header('Location: login.php');
+    exit;
+}
+
+// Load all sales with a simple item count
 $sales = [];
 $result = $conn->query("
     SELECT s.saleID,
@@ -44,7 +51,11 @@ if ($totalsResult && $totalsResult->num_rows > 0) {
 
 <h1>Sales History</h1>
 
-<p><a href="pos.php">← Back to POS</a></p>
+<p>
+    <a href="pos.php">← Back to POS</a>
+    | <a href="audit_logs.php">Audit Logs</a>
+    | <a href="logout.php">Logout</a>
+</p>
 
 <p><strong>Total of all sales:</strong> $<?php echo number_format($grandTotal, 2); ?></p>
 
