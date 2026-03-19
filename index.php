@@ -20,27 +20,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     } else {
         // Look up active user by username or email + passcode
         $stmt = $conn->prepare("
-            SELECT userID, userName, roleID
-            FROM Users
-            WHERE activityStatus = TRUE
-              AND (userName = ? OR userEmail = ?)
-              AND userPasscode = ?
-            LIMIT 1
-        ");
-        if ($stmt) {
-            $stmt->bind_param('sss', $usernameOrEmail, $usernameOrEmail, $password);
-            $stmt->execute();
-            $result = $stmt->get_result();
-            $user = $result ? $result->fetch_assoc() : null;
-            $stmt->close();
+    SELECT userID, userName, roleID, userPasscode
+    FROM Users
+    WHERE activityStatus = TRUE
+      AND (userName = ? OR userEmail = ?)
+    LIMIT 1");
+	if ($stmt) {
+    $stmt->bind_param('ss', $usernameOrEmail, $usernameOrEmail);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $user = $result ? $result->fetch_assoc() : null;
+    $stmt->close();
 
             if ($user) {
-                // Store in session so pos.php can read it
                 $_SESSION['userID'] = (int)$user['userID'];
                 $_SESSION['userName'] = (string)$user['userName'];
                 $_SESSION['roleID'] = (int)$user['roleID'];
 
-                // Go to POS screen
+               
                 header('Location: pos.php');
                 exit;
             } else {
