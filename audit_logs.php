@@ -1,8 +1,7 @@
 <?php
 //start session
 session_start();
-include __DIR__ . '/dbconnect.php';
-include __DIR__ . '/audit_helpers.php';
+
 require_once __DIR__ . '/dbconnect.php';
 require_once __DIR__ . '/audit_helpers.php';
 
