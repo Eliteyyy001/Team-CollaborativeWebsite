@@ -1,92 +1,100 @@
 <?php
-//start session 
+// start session so we can remember the cart
 session_start();
-//connect database
-include __DIR__ . '/dbconnect.php';
+// connect database
 
+require_once __DIR__ . '/dbconnect.php';
+require_once __DIR__ . '/audit_helpers.php';
+
+if (!isset($_SESSION['userID'])) {
+    header('Location: login.php');
+    exit;
+}
+
+// If there is no cart yet, start with an empty one
 if (!isset($_SESSION['cart'])) {
     $_SESSION['cart'] = [];
 }
 
 $message = '';
-$isAjax = (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest');
+$lastSaleID = null;
 
-
-function sendCartJson($conn) {
-    header('Content-Type: application/json');
-    $cartItems = [];
-    $cartTotal = 0;
-    if (!empty($_SESSION['cart'])) {
-        $ids = implode(",", array_map('intval', array_keys($_SESSION['cart'])));
-        $result = $conn->query("SELECT prodID, prodName, prodCost FROM `Product` WHERE prodID IN ($ids)");
-        if ($result) {
-            while ($row = $result->fetch_assoc()) {
-                $row['quantity'] = (int)$_SESSION['cart'][(int)$row['prodID']];
-                $row['subtotal'] = (float)$row['prodCost'] * $row['quantity'];
-                $cartTotal += $row['subtotal'];
-                $cartItems[] = $row;
-            }
-        }
-    }
-    echo json_encode(['success' => true, 'items' => $cartItems, 'total' => round($cartTotal, 2)]);
-    exit;
-}
-
-// Add item to cart
+// --- When the user clicks "Add" (from POS or a form) ---
 if (isset($_POST['add'])) {
-    $prodID = (int)$_POST['add'];
-    $qty = isset($_POST['qty']) ? max(1, (int)$_POST['qty']) : 1;
+    $prodID = (int) $_POST['add'];
+    $qty = isset($_POST['qty']) ? max(1, (int) $_POST['qty']) : 1;
     if (!isset($_SESSION['cart'][$prodID])) {
         $_SESSION['cart'][$prodID] = 0;
     }
     $_SESSION['cart'][$prodID] += $qty;
-    if ($isAjax) sendCartJson($conn);
-    header('Location: cart.php');
+    // If they came from the POS page, send them back there so the cart panel updates
+    $goBack = (!empty($_POST['from']) && $_POST['from'] === 'pos') ? 'pos.php' : 'cart.php';
+    header('Location: ' . $goBack);
     exit;
 }
 
-// Remove item from cart
+// --- When the user clicks "Remove" on an item ---
 if (isset($_POST['remove'])) {
-    $prodID = (int)$_POST['remove'];
-    if ($prodID > 0) unset($_SESSION['cart'][$prodID]);
-    if ($isAjax) sendCartJson($conn);
-    header('Location: cart.php');
+    $prodID = (int) $_POST['remove'];
+    if ($prodID > 0) {
+        unset($_SESSION['cart'][$prodID]);
+    }
+    $goBack = (!empty($_POST['from']) && $_POST['from'] === 'pos') ? 'pos.php' : 'cart.php';
+    header('Location: ' . $goBack);
     exit;
 }
 
-// Clear entire cart
+// --- When the user clicks "Clear" or "Cancel" to empty the cart ---
 if (isset($_POST['clear'])) {
     $_SESSION['cart'] = [];
-    if ($isAjax) sendCartJson($conn);
-    header('Location: cart.php');
+    $goBack = (!empty($_POST['from']) && $_POST['from'] === 'pos') ? 'pos.php' : 'cart.php';
+    header('Location: ' . $goBack);
     exit;
 }
 
-// Update quantity
+// --- When the user changes quantities and clicks "Update Cart" ---
 if (isset($_POST['update']) && isset($_POST['qty'])) {
     foreach ($_POST['qty'] as $prodID => $qty) {
-        $prodID = (int)$prodID;
-        $qty = max(0, (int)$qty);
+        $prodID = (int) $prodID;
+        $qty = max(0, (int) $qty);
         if ($qty <= 0) {
             unset($_SESSION['cart'][$prodID]);
         } else {
             $_SESSION['cart'][$prodID] = $qty;
         }
     }
+    audit_log($conn, current_user_id(), 'UPDATE_CART', 'Cart quantities updated');
     header('Location: cart.php');
     exit;
 }
 
-// Checkout 
+// --- When the user clicks "Checkout" to complete a sale ---
+// Delegate the actual sale and inventory logic to checkout_process.php
 if (isset($_POST['checkout'])) {
-    if (empty($_SESSION['cart'])) {
-        $message = 'Your cart is empty. Add items before checking out.';
-    } else {
-        
+    // Sync any quantity changes from the form into the session cart first
+    if (isset($_POST['qty']) && is_array($_POST['qty'])) {
+        foreach ($_POST['qty'] as $prodID => $qty) {
+            $prodID = (int) $prodID;
+            $qty = max(0, (int) $qty);
+            if ($qty <= 0) {
+                unset($_SESSION['cart'][$prodID]);
+            } else {
+                $_SESSION['cart'][$prodID] = $qty;
+            }
+        }
     }
+
+    // Optional override total (Manager/Admin/Owner only)
+    $overrideTotal = isset($_POST['override_total']) ? trim((string)$_POST['override_total']) : '';
+    $overrideReason = isset($_POST['override_reason']) ? trim((string)$_POST['override_reason']) : '';
+    $_SESSION['override_total'] = $overrideTotal;
+    $_SESSION['override_reason'] = $overrideReason;
+
+    header('Location: checkout_process.php');
+    exit;
 }
 
-// Build cart items for display
+// --- Build the list of cart items for the table (get names and prices from database) ---
 $cartItems = [];
 $total = 0;
 if (!empty($_SESSION['cart'])) {
@@ -95,8 +103,8 @@ if (!empty($_SESSION['cart'])) {
     $result = $conn->query("SELECT prodID, prodName, prodCost FROM `Product` WHERE prodID IN ($ids)");
     if ($result) {
         while ($row = $result->fetch_assoc()) {
-            $row['quantity'] = (int)$_SESSION['cart'][(int)$row['prodID']];
-            $total += (float)$row['prodCost'] * $row['quantity'];
+            $row['quantity'] = (int) $_SESSION['cart'][(int) $row['prodID']];
+            $total += (float) $row['prodCost'] * $row['quantity'];
             $cartItems[] = $row;
         }
     }
@@ -115,7 +123,11 @@ if (!empty($_SESSION['cart'])) {
 <h1>FreshFold Cart</h1>
 <h2>Cart</h2>
 
-<p id="message" class="message<?= $message ? ' warning' : '' ?>"><?= htmlspecialchars($message) ?></p>
+<?php if ($message): ?>
+    <p id="message" class="message warning"><?= htmlspecialchars($message) ?></p>
+<?php else: ?>
+    <p id="message" class="message"></p>
+<?php endif; ?>
 
 <form method="post" action="cart.php">
 
@@ -139,17 +151,17 @@ if (!empty($_SESSION['cart'])) {
                         <td><?= htmlspecialchars($item['prodName']) ?></td>
                         <td>
                             <input type="number"
-                                  name="qty[<?= (int)$item['prodID'] ?>]"
-                                  value="<?= (int)$item['quantity'] ?>"
+                                  name="qty[<?= (int) $item['prodID'] ?>]"
+                                  value="<?= (int) $item['quantity'] ?>"
                                   min="1"
                                   onchange="validateQuantity(this)">
                         </td>
-                        <td>$<?= number_format((float)$item['prodCost'] * (int)$item['quantity'], 2) ?></td>
+                        <td>$<?= number_format((float) $item['prodCost'] * (int) $item['quantity'], 2) ?></td>
                         <td>
                             <button type="submit"
                                     class="btn-remove"
                                     name="remove"
-                                    value="<?= (int)$item['prodID'] ?>">
+                                    value="<?= (int) $item['prodID'] ?>">
                                 Remove
                             </button>
                         </td>
@@ -163,8 +175,22 @@ if (!empty($_SESSION['cart'])) {
         <strong>Total: $<?= number_format($total, 2) ?></strong>
     </div>
 
+    <div class="sales-section">
+        <p class="summary-text">
+            <strong>Override (optional):</strong> Only Manager/Admin/Owner can override the sale total.
+        </p>
+        <div class="form-group">
+            <label>Override Total ($):</label>
+            <input type="number" step="0.01" min="0" name="override_total" placeholder="Leave blank for no override">
+        </div>
+        <div class="form-group">
+            <label>Override Reason:</label>
+            <input type="text" name="override_reason" placeholder="Example: coupon, discount, customer issue">
+        </div>
+    </div>
+
     <div class="cart-actions">
-        <button type="submit" name="update" class="btn-submit"><a href="pos.php">Update Cart</a></button>
+        <button type="submit" name="update" class="btn-submit">Update Cart</button>
         <button type="submit" name="checkout" class="btn-cancel" onclick="return validateCheckout();">Checkout</button>
     </div>
 
