@@ -1,28 +1,25 @@
 <?php
 // This script completes a checkout using the existing Session cart
 
-//start session
+
+// start session
 session_start();
 
-//include database connection file 
-include __DIR__ . '/dbconnect.php';
+require_once __DIR__ . '/dbconnect.php';
+require_once __DIR__ . '/audit_helpers.php';
 
-
-$userID = isset($_SESSION['userID']) ? (int) $_SESSION['userID'] : 4;
+$userID = current_user_id();
+if ($userID <= 0) {
+    header('Location: login.php');
+    exit;
+}
 
 if (empty($_SESSION['cart'])) {
     $message = 'Your cart is empty. Add items before checking out.';
 } else {
     $message = '';
 
- 
-    $checkoutItems = [];
-    $cartTotal = 0;
-
-    $idsArray = array_map('intval', array_keys($_SESSION['cart']));
-    $ids = implode(",", $idsArray);
-    $result = $conn->query("SELECT prodID, prodName, prodCost, quantityStocked FROM Product WHERE prodID IN ($ids)");
-
+    // Build a clean copy of the cart from the database
     $checkoutItems = [];
     $cartTotal = 0;
 
@@ -54,24 +51,38 @@ if (empty($_SESSION['cart'])) {
     if (empty($checkoutItems) || $cartTotal <= 0) {
         $message = 'Could not load cart items or total is 0. Try again.';
     } else {
+        //  override total (Manager/Admin/Owner only)
+        $overrideTotalRaw = isset($_SESSION['override_total']) ? trim((string)$_SESSION['override_total']) : '';
+        $overrideReason = isset($_SESSION['override_reason']) ? trim((string)$_SESSION['override_reason']) : '';
+        $overrideApplied = false;
+        $computedTotal = $cartTotal;
+
+        if ($overrideTotalRaw !== '' && can_override_totals()) {
+            $overrideTotal = (float)$overrideTotalRaw;
+            if ($overrideTotal > 0) {
+                $cartTotal = $overrideTotal;
+                $overrideApplied = true;
+            }
+        }
+
         $conn->begin_transaction();
         $ok = true;
 
-        // create the sale header 
-         $saleStmt = $conn->prepare("INSERT INTO Sale (userID, saleDateTime, totalAmount) VALUES (?, NOW(), ?)");
+        // 1) Create the Sale header (uses  Sale table)
+        $saleStmt = $conn->prepare("INSERT INTO Sale (userID, saleDateTime, totalAmount) VALUES (?, NOW(), ?)");
         if (!$saleStmt || !$saleStmt->bind_param("id", $userID, $cartTotal) || !$saleStmt->execute()) {
             $ok = false;
         } else {
             $saleID = $conn->insert_id;
             $saleStmt->close();
 
-            // For each cart item, add SaleItem, update Product stock, and log InventoryMovement
+            // 2) For each cart item, add SaleItem, update Product stock, and log InventoryMovement
             foreach ($checkoutItems as $item) {
                 $prodID = (int) $item['prodID'];
                 $quantity = (int) $item['quantity'];
                 $unitPrice = (float) $item['unitPrice'];
 
-                // Check stock count
+                // Check stock
                 $stockStmt = $conn->prepare("SELECT quantityStocked FROM Product WHERE prodID = ? FOR UPDATE");
                 $stockResult = false;
                 if ($stockStmt && $stockStmt->bind_param("i", $prodID) && $stockStmt->execute()) {
@@ -93,8 +104,7 @@ if (empty($_SESSION['cart'])) {
                     break;
                 }
 
-
-                // a) Insert into SaleItem 
+                // a) Insert into SaleItem (no lineTotal column in schema)
                 $saleItemStmt = $conn->prepare("INSERT INTO SaleItem (saleID, prodID, quantity, itemPrice) VALUES (?, ?, ?, ?)");
                 if (!$saleItemStmt || !$saleItemStmt->bind_param("iiid", $saleID, $prodID, $quantity, $unitPrice) || !$saleItemStmt->execute()) {
                     $ok = false;
@@ -110,9 +120,8 @@ if (empty($_SESSION['cart'])) {
                 }
                 $updateStmt->close();
 
-                //  Log inventory movement using the InventoryMovement table
-             
-                 $qtyChange = -$quantity;
+                // c) Log inventory movement using InventoryMovement table
+                $qtyChange = -$quantity;
                 $movementStmt = $conn->prepare("INSERT INTO InventoryMovement (prodID, transType, transID, quantityChange, unitCost, movedAt, movedBy, prodActivityStatus) VALUES (?, 'Sale', ?, ?, ?, NOW(), ?, TRUE)");
                 if (!$movementStmt || !$movementStmt->bind_param("iiidi", $prodID, $saleID, $qtyChange, $unitPrice, $userID) || !$movementStmt->execute()) {
                     $ok = false;
@@ -124,10 +133,23 @@ if (empty($_SESSION['cart'])) {
 
         if ($ok) {
             $conn->commit();
-            // clear cart
+
+            // Audit logs (after commit so the Sale exists)
+            audit_log($conn, $userID, 'CREATE_SALE', 'Sale #' . $saleID . ' Total $' . number_format((float)$cartTotal, 2));
+            if ($overrideApplied) {
+                $entity = 'Sale #' . $saleID
+                    . ' Override Total $' . number_format((float)$cartTotal, 2)
+                    . ' (computed $' . number_format((float)$computedTotal, 2) . ')';
+                if ($overrideReason !== '') {
+                    $entity .= ' Reason: ' . $overrideReason;
+                }
+                audit_log($conn, $userID, 'OVERRIDE_TOTAL', $entity);
+            }
+
+            // Clear cart after successful sale
             $_SESSION['cart'] = [];
-            header('Location: receipt.php?saleID=' . $saleID);
-            exit;
+            unset($_SESSION['override_total'], $_SESSION['override_reason']);
+            $message = 'Sale completed successfully. Sale ID: ' . $saleID;
         } else {
             $conn->rollback();
             if (!$message) {
@@ -136,6 +158,7 @@ if (empty($_SESSION['cart'])) {
         }
     }
 }
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
