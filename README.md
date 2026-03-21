@@ -380,3 +380,89 @@ This project demonstrates authentication, authorization, product management, and
 5. Protected routes require:
    - `Authorization: Bearer <token>`
 6. Middleware verifies token and attaches `req.user`.
+
+# Sales & Inventory Dashboard
+
+This project is a full-stack sales and inventory management system with a dashboard that displays key business metrics, sales trends, and inventory insights.
+
+---
+
+## Features
+
+### Sales Dashboard
+- Displays total revenue and total orders
+- Line chart showing sales trends over time
+- Data is dynamically fetched from backend API
+
+### Inventory Summary
+- Total number of products
+- Low stock items (quantity < 10)
+- Out of stock items (quantity = 0)
+
+### Date Filtering
+- Filter dashboard data by start and end date
+- Updates:
+  - Sales chart
+  - Revenue
+  - Order count
+
+### Sales History & Receipts
+- View all sales transactions
+- Generate receipt view for each order
+- Print-friendly receipt page
+
+---
+
+## Tech Stack
+
+### Frontend
+- HTML
+- CSS
+- JavaScript
+- Chart.js (for data visualization)
+
+### Backend
+- Node.js
+- Express
+- JWT Authentication
+
+---
+
+## API Endpoints
+
+### Products
+- POST /api/products → Add product
+- GET /api/products → Get all active products
+- PUT /api/products/:id → Update product
+- DELETE /api/products/:id → Soft delete product
+
+### Sales
+- POST /api/sales → Create a sale (updates inventory)
+- GET /api/sales → Get all sales (supports date filtering)
+
+### Dashboard
+- GET /api/dashboard → Get dashboard metrics and sales data  
+  Query Params:
+  - startDate (optional)
+  - endDate (optional)
+
+---
+
+## Dashboard Metrics
+
+The dashboard returns:
+
+- totalRevenue
+- totalOrders
+- totalItems
+- lowStock
+- outOfStock
+
+---
+
+## Setup Instructions
+
+1. Clone the repository
+```bash
+git clone <your-repo-url>
+cd <your-project-folder>
