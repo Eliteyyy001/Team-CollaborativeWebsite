@@ -700,3 +700,50 @@ Sales data secured with role-based access control.
 - Clean Git workflow with feature branches
 
 System is stable and meets Definition of Done.
+
+Sprint Log – Sales & Inventory Dashboard
+
+### Sprint Name: Dashboard & Inventory Overview
+Duration: March 1 - March 22
+Team/Developer: Godspower
+
+# User Stories / Tasks
+**Sales Dashboard**
+- As a user, I want to see total revenue and total orders on the dashboard.
+## Tasks completed:
+- Created dashboard.html layout.
+- Implemented line chart for sales trends using Chart.js.
+- Connected frontend to /api/dashboard to fetch sales data dynamically.
+## Inventory Summary
+- As a user, I want to view inventory metrics on the dashboard.
+Tasks completed:
+- Displayed total products, low-stock items, and out-of-stock items.
+- Connected metrics to backend product data.
+# Date Filtering
+- As a user, I want to filter dashboard metrics by date.
+- Tasks completed:
+- Added start and end date input fields on the dashboard.
+- Implemented dynamic filter that updates sales chart and metrics.
+## Sales History & Receipts
+- As a user, I want to view past sales and generate receipts.
+- Tasks completed:
+- Created sales.html and receipt.html.
+- Built receipt view and print-friendly format.
+- Connected sales data to backend /api/sales endpoints.
+# Backend API
+- As a developer, I need endpoints to support the dashboard.
+- Tasks completed:
+- Implemented /api/products CRUD endpoints.
+- Implemented /api/sales endpoints with inventory updates.
+- Implemented /api/dashboard endpoint returning metrics and sales data with optional date filters.
+- Secured API with JWT authentication middleware.
+# Deliverables
+- Frontend: dashboard.html, dashboard.js, sales.html, receipt.html
+- Backend: Product, Sales, and Dashboard API endpoints
+- Complete connection between frontend and backend for dynamic metrics
+## Definition of Done
+- Dashboard displays total revenue, total orders, and inventory metrics correctly.
+- Sales chart updates with real data.
+- Date filters dynamically update metrics and chart.
+- Sales history and receipt views are functional and print-ready.
+- All endpoints are secured and return correct data.
