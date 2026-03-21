@@ -149,6 +149,7 @@ if (isset($_GET['edit'])) {
         <div class="nav-brand">Freshfold Admin</div>
         <ul class="nav-links">
             <li><a href="admin-dashboard.php" class="active">Users</a></li>
+            <li><a href="admin-alerts.php">Alerts</a></li>
         </ul>
         <div class="nav-user">
             <span>Welcome, <?php echo htmlspecialchars($_SESSION['admin_username']); ?></span>
