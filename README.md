@@ -80,6 +80,21 @@ Access is restricted to administrators, logged-in database users, and the defaul
 
 _Note: The receipt preview panel on the right side of pos.php does not dynamically update. The JavaScript to populate that panel was not implemented this sprint and is planned for a future sprint._
 
+**Audit Logs (Action Tracking System)**
+
+This feature provides a centralized audit logging system that tracks important system actions to ensure accountability, traceability, and system transparency.
+
+The Audit Logs system includes:
+
+- Tracking of user actions across the system
+- Logging of login and logout activity
+- Logging of completed sales transactions
+- Storage of timestamps for every recorded action
+- Storage of the user responsible for each action
+- Display of audit logs in a clear, readable table format
+- Centralized logging using reusable helper functions (`audit_helpers.php`)
+
+
   ## Usage Instructions
 
   **Freshfold Database**
@@ -164,6 +179,21 @@ _Note: The receipt preview panel on the right side of pos.php does not dynamical
 - To view a past receipt, navigate to `receipt.php?saleID=<id>` while logged in as an authorized user.
 - Unauthorized users are denied access with a 403 response; unauthenticated users are redirected to login.
 
+
+**Audit Logs**
+
+- Log in to the system using valid credentials.
+- Perform actions such as:
+  - Logging in and logging out
+  - Completing a sale
+- Navigate to the Audit Logs page via the navigation bar.
+- View the audit log table which displays:
+  - Timestamp of the action
+  - User who performed the action
+  - Action type (e.g., login, logout, sale)
+  - Additional details related to the action
+- Logs are displayed in descending order (most recent first).
+- Verify that each system action is recorded immediately after it occurs.
 
   ## Setup Steps
 
@@ -318,6 +348,24 @@ _Note: The receipt preview panel on the right side of pos.php does not dynamical
 **Inventory Backend**
 _Cannot be set up for usage till this is connected to a php and html file_
 
+**Audit Logs (Action Tracking System)**
+
+#### Prerequisites
+- XAMPP installed
+- Apache and MySQL services running
+- Freshfold database imported
+- `AuditLog` and `Users` tables properly configured
+- Session-based authentication implemented
+
+#### Steps
+1. Start XAMPP and ensure **Apache** and **MySQL** are running.
+2. Confirm database connection is active in `dbconnect.php`.
+3. Ensure `audit_helpers.php` is included in relevant backend files.
+4. Trigger system actions such as login, logout, or completing a sale.
+5. Open the Audit Logs page via `audit_logs.php`.
+6. Verify that:
+   - New log entries appear after each action
+   - Each log includes timestamp, user, action type, and details
 
 
 # Sales Management System
