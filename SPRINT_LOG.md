@@ -747,3 +747,79 @@ Tasks completed:
 - Date filters dynamically update metrics and chart.
 - Sales history and receipt views are functional and print-ready.
 - All endpoints are secured and return correct data.
+
+
+| Item | Details |
+|-----|--------|
+| Sprint # | Sprint 4 |
+| Sprint Dates | March 1, 2026 – March 22, 2026 |
+| Team Name | SystemSync |
+| Members Present | Godspower Ogide, Hamza Yalouli, Hannah Injety, Trevor Lovet |
+
+---
+
+### Planned Tasks
+
+**Audit Logs**
+- Implement centralized audit logging system
+- Track user actions across the system
+- Log login and logout activity
+- Log completed sales transactions
+- Store timestamps for each action
+- Store userID associated with each action
+- Ensure logs are accurate and readable
+- Create reusable helper functions for logging (`audit_helpers.php`)
+- Create audit logs display page
+  
+
+### Completed Tasks
+
+**Audit Logs**
+- Implemented centralized audit logging system using `AuditLog` table
+- Implemented logging for login and logout actions
+- Implemented logging for completed sales transactions
+- Stored timestamps automatically for each logged action
+- Stored userID for each action performed
+- Created reusable helper functions in `audit_helpers.php` to standardize logging
+- Integrated audit logging across multiple system features
+- Built audit logs page (`audit_logs.php`) to display logs in a readable table
+- Displayed logs with timestamp, user, action type, and affected entity
+- Ensured logs are ordered by most recent actions
+- Verified accuracy and readability of all log entries
+
+### Incomplete Tasks
+**Audit Logs**
+
+- None  
+_All planned tasks for Audit Logs were completed successfully._
+
+## Manual, Unit & Integration Testing
+**Audit Logs**
+
+| Test Case | Test Type | Result |
+|----------|----------|--------|
+| Log entry created on user logout | Integration | Passed |
+| Log entry created on completed sale | Integration | Passed |
+| actionTime stored correctly | Unit | Passed |
+| userID stored correctly for each action | Unit | Passed |
+| actionType stored correctly | Unit | Passed |
+| affectedEntity stored when applicable | Unit | Passed |
+| Logs display in correct descending order | Integration | Passed |
+| Audit logs page loads correctly | Manual | Passed |
+| Logs display in readable table format | Manual | Passed |
+| Multiple actions log correctly without conflicts | Integration | Passed |
+| No database errors during logging | Integration | Passed |
+| No console errors on audit logs page | Manual | Passed |
+
+## Bug Tracking
+
+**Audit Logs**
+
+### High-Severity Bugs
+- No high-severity bugs were found during this sprint.
+
+### Issues Identified
+- No issues identified.
+- Audit logging system functions correctly and consistently across all tracked actions.
+
+
