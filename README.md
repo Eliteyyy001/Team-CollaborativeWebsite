@@ -80,6 +80,14 @@ Access is restricted to administrators, logged-in database users, and the defaul
 
 _Note: The receipt preview panel on the right side of pos.php does not dynamically update. The JavaScript to populate that panel was not implemented this sprint and is planned for a future sprint._
 
+**Low-Stock Alerts & Thresholds**
+
+This feature automatically tracks product stock levels and creates alerts when inventory gets low. It is made up of three parts: reorder thresholds per product, automatic alert creation when stock drops, and an admin page to manage and dismiss alerts.
+
+Each product can have a reorder point and a target level set by an admin. If no threshold has been set for a product, the system defaults to a reorder point of 5. When a cashier completes a sale, the system checks the new stock level for each item sold. If the stock is at or below the reorder point and no unresolved alert already exists for that product, a new alert is inserted into the `LowStockAlert` table. A MySQL database trigger on the `Product` table fires the same check any time a product's stock is updated through any part of the system, not just checkout.
+
+Admins can visit the Alerts page from the admin dashboard to see all active low-stock alerts, dismiss individual alerts once the issue is resolved, and update reorder points and target levels for any product. All alert dismissals and threshold changes are recorded in the audit log.
+
 **Audit Logs (Action Tracking System)**
 
 This feature provides a centralized audit logging system that tracks important system actions to ensure accountability, traceability, and system transparency.
@@ -179,6 +187,14 @@ The Audit Logs system includes:
 - To view a past receipt, navigate to `receipt.php?saleID=<id>` while logged in as an authorized user.
 - Unauthorized users are denied access with a 403 response; unauthenticated users are redirected to login.
 
+
+**Low-Stock Alerts & Thresholds**
+- Log in to the admin panel at `admin-login.php` with Administrator credentials.
+- Click "Alerts" in the top navigation bar to open the Alerts page (`admin-alerts.php`).
+- The top table shows all active low-stock alerts with the product name, quantity on hand, and the reorder point that was triggered.
+- Click "Dismiss" next to an alert to mark it as resolved. The alert is removed from the active list and recorded in the audit log.
+- The bottom table shows all products and their current threshold settings. Enter a new reorder point or target level and click "Save" to update.
+- Alerts are created automatically when a sale brings a product's stock to or below its reorder point. The database trigger also fires alerts when stock is updated anywhere else in the system.
 
 **Audit Logs**
 
@@ -347,6 +363,25 @@ The Audit Logs system includes:
 
 **Inventory Backend**
 _Cannot be set up for usage till this is connected to a php and html file_
+
+**Low-Stock Alerts & Thresholds**
+
+#### Prerequisites
+- XAMPP installed
+- Apache and MySQL services running
+- Freshfold database imported (includes `ProductThreshold`, `LowStockAlert` tables, and the `low_stock_after_update` trigger)
+- Admin account with the Administrator role
+
+#### Steps
+1. Start XAMPP and ensure **Apache** and **MySQL** are running.
+2. Import `freshfold_system.sql` to ensure the `ProductThreshold` and `LowStockAlert` tables and the `low_stock_after_update` trigger are in place.
+3. Open the admin login page at `localhost/admin-login.php` and log in with Administrator credentials.
+4. Click "Alerts" in the navigation bar to open `admin-alerts.php`.
+5. Set reorder points and target levels for products using the Product Thresholds table and click "Save".
+6. Complete a sale through the POS that brings a product's stock to or below its reorder point.
+7. Return to `admin-alerts.php` and verify a new alert appears for that product.
+8. Click "Dismiss" to resolve the alert and confirm it is removed from the active list.
+9. Verify the dismiss action appears in the audit log at `audit_logs.php`.
 
 **Audit Logs (Action Tracking System)**
 

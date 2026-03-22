@@ -760,6 +760,17 @@ Tasks completed:
 
 ### Planned Tasks
 
+**Low-Stock Alerts & Thresholds**
+- Add reorder point and target level per product using the existing `ProductThreshold` table
+- Automatically create a low-stock alert when a sale brings stock to or below the reorder point
+- Use a default reorder point of 5 for products without a threshold set
+- Skip creating a duplicate alert if one already exists for that product
+- Add a MySQL database trigger to fire the same alert check on any product stock update
+- Build an admin page to view all active alerts and dismiss them
+- Allow admins to set and update reorder points and target levels for each product
+- Record all alert dismissals and threshold changes in the audit log
+- Add an Alerts link to the admin dashboard navigation
+
 **Audit Logs**
 - Implement centralized audit logging system
 - Track user actions across the system
@@ -773,6 +784,18 @@ Tasks completed:
   
 
 ### Completed Tasks
+
+**Low-Stock Alerts & Thresholds**
+- Added alert creation logic to `checkout_process.php` that fires after each item is sold
+- System looks up the reorder point from `ProductThreshold` for each product, defaulting to 5 if not set
+- Alert is inserted into `LowStockAlert` only if stock is at or below the reorder point and no open alert already exists
+- Added a MySQL `AFTER UPDATE` trigger (`low_stock_after_update`) on the `Product` table so alerts also fire when stock is changed outside of checkout
+- Built `admin-alerts.php` for admins to view all active alerts and dismiss them one by one
+- Built product thresholds table on the same page so admins can set or update reorder points and target levels
+- Used `ON DUPLICATE KEY UPDATE` so saving a threshold works for both new and existing products
+- All dismissals and threshold saves are recorded in the audit log using `audit_log()`
+- Added "Alerts" navigation link to `admin-dashboard.php`
+- Fixed a broken `require_once` path in `checkout_process.php` that was preventing the audit helper from loading
 
 **Audit Logs**
 - Implemented centralized audit logging system using `AuditLog` table
@@ -788,12 +811,38 @@ Tasks completed:
 - Verified accuracy and readability of all log entries
 
 ### Incomplete Tasks
+
+**Low-Stock Alerts & Thresholds**
+- None
+_All planned tasks were completed successfully._
+
 **Audit Logs**
 
-- None  
+- None
 _All planned tasks for Audit Logs were completed successfully._
 
 ## Manual, Unit & Integration Testing
+
+**Low-Stock Alerts & Thresholds**
+
+| Test Case | Test Type | Result |
+|----------|----------|--------|
+| Alert created when sale brings stock to or below reorder point | Integration | Passed |
+| No duplicate alert created if one already exists | Unit | Passed |
+| Default reorder point of 5 used when no threshold is set | Unit | Passed |
+| Custom reorder point used when threshold is set | Unit | Passed |
+| DB trigger fires alert when stock updated outside checkout | Integration | Passed |
+| Admin alerts page loads correctly | Manual | Passed |
+| Active alerts display with correct product and quantity | Integration | Passed |
+| Dismiss button marks alert as resolved | Integration | Passed |
+| Dismissed alert no longer appears in active list | Integration | Passed |
+| Dismiss action recorded in audit log | Integration | Passed |
+| Admin can set a new reorder point for a product | Integration | Passed |
+| Admin can update an existing reorder point | Integration | Passed |
+| Threshold save recorded in audit log | Integration | Passed |
+| Alerts link appears in admin dashboard navigation | Manual | Passed |
+| Non-admin users cannot access admin-alerts.php | Integration | Passed |
+
 **Audit Logs**
 
 | Test Case | Test Type | Result |
@@ -812,6 +861,14 @@ _All planned tasks for Audit Logs were completed successfully._
 | No console errors on audit logs page | Manual | Passed |
 
 ## Bug Tracking
+
+**Low-Stock Alerts & Thresholds**
+
+### High-Severity Bugs
+- No high-severity bugs were found.
+
+### Issues Identified
+- `checkout_process.php` had a broken `require_once` path for `audit_helpers.php`. This was found and fixed as part of this feature.
 
 **Audit Logs**
 
