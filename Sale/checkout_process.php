@@ -6,7 +6,7 @@
 session_start();
 
 require_once __DIR__ . '/dbconnect.php';
-require_once __DIR__ . '/audit_helpers.php';
+require_once __DIR__ . '/../audit_helpers.php';
 
 $userID = current_user_id();
 if ($userID <= 0) {
@@ -128,6 +128,33 @@ if (empty($_SESSION['cart'])) {
                     break;
                 }
                 $movementStmt->close();
+
+                // d) Low-stock alert check
+                $newStock = $currentStock - $quantity;
+                $alertThreshold = 5; // default threshold
+                $threshStmt = $conn->prepare("SELECT reorderPoint FROM ProductThreshold WHERE prodID = ?");
+                if ($threshStmt && $threshStmt->bind_param("i", $prodID) && $threshStmt->execute()) {
+                    $threshRow = $threshStmt->get_result()->fetch_assoc();
+                    if ($threshRow) {
+                        $alertThreshold = (int)$threshRow['reorderPoint'];
+                    }
+                    $threshStmt->close();
+                }
+                if ($newStock <= $alertThreshold) {
+                    // Skip if alert exists
+                    $dupeStmt = $conn->prepare("SELECT alertID FROM LowStockAlert WHERE prodID = ? AND resolveStatus = FALSE LIMIT 1");
+                    if ($dupeStmt && $dupeStmt->bind_param("i", $prodID) && $dupeStmt->execute()) {
+                        if ($dupeStmt->get_result()->num_rows === 0) {
+                            $alertInsert = $conn->prepare("INSERT INTO LowStockAlert (prodID, quantityOnHand, resolveStatus) VALUES (?, ?, FALSE)");
+                            if ($alertInsert) {
+                                $alertInsert->bind_param("ii", $prodID, $newStock);
+                                $alertInsert->execute();
+                                $alertInsert->close();
+                            }
+                        }
+                        $dupeStmt->close();
+                    }
+                }
             }
         }
 

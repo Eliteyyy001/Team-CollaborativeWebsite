@@ -232,5 +232,36 @@ INSERT INTO AuditLog (performedByUserID, actionType, affectedEntity, actionTime)
 (1, 'VIEW_REPORT', 'Daily Sales Report', '2024-01-26 17:15:00');
 
 
+-- Low-stock trigger
+DELIMITER $$
+
+CREATE TRIGGER low_stock_after_update
+AFTER UPDATE ON Product
+FOR EACH ROW
+BEGIN
+    DECLARE reorder INT DEFAULT 5;
+
+    -- Get product threshold
+    SELECT reorderPoint INTO reorder
+    FROM ProductThreshold
+    WHERE prodID = NEW.prodID
+    LIMIT 1;
+
+    -- Fire if stock is low
+    IF NEW.quantityStocked <= IFNULL(reorder, 5) THEN
+        -- Skip if alert exists
+        IF NOT EXISTS (
+            SELECT 1 FROM LowStockAlert
+            WHERE prodID = NEW.prodID
+            AND resolveStatus = FALSE
+        ) THEN
+            INSERT INTO LowStockAlert (prodID, quantityOnHand, resolveStatus)
+            VALUES (NEW.prodID, NEW.quantityStocked, FALSE);
+        END IF;
+    END IF;
+END$$
+
+DELIMITER ;
+
 SELECT 'FreshFold database created successfully!' AS Message;
 
