@@ -1,5 +1,5 @@
 <?php
-// this script shows the POS screen where a cashier can select products,
+// 
 // manage the cart, and complete a sale
 
 // start session and connect database
@@ -17,7 +17,7 @@ if (!isset($_SESSION['cart'])) {
     $_SESSION['cart'] = [];
 }
 
-// Load categories for filter dropdown 
+// 
 $categories = [];
 $dbError = '';
 $catResult = $conn->query("SELECT catID, catName FROM `Category` ORDER BY catName");
