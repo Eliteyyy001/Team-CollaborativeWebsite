@@ -127,15 +127,6 @@ $cashier_name = $_SESSION['cashier_name'] ?? 'Unknown';
   </td>
 </tr>
 
-
-
-
-
-
-
-
-
-
 <tr>
   <td style="border:1px solid #c0b070; padding:10px;">
     2024-01-26 12:41:03
@@ -153,13 +144,6 @@ $cashier_name = $_SESSION['cashier_name'] ?? 'Unknown';
     Sale #22 Total $19.98
   </td>
 </tr>
-
-
-
-
-
-
-
 <tr>
   <td style="border:1px solid #c0b070; padding:10px;">
     2024-01-26 06:09:33
@@ -177,14 +161,8 @@ $cashier_name = $_SESSION['cashier_name'] ?? 'Unknown';
     Sale #21 Total $17.98
   </td>
 </tr>
-
-
-
-
-
-
-
-<tr>
+    
+    <tr>
   <td style="border:1px solid #c0b070; padding:10px;">
     2024-01-26 04:28:14
   </td>
@@ -201,16 +179,6 @@ $cashier_name = $_SESSION['cashier_name'] ?? 'Unknown';
     System
   </td>
 </tr>
-
-
-
-
-
-
-
-
-
-
 <tr>
   <td style="border:1px solid #c0b070; padding:10px;">
     2024-01-26 04:28:14
@@ -228,14 +196,6 @@ $cashier_name = $_SESSION['cashier_name'] ?? 'Unknown';
     Sale #20 Total $33.96
   </td>
 </tr>
-
-
-
-
-
-
-
-
 <tr>
   <td style="border:1px solid #c0b070; padding:10px;">
     2024-01-26 08:17:55
@@ -253,19 +213,6 @@ $cashier_name = $_SESSION['cashier_name'] ?? 'Unknown';
     Daily Sales Report
   </td>
 </tr>
-
-
-
-
-
-
-
-
-
-
-
-
-
 <tr>
   <td style="border:1px solid #c0b070; padding:10px;">
     2024-01-26 05:12:09
@@ -283,10 +230,6 @@ $cashier_name = $_SESSION['cashier_name'] ?? 'Unknown';
     System
   </td>
 </tr>
-
-
-
-
 <tr>
   <td style="border:1px solid #c0b070; padding:10px;">
     2024-01-26 11:30:25
@@ -304,9 +247,6 @@ $cashier_name = $_SESSION['cashier_name'] ?? 'Unknown';
     System
   </td>
 </tr>
-
-
-
 <tr>
   <td style="border:1px solid #c0b070; padding:10px;">
     2024-01-26 03:47:15
@@ -324,12 +264,6 @@ $cashier_name = $_SESSION['cashier_name'] ?? 'Unknown';
     Sale 1001
   </td>
 </tr>
-
-
-
-
-
-
 <tr>
   <td style="border:1px solid #c0b070; padding:10px;">
     2024-01-26 09:30:00
@@ -388,9 +322,8 @@ function updateLogTimes() {
     rows.forEach((cell, index) => {
         const baseTime = new Date(cell.getAttribute("data-original"));
 
-        // نضيف لكل صفّ ثواني مختلفة حتى ما يكونوش نفس الوقت
         const now = new Date();
-        const offsetSeconds = index * 7; // كل صف يزيد 7 ثواني
+        const offsetSeconds = index * 7;
         const updated = new Date(now.getTime() + offsetSeconds * 1000);
 
         const formatted =
@@ -405,7 +338,6 @@ function updateLogTimes() {
     });
 }
 
-// تحديث كل ثانية
 setInterval(updateLogTimes, 1000);
 updateLogTimes();
 </script>
