@@ -549,3 +549,24 @@ The dashboard returns:
 ```bash
 git clone <your-repo-url>
 cd <your-project-folder>
+
+
+
+
+## Contributor: Yalouli
+
+### Sprint 4 Contributions
+- Tested the updated POS interface, including product selection, cart behavior, and receipt generation.
+- Reviewed the Products page to confirm correct pricing, stock values, and item availability.
+- Checked the Sales history page and identified issues such as SQL text appearing in the cashier field.
+- Verified the Audit Logs page to ensure login and logout events were recorded correctly.
+- Helped confirm that UI updates matched the expected sprint requirements.
+
+### Technical Tasks Completed
+- Performed functional and UI testing across POS, Products, Sales, and Audit Logs pages.
+- Identified data display errors and inconsistencies and reported them to the team.
+- Ensured that updated features behaved correctly after recent changes.
+
+### Collaboration
+- Assisted teammates by reviewing updated pages and validating system behavior.
+- Supported the final sprint review by helping confirm feature completeness and accuracy.
