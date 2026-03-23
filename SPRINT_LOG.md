@@ -880,3 +880,17 @@ _All planned tasks for Audit Logs were completed successfully._
 - Audit logging system functions correctly and consistently across all tracked actions.
 
 
+### Contribution – Yalouli
+
+**Work Completed**
+- Tested the updated POS page, including product selection, cart behavior, and receipt display.
+- Reviewed the Products page to confirm correct pricing, stock values, and item availability.
+- Checked the Sales history page and identified issues such as SQL text appearing in the cashier field.
+- Verified the Audit Logs page to ensure login and logout events were recorded correctly.
+- Confirmed that UI updates and page behavior matched the expected sprint requirements.
+
+**In Progress**
+- Continuing to test the system for UI inconsistencies and incorrect data display.
+
+**Issues / Blockers**
+- None
