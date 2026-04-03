@@ -132,12 +132,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         <input type="hidden" name="action" value="login">
         <div class="form-group">
             <label for="username">Username or Email</label>
-            <input type="text" id="username" name="username" required placeholder="cashier1 or email">
+            <input type="text" id="username" name="username">
         </div>
 
         <div class="form-group">
             <label for="password">Passcode</label>
-            <input type="password" id="password" name="password" required placeholder="your passcode">
+            <input type="password" id="password" name="password">
         </div>
 
         <button type="submit" class="login-btn">Login</button>
@@ -165,6 +165,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         </div>
         <button type="submit" class="login-btn">Sign Up</button>
     </form>
+	<a href="admin-login.php" class="admin-login-link">Admin/Employee Login</a>
 </div>
 
 <footer>
