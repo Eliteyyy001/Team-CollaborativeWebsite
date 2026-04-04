@@ -32,14 +32,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     $user = $result ? $result->fetch_assoc() : null;
     $stmt->close();
 
-            if ($user) {
-                $_SESSION['userID'] = (int)$user['userID'];
-                $_SESSION['userName'] = (string)$user['userName'];
-                $_SESSION['roleID'] = (int)$user['roleID'];
-
-               
-                header('Location: pos.php');
-                exit;
+            if ($user && $user['userPasscode'] === $password) {
+                // block customers
+                if ((int)$user['roleID'] === 5) {
+                    $loginError = 'This login is for staff only.';
+                } else {
+                    $_SESSION['userID'] = (int)$user['userID'];
+                    $_SESSION['userName'] = (string)$user['userName'];
+                    $_SESSION['roleID'] = (int)$user['roleID'];
+                    header('Location: pos.php');
+                    exit;
+                }
             } else {
                 $loginError = 'Wrong username/email or password!';
             }
