@@ -165,7 +165,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         </div>
         <button type="submit" class="login-btn">Sign Up</button>
     </form>
-	<a href="admin-login.php" class="admin-login-link">Admin/Employee Login</a>
 </div>
 
 <footer>
