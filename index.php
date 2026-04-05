@@ -19,14 +19,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         $loginError = 'Please enter both username/email and password.';
     } else {
         // Look up active user by username or email + passcode
-        $stmt = $conn->prepare("
-    SELECT userID, userName, roleID, userPasscode
-    FROM Users
-    WHERE activityStatus = TRUE
-      AND (userName = ? OR userEmail = ?)
-    LIMIT 1");
-	if ($stmt) {
-    $stmt->bind_param('ss', $usernameOrEmail, $usernameOrEmail);
+       $stmt = $conn->prepare("
+SELECT userID, userName, roleID
+FROM Users
+WHERE activityStatus = TRUE
+AND (userName = ? OR userEmail = ?)
+AND userPasscode = ?
+LIMIT 1");
+$stmt->bind_param('sss', $usernameOrEmail, $usernameOrEmail, $password);
     $stmt->execute();
     $result = $stmt->get_result();
     $user = $result ? $result->fetch_assoc() : null;
