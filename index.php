@@ -2,7 +2,7 @@
 // Simple login + signup using the Users table user names, emails, and passwords
 
 session_start();
-require __DIR__ . '/dbconnect.php'; 
+require __DIR__ . '/freshfoldDatabase/dbconnect.php';
 
 
 // Messages

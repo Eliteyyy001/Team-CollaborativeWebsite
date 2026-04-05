@@ -5,7 +5,7 @@
 // start session and connect database
 session_start();
 
-require_once __DIR__ . '/dbconnect.php';
+require_once __DIR__ . '/freshfoldDatabase/dbconnect.php';
 require_once __DIR__ . '/audit_helpers.php';
 
 if (!isset($_SESSION['userID'])) {
@@ -74,11 +74,9 @@ if (!empty($_SESSION['cart'])) {
     <nav class="navbar">
         <div class="nav-brand">FreshFold POS</div>
         <ul class="nav-links">
-            <li><a href="index.php">Dashboard</a></li>
             <li><a href="pos.php" class="active">Make Sale</a></li>
-            <li><a href="products.html">Products</a></li>
-            <li><a href="reports.html">Reports</a></li>
             <li><a href="sales.php">Sales</a></li>
+            <li><a href="top_selling_report.php">Reports</a></li>
             <li><a href="audit_logs.php">Audit Logs</a></li>
         </ul>
         <div class="nav-user">
