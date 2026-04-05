@@ -1,352 +1,376 @@
 <?php
-
 date_default_timezone_set('America/New_York');
-
 session_start();
-
 if (!isset($_SESSION['logged_in']) || !$_SESSION['logged_in']) {
     header("Location: login.php");
     exit;
 }
-
-$cashier_name = $_SESSION['cashier_name'] ?? 'Unknown';
-
+$cashier_name = $_SESSION['cashier_name'] ?? 'Jane Smith';
+$products = [
+    ['name' => 'Box Legend Folding Board', 'price' => 11.99, 'stock' => 2],
+    ['name' => 'Downey Fabric Softner', 'price' => 7.99, 'stock' => 199],
+    ['name' => 'Downey Sensitive Detergent', 'price' => 8.89, 'stock' => 119],
+    ['name' => 'FlipFold', 'price' => 12.99, 'stock' => 79],
+    ['name' => 'Tide Dryer Sheets', 'price' => 4.99, 'stock' => 298],
+    ['name' => 'Tide Stain Fighting Detergent', 'price' => 6.69, 'stock' => 100],
+    ['name' => 'Wool Dryer Balls', 'price' => 7.99, 'stock' => 149],
+];
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Audit Logs - FreshFold POS</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FreshFold POS</title>
+  <link rel="stylesheet" href="pos.css">
+  <style>
+    #sale-cart-body tr { border-bottom: 1px solid #ddd; }
+    #sale-cart-body td { padding: 8px; }
+    .remove-btn {
+      background: #cc0000;
+      color: white;
+      border: none;
+      padding: 4px 8px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    /* Status Banners - Made clearly different */
+    .stock-banner {
+      padding: 6px 12px;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      font-weight: bold;
+      display: inline-block;
+      text-align: center;
+      min-width: 110px;
+    }
+    .stock-banner.out {
+      background: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+    .stock-banner.low {
+      background: #fff3cd;
+      color: #856404;
+      border: 1px solid #ffeaa7;
+    }
+    .stock-banner.in {
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+  </style>
 </head>
-
-<body style="background:white; font-family:Arial;">
-
-<!-- Connection bar -->
-<div style="background:white; color:#000; padding:6px 12px; font-size:0.9rem; font-weight:bold; border-bottom:1px solid #e0e0e0;">
-  Connected successfully
+<body style="background:white;">
+<div style="background:white; color:#000; padding:6px 12px; font-size:0.9rem; font-weight:bold; border-bottom:1px solid #e0e0e0; text-align:left;">
+  Connected successfully — <span id="live-time"></span>
 </div>
-
-<!-- Top navigation bar -->
-<div style="background:#3a3a3a; color:white; padding:8px 16px; display:flex; justify-content:space-between; align-items:center;">
-  
+<div class="top-nav" style="background:#3a3a3a; color:white; padding:8px 16px; display:flex; justify-content:space-between; align-items:center;">
   <div>FreshFold POS</div>
-
-  <div style="display:flex; gap:10px;">
-      <a href="pos.php" style="color:white; padding:6px 12px; background:#555; text-decoration:none;">Make Sale</a>
-      <a href="sales.php" style="color:white; padding:6px 12px; background:#555; text-decoration:none;">Sales</a>
-      <a href="audit_logs.php" style="color:white; padding:6px 12px; background:#ffa500; font-weight:bold; text-decoration:none;">Audit Logs</a>
+  <div class="menu" style="display:flex; gap:10px;">
+    <a href="#" style="color:white; padding:6px 12px; background:#555; text-decoration:none;">Dashboard</a>
+    <a href="#" class="active" style="color:white; padding:6px 12px; background:#ffa500; font-weight:bold; text-decoration:none;">Make Sale</a>
+    <a href="#" style="color:white; padding:6px 12px; background:#555; text-decoration:none;">Products</a>
+    <a href="#" style="color:white; padding:6px 12px; background:#555; text-decoration:none;">Reports</a>
+    <a href="#" style="color:white; padding:6px 12px; background:#555; text-decoration:none;">Sales</a>
+    <a href="audit_logs.php" style="color:white; padding:6px 12px; background:#555; text-decoration:none;">Audit Logs</a>
   </div>
-
   <div style="display:flex; gap:15px; align-items:center;">
     User: <?= htmlspecialchars($cashier_name) ?>
     <a href="logout.php" style="color:white;">Logout</a>
   </div>
-
 </div>
+<div class="container" style="display:flex; gap:10px; padding:12px; height:calc(100vh - 55px);">
+  <!-- Products Panel -->
+  <div class="panel" style="flex:1; background:#faefdd; border:1px solid:#c0b070; border-radius:6px; padding:12px;">
+    <div style="background:#d6b98a; padding:8px; font-weight:bold; border:1px solid:#c0b070; margin-bottom:10px;">
+      Products
+    </div>
+    <input type="text" placeholder="Search POS"
+           style="width:100%; padding:6px; margin-bottom:8px; border:1px solid:#aaa; border-radius:4px;background:#daecff;">
+    <div style="display:flex; align-items:center; gap:30px; margin-bottom:10px; height:55px;">
+      <div style="display:flex; align-items:center; gap:6px;">
+        <label style="font-weight:bold; position:relative; top:-3px;">Filter:</label>
+        <select style="padding:6px; border:1px solid:#aaa; border-radius:4px; background:#daecff; width:150px; font-weight:bold; font-size:0.95rem;">
+          <option>All Categories</option>
+        </select>
+      </div>
+      <div style="display:flex; align-items:center; gap:6px;">
+        <label style="font-weight:bold; position:relative; top:-3px;">Sort:</label>
+        <select style="padding:6px; border:1px solid:#aaa; border-radius:4px; background:#daecff; width:80px; font-weight:bold; font-size:0.95rem;">
+          <option>Price</option>
+        </select>
+      </div>
+    </div>
+    <table style="width:100%; border-collapse:collapse; font-size:0.92rem;">
+      <thead>
+        <tr style="background:#d6b98a;">
+          <th style="padding:8px; text-align:left;">Product Name</th>
+          <th style="padding:8px; text-align:left;">Price</th>
+          <th style="padding:8px; text-align:left;">Stock</th>
+          <th style="padding:8px; text-align:left;">Status</th>
+          <th></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+      <?php foreach ($products as $p): ?>
+        <tr style="background:#fffaf2; border-bottom:1px solid:#e0d0a0;">
+          <td style="padding:6px 8px; font-weight:bold; border-right:1px solid:#e0d0a0;">
+              <?= htmlspecialchars($p['name']) ?>
+          </td>
+          <td style="padding:6px 8px; font-weight:bold; border-right:1px solid:#e0d0a0; border-left:1px solid:#e0d0a0;">
+              $<?= number_format($p['price'], 2) ?>
+          </td>
+          <td style="padding:6px 8px; font-weight:bold; border-right:1px solid:#e0d0a0;">
+              <?= $p['stock'] ?>
+          </td>
+          <td style="padding:6px 8px; font-weight:bold; border-right:1px solid:#e0d0a0;">
+              <?php 
+              if ((int)$p['stock'] <= 0): ?>
+                  <div class="stock-banner out">OUT OF STOCK</div>
+              <?php elseif ((int)$p['stock'] < 5): ?>
+                  <div class="stock-banner low">LOW STOCK</div>
+              <?php else: ?>
+                  <div class="stock-banner in">IN STOCK</div>
+              <?php endif; ?>
+          </td>
+          <td style="padding:6px 8px;">
+              <button onclick="addToCart('<?= htmlspecialchars($p['name']) ?>', <?= $p['price'] ?>, <?= $p['stock'] ?>, 1)"
+                  style="background:#6B8E23; color:white; border:none; padding:4px 10px; border-radius:4px; cursor:pointer;">
+                  Add
+              </button>
+          </td>
+        </tr>
+      <?php endforeach; ?>
+      </tbody>
+    </table>
+  </div>
 
-<!-- Main content -->
-<div style="padding:20px;">
-
-<!-- Beige header bar -->
-<div style="
-    background:#d6b98a;
-    padding:10px;
-    font-weight:bold;
-    border:1px solid:#c0b070;
-    border-bottom:none;
-    width:100%;
-    border-radius:6px 6px 0 0;
-">
-    Audit Logs
-</div>
-
-<!-- Beige box -->
-<div style="
-      background:#fffaf2;
-      border:1px solid:#c0b070;
-      border-top:none;
-      padding:20px;
-      border-radius:0 0 6px 6px;
-">
-
-    <!-- TABLE -->
-    <table style="width:100%; border-collapse:collapse; font-size:0.95rem;">
-
+  
+  <!-- Make Sale Panel -->
+  <div class="panel" style="flex:1; background:#faefdd; border:1px solid:#c0b070; border-radius:6px; padding:12px;">
+    <div style="background:#d6b98a; padding:8px; font-weight:bold; border:1px solid:#c0b070; margin-bottom:10px;">Make Sale</div>
+    <label style="display:block; margin:10px 0 5px; font-weight:bold;">Product:</label>
+    <select id="product-select" style="width:100%; max-width:595px; padding:6px; border:1px solid:#999; border-radius:4px; font-weight:bold; background:#fef9f3;">
+      <option value="">Select</option>
+      <?php foreach ($products as $p): ?>
+        <option value="<?= htmlspecialchars($p['name']) ?>" data-stock="<?= $p['stock'] ?>" data-price="<?= $p['price'] ?>">
+          <?= htmlspecialchars($p['name']) ?>
+        </option>
+      <?php endforeach; ?>
+    </select>
+    <label style="display:block; margin:10px 0 4px; font-weight:bold;">Quantity:</label>
+    <input id="qty-box" type="number" value="1" min="1" style="width:100%; max-width:595px; padding:6px; border:1px solid:#999; border-radius:4px; font-weight:bold; background:#fef9f3;">
+    <label style="display:block; margin:10px 0 4px; font-weight:bold;">Price:</label>
+    <input id="price-box" type="text" value="$0.00" readonly style="width:100%; max-width:595px; padding:6px; border:1px solid:#999; border-radius:4px; background:#fef9f3; font-weight:bold;">
+    <p style="color:#555; font-size:0.88rem; margin:4px 0 12px; font-style:italic;">
+      Helper: "Enter quantity ≥ 1"
+    </p>
+    <button onclick="addToCartFromInputs()" style="background:#6B8E23; color:white; padding:10px; border:none; border-radius:4px; cursor:pointer; width:18%; font-weight:bold;">
+      Submit Sale
+    </button>
+    <div style="margin-top:16px;">
+      <strong>Cart items</strong>
+      <table style="width:100%; border-collapse:collapse; margin:12px 0; font-size:0.9rem;">
         <thead>
-            <tr style="background:#d6b98a;">
-                <th style="padding:10px; border:1px solid #c0b070;">Time</th>
-                <th style="padding:10px; border:1px solid #c0b070;">User</th>
-                <th style="padding:10px; border:1px solid #c0b070;">Action</th>
-                <th style="padding:10px; border:1px solid #c0b070;">Details</th>
-            </tr>
+          <tr style="background:#d6b98a;">
+            <th style="padding:8px; text-align:left;">Item</th>
+            <th style="padding:8px; text-align:center;">Qty</th>
+            <th style="padding:8px; text-align:right;">Price</th>
+            <th style="padding:8px; text-align:center;"></th>
+          </tr>
         </thead>
+        <tbody id="sale-cart-body">
+          <tr class="empty-row">
+            <td colspan="4" style="text-align:center; color:#777; padding:20px;">
+              Your cart is empty.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div style="background:#d9ecff; padding:8px; font-weight:bold; border:1px solid:#c0b070; margin-top:10px; margin-bottom:10px; display:flex; justify-content:space-between;">
+        <span>Total Price</span>
+        <span id="cart-total" style="color:#2e7d32;">$0.00</span>
+      </div>
+      <button id="cancel-btn" style="background:#e53935; color:white; border:none; padding:10px; width:25%; border-radius:4px; cursor:pointer; font-size:1rem; margin-top:14px;" onclick="clearCart()">
+        Cancel
+      </button>
+    </div>
+  </div>
 
-<tbody>
-
-
-<tr>
-  <td style="border:1px solid #c0b070; padding:10px;">
-    2024-01-26 03:26:01
-  </td>
-
-  <td style="border:1px solid #c0b070; padding:10px;">
-    JaneSmith (1)
-  </td>
-
-  <td style="border:1px solid #c0b070; padding:10px;">
-    LOGOUT
-  </td>
-
-  <td style="border:1px solid #c0b070; padding:10px;">
-    	System
-  </td>
-</tr>
-
-
-
-
-
-
-
-
-<tr>
-  <td style="border:1px solid #c0b070; padding:10px;">
-    2024-01-26 05:19:49
-  </td>
-
-  <td style="border:1px solid #c0b070; padding:10px;">
-    main_manager (1)
-  </td>
-
-  <td style="border:1px solid #c0b070; padding:10px;">
-    CREATE_SALE
-  </td>
-
-  <td style="border:1px solid #c0b070; padding:10px;">
-    	Sale 1095
-  </td>
-</tr>
-
-<tr>
-  <td style="border:1px solid #c0b070; padding:10px;">
-    2024-01-26 12:41:03
-  </td>
-
-  <td style="border:1px solid #c0b070; padding:10px;">
-    main_manager (2)
-  </td>
-
-  <td style="border:1px solid #c0b070; padding:10px;">
-    CREATE_SALE
-  </td>
-
-  <td style="border:1px solid #c0b070; padding:10px;">
-    Sale #22 Total $19.98
-  </td>
-</tr>
-<tr>
-  <td style="border:1px solid #c0b070; padding:10px;">
-    2024-01-26 06:09:33
-  </td>
-
-  <td style="border:1px solid #c0b070; padding:10px;">
-    freshfold_admin2 (3)
-  </td>
-
-  <td style="border:1px solid #c0b070; padding:10px;">
-    CREATE_SALE
-  </td>
-
-  <td style="border:1px solid #c0b070; padding:10px;">
-    Sale #21 Total $17.98
-  </td>
-</tr>
-    
-    <tr>
-  <td style="border:1px solid #c0b070; padding:10px;">
-    2024-01-26 04:28:14
-  </td>
-
-  <td style="border:1px solid #c0b070; padding:10px;">
-    freshfold_admin2 (4)
-  </td>
-
-  <td style="border:1px solid #c0b070; padding:10px;">
-    LOGOUT
-  </td>
-
-  <td style="border:1px solid #c0b070; padding:10px;">
-    System
-  </td>
-</tr>
-<tr>
-  <td style="border:1px solid #c0b070; padding:10px;">
-    2024-01-26 04:28:14
-  </td>
-
-  <td style="border:1px solid #c0b070; padding:10px;">
-    HamzaYal (5)
-  </td>
-
-  <td style="border:1px solid #c0b070; padding:10px;">
-    CREATE_SALE
-  </td>
-
-  <td style="border:1px solid #c0b070; padding:10px;">
-    Sale #20 Total $33.96
-  </td>
-</tr>
-<tr>
-  <td style="border:1px solid #c0b070; padding:10px;">
-    2024-01-26 08:17:55
-  </td>
-
-  <td style="border:1px solid #c0b070; padding:10px;">
-    LORI_Adams (4)
-  </td>
-
-  <td style="border:1px solid #c0b070; padding:10px;">
-    VIEW_REPORT
-  </td>
-
-  <td style="border:1px solid #c0b070; padding:10px;">
-    Daily Sales Report
-  </td>
-</tr>
-<tr>
-  <td style="border:1px solid #c0b070; padding:10px;">
-    2024-01-26 05:12:09
-  </td>
-
-  <td style="border:1px solid #c0b070; padding:10px;">
-    freshfold_admin2 (4)
-  </td>
-
-  <td style="border:1px solid #c0b070; padding:10px;">
-    LOGIN
-  </td>
-
-  <td style="border:1px solid #c0b070; padding:10px;">
-    System
-  </td>
-</tr>
-<tr>
-  <td style="border:1px solid #c0b070; padding:10px;">
-    2024-01-26 11:30:25
-  </td>
-
-  <td style="border:1px solid #c0b070; padding:10px;">
-    freshfold_admin2 (4)
-  </td>
-
-  <td style="border:1px solid #c0b070; padding:10px;">
-    LOGIN
-  </td>
-
-  <td style="border:1px solid #c0b070; padding:10px;">
-    System
-  </td>
-</tr>
-<tr>
-  <td style="border:1px solid #c0b070; padding:10px;">
-    2024-01-26 03:47:15
-  </td>
-
-  <td style="border:1px solid #c0b070; padding:10px;">
-    main_manager (2)
-  </td>
-
-  <td style="border:1px solid #c0b070; padding:10px;">
-    CREATE_SALE
-  </td>
-
-  <td style="border:1px solid #c0b070; padding:10px;">
-    Sale 1001
-  </td>
-</tr>
-<tr>
-  <td style="border:1px solid #c0b070; padding:10px;">
-    2024-01-26 09:30:00
-  </td>
-
-  <td style="border:1px solid #c0b070; padding:10px;">
-    freshfold_admin1 (3)
-  </td>
-
-  <td style="border:1px solid #c0b070; padding:10px;">
-    LOGIN
-  </td>
-
-  <td style="border:1px solid #c0b070; padding:10px;">
-    System
-  </td>
-</tr>
-
-
-
-
-
-<tr>
-  <td style="border:1px solid #c0b070; padding:10px;">
-    2024-01-26 12:41:03
-  </td>
-
-  <td style="border:1px solid #c0b070; padding:10px;">
-    main_manager (3)
-  </td>
-
-  <td style="border:1px solid #c0b070; padding:10px;">
-    CREATE_SALE
-  </td>
-
-  <td style="border:1px solid #c0b070; padding:10px;">
-    Sale #26 Total $21.98
-  </td>
-</tr>
-
-
-
-
-
-
-</tbody>
-
-
-</table>
-
+  <!-- Receipt Panel -->
+  <div class="panel" style="flex:1; background:#faefdd; border:1px solid:#c0b070; border-radius:6px; padding:12px;">
+    <div style="background:#d6b98a; padding:8px; font-weight:bold; border:1px solid:#c0b070; margin-bottom:10px; text-align:left;">
+      Receipt
+    </div>
+    <div style="background:#fffaf2; border:1px solid:#c0b070; padding:24px 20px; font-size:1rem; border-radius:4px; color:#333; min-height:520px;">
+      <div style="margin-bottom:18px;">
+        <strong>Product:</strong><br>
+        <div style="border-bottom:1px solid #888; min-height:10px; padding:4px 0;"></div>
+      </div>
+      <div style="margin-bottom:18px;">
+        <strong>Quantity:</strong><br>
+        <div style="border-bottom:1px solid #888; min-height:10px; padding:4px 0;"></div>
+      </div>
+      <div style="margin-bottom:18px;">
+        <strong>Price:</strong><br>
+        <div style="border-bottom:1px solid #888; min-height:10px; padding:4px 0;"></div>
+      </div>
+      <div style="margin-bottom:18px;">
+        <strong>Total:</strong><br>
+        <div style="border-bottom:1px solid #888; min-height:10px; padding:4px 0;"></div>
+      </div>
+      <div style="margin-bottom:18px; display:flex; justify-content:space-between; align-items:baseline;">
+        <strong>Date:</strong>
+        <div style="border-bottom:1px solid #888; padding:4px 0; text-align:right; flex-grow:1; min-height:30px;">
+          <strong><?= date('m/d/Y') ?></strong>
+        </div>
+      </div>
+      <div style="display:flex; gap:12px; margin:30px 0 20px 0;">
+        <button style="flex:1; background:#6B8E23; color:white; padding:10px; border:none; border-radius:6px; cursor:pointer; font-weight:bold;">
+          Print
+        </button>
+        <button style="flex:1; background:#f57c00; color:white; padding:10px; border:none; border-radius:6px; cursor:pointer; font-weight:bold;">
+          Download
+        </button>
+      </div>
+      <a href="#" style="display:block; text-align:center; color:black; font-weight:bold; text-decoration:none; margin-top:12px;">
+        Back to Dashboard
+      </a>
+    </div>
+  </div>
+</div>
 
 <script>
-function updateLogTimes() {
-    const rows = document.querySelectorAll(".log-time");
+// LIVE CLOCK
+function updateClock() {
+    const now = new Date();
+    document.getElementById("live-time").textContent = now.toLocaleString();
+}
+setInterval(updateClock, 1000);
+updateClock();
 
-    rows.forEach((cell, index) => {
-        const baseTime = new Date(cell.getAttribute("data-original"));
+// UPDATE PRICE 
+document.getElementById("product-select").addEventListener("change", function () {
+    let price = this.options[this.selectedIndex].getAttribute("data-price");
+    if (!price) {
+        document.getElementById("price-box").value = "$0.00";
+        return;
+    }
+    document.getElementById("price-box").value = "$" + parseFloat(price).toFixed(2);
+});
 
-        const now = new Date();
-        const offsetSeconds = index * 7;
-        const updated = new Date(now.getTime() + offsetSeconds * 1000);
-
-        const formatted =
-            updated.getFullYear() + "-" +
-            String(updated.getMonth() + 1).padStart(2, '0') + "-" +
-            String(updated.getDate()).padStart(2, '0') + " " +
-            String(updated.getHours()).padStart(2, '0') + ":" +
-            String(updated.getMinutes()).padStart(2, '0') + ":" +
-            String(updated.getSeconds()).padStart(2, '0');
-
-        cell.textContent = formatted;
-    });
+// ADD ITEM FROM PRODUCT LIST
+function addToCart(name, price, stock, qty = 1)
+{
+    if (qty > stock) {
+        alert("Only " + stock + " left in stock.");
+        return;
+    }
+    let cartBody = document.getElementById("sale-cart-body");
+    let emptyRow = cartBody.querySelector(".empty-row");
+    if (emptyRow) emptyRow.remove();
+    let existing = cartBody.querySelector(`tr[data-name="${name}"]`);
+    if (existing) {
+        let qtyCell = existing.querySelector(".qty");
+        let totalCell = existing.querySelector(".total");
+        let newQty = parseInt(qtyCell.textContent) + qty;
+        if (newQty > stock) {
+            alert("Only " + stock + " left in stock.");
+            return;
+        }
+        qtyCell.textContent = newQty;
+        totalCell.textContent = "$" + (newQty * price).toFixed(2);
+        updateCartTotal();
+        return;
+    }
+    let row = document.createElement("tr");
+    row.setAttribute("data-name", name);
+    row.innerHTML = `
+        <td>${name}</td>
+        <td class="qty" style="text-align:center;">${qty}</td>
+        <td class="total" style="text-align:right;">$${(qty * price).toFixed(2)}</td>
+        <td style="text-align:center;">
+            <button class="remove-btn" onclick="removeItem('${name}')">X</button>
+        </td>
+    `;
+    cartBody.appendChild(row);
+    updateCartTotal();
 }
 
-setInterval(updateLogTimes, 1000);
-updateLogTimes();
+// Submit Sale with Warning + Override Prompt (from previous version)
+function addToCartFromInputs() {
+    const select = document.getElementById("product-select");
+    const qtyInput = document.getElementById("qty-box");
+    const priceInput = document.getElementById("price-box");
+
+    if (select.selectedIndex === 0) {
+        alert("Please select a product.");
+        return;
+    }
+
+    const name = select.options[select.selectedIndex].text.trim();
+    const qty = parseInt(qtyInput.value) || 1;
+    const price = parseFloat(priceInput.value.replace("$", "")) || 0;
+    const stock = parseInt(select.options[select.selectedIndex].getAttribute("data-stock"));
+
+    if (qty < 1) {
+        alert("Quantity must be at least 1.");
+        return;
+    }
+
+    let message = `Add ${qty} × "${name}" to cart?`;
+    if (stock <= 0) {
+        message = `⚠️ WARNING: "${name}" is OUT OF STOCK (only ${stock} left).\n\nDo you want to override and add it anyway?`;
+    } else if (qty > stock) {
+        message = `⚠️ WARNING: Only ${stock} "${name}" left in stock.\n\nYou requested ${qty}.\n\nOverride stock limit?`;
+    } else if (stock < 5) {
+        message = `⚠️ Low Stock Alert: Only ${stock} "${name}" remaining.\n\nAdd ${qty} anyway?`;
+    }
+
+    if (confirm(message)) {
+        addToCart(name, price, stock, qty);
+    }
+
+    select.selectedIndex = 0;
+    qtyInput.value = "1";
+    priceInput.value = "$0.00";
+}
+
+function removeItem(name) {
+    const cartBody = document.getElementById("sale-cart-body");
+    const row = cartBody.querySelector(`tr[data-name="${name}"]`);
+    if (row) row.remove();
+    if (!cartBody.querySelector("tr")) {
+        cartBody.innerHTML = `
+            <tr class="empty-row">
+                <td colspan="4" style="text-align:center; color:#777; padding:20px;">
+                    Your cart is empty.
+                </td>
+            </tr>`;
+    }
+    updateCartTotal();
+}
+
+function clearCart() {
+    const cartBody = document.getElementById("sale-cart-body");
+    cartBody.innerHTML = `
+        <tr class="empty-row">
+            <td colspan="4" style="text-align:center; color:#777; padding:20px;">
+                Your cart is empty.
+            </td>
+        </tr>`;
+    updateCartTotal();
+}
+
+function updateCartTotal() {
+    let total = 0;
+    document.querySelectorAll("#sale-cart-body .total").forEach(cell => {
+        total += parseFloat(cell.textContent.replace("$", ""));
+    });
+    document.getElementById("cart-total").textContent = "$" + total.toFixed(2);
+}
 </script>
-
-
-
-
-
-
-
 </body>
 </html>
