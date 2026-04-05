@@ -167,31 +167,9 @@ $products = [
     <p style="color:#555; font-size:0.88rem; margin:4px 0 12px; font-style:italic;">
       Helper: "Enter quantity ≥ 1"
     </p>
-    
-    
-    
-    
-    
-    
-    <!-- Add to Cart and Complete Sale Buttons with proper spacing -->
-    <div style="display: flex; gap: 12px; margin-top: 10px;">
-        <button onclick="addToCartFromInputs()" 
-                style="background:#6B8E23; color:white; padding:12px; border:none; border-radius:6px; cursor:pointer; flex: 1; font-weight:bold;">
-            Add to Cart
-        </button>
-        
-        <button onclick="completeSale()" 
-                style="background:#2e7d32; color:white; padding:12px; border:none; border-radius:6px; cursor:pointer; flex: 1; font-weight:bold;">
-            Complete Sale
-        </button>
-    </div>
-
-
-
-    
-    
-    
-    
+    <button onclick="addToCartFromInputs()" style="background:#6B8E23; color:white; padding:10px; border:none; border-radius:4px; cursor:pointer; width:18%; font-weight:bold;">
+      Submit Sale
+    </button>
     <div style="margin-top:16px;">
       <strong>Cart items</strong>
       <table style="width:100%; border-collapse:collapse; margin:12px 0; font-size:0.9rem;">
@@ -264,10 +242,6 @@ $products = [
   </div>
 </div>
 
-
-
-
-
 <script>
 // LIVE CLOCK
 function updateClock() {
@@ -326,7 +300,6 @@ function addToCart(name, price, stock, qty = 1)
 }
 
 // Submit Sale with Warning + Override Prompt (from previous version)
-// UPDATED Submit Sale - Step 1 (Preparation for backend)
 function addToCartFromInputs() {
     const select = document.getElementById("product-select");
     const qtyInput = document.getElementById("qty-box");
@@ -347,22 +320,19 @@ function addToCartFromInputs() {
         return;
     }
 
-    // Warning + Override Prompt
     let message = `Add ${qty} × "${name}" to cart?`;
     if (stock <= 0) {
-        message = `⚠️ WARNING: "${name}" is OUT OF STOCK (only ${stock} left).\n\nDo you want to override?`;
+        message = `⚠️ WARNING: "${name}" is OUT OF STOCK (only ${stock} left).\n\nDo you want to override and add it anyway?`;
     } else if (qty > stock) {
-        message = `⚠️ WARNING: Only ${stock} "${name}" left in stock.\n\nYou requested ${qty}.\n\nOverride?`;
+        message = `⚠️ WARNING: Only ${stock} "${name}" left in stock.\n\nYou requested ${qty}.\n\nOverride stock limit?`;
     } else if (stock < 5) {
         message = `⚠️ Low Stock Alert: Only ${stock} "${name}" remaining.\n\nAdd ${qty} anyway?`;
     }
 
     if (confirm(message)) {
-        addToCart(name, price, stock, qty);   // Add to visual cart first
-        // TODO: Later we will send this to backend to save sale
+        addToCart(name, price, stock, qty);
     }
 
-    // Reset inputs
     select.selectedIndex = 0;
     qtyInput.value = "1";
     priceInput.value = "$0.00";
@@ -401,192 +371,6 @@ function updateCartTotal() {
     });
     document.getElementById("cart-total").textContent = "$" + total.toFixed(2);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-// STEP 2: Complete Sale - Final Confirmation
-function completeSale() {
-    const cartBody = document.getElementById("sale-cart-body");
-    const rows = cartBody.querySelectorAll("tr:not(.empty-row)");
-
-    if (rows.length === 0) {
-        alert("Your cart is empty. Please add items first.");
-        return;
-    }
-
-    let total = parseFloat(document.getElementById("cart-total").textContent.replace("$", "")) || 0;
-
-    const confirmMsg = `Complete this sale?\n\nTotal Amount: $${total.toFixed(2)}\nNumber of items: ${rows.length}\n\nThis will save the sale and update stock.`;
-
-    if (confirm(confirmMsg)) {
-        // For now, just show success (we will connect to backend in Step 3)
-        alert("✅ Sale Completed Successfully!\n\nTotal: $" + total.toFixed(2));
-
-        // Clear the cart after sale
-        clearCart();
-
-        // Optional: Refresh the products table to show updated stock (later)
-        // location.reload();
-    }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-function completeSale() {
-    const cartBody = document.getElementById("sale-cart-body");
-    const rows = cartBody.querySelectorAll("tr:not(.empty-row)");
-
-    if (rows.length === 0) {
-        alert("Your cart is empty. Please add items first.");
-        return;
-    }
-
-    let items = [];
-    let total = 0;
-
-    rows.forEach(row => {
-        const name = row.getAttribute("data-name");
-        const qty = parseInt(row.querySelector(".qty").textContent);
-        const price = parseFloat(row.querySelector(".total").textContent.replace("$", ""));
-
-        items.push({ name: name, qty: qty, price: price });
-        total += price;
-    });
-
-    // 🔥 UPDATE RECEIPT IMMEDIATELY (THIS IS WHAT YOU ASKED FOR)
-    showReceipt(items, total);
-
-    // 🔥 DO NOT WAIT UNTIL AFTER SALE TO SHOW RECEIPT
-    // Now ask to complete the sale
-    if (confirm(`Complete this sale?\n\nTotal: $${total.toFixed(2)}\nItems: ${items.length}`)) {
-
-        fetch('complete_sale.php', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ items: items })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                alert(`✅ Sale Completed Successfully!\nTotal: $${data.total.toFixed(2)}`);
-
-                // Clear cart AFTER sale
-                clearCart();
-            } else {
-                alert("❌ Error: " + data.message);
-            }
-        })
-        .catch(error => {
-            console.error(error);
-            alert("Connection error. Please make sure complete_sale.php exists and has no errors.");
-        });
-    }
-}
-
-
-
-
-
-// Exact Receipt Format You Requested - Fixed
-
-function showReceipt(items, total) {
-    const receiptContent = document.querySelector(".panel:last-child div[style*='background:#fffaf2']");
-    
-    if (!receiptContent) return;
-
-    let productHTML = '';
-    let quantityHTML = '';
-    let priceHTML = '';
-
-    items.forEach(item => {
-        const line = `${item.qty} × ${item.name}`;
-        
-        productHTML += line + '<br>';
-        quantityHTML += line + '<br>';
-        priceHTML += `$${item.price.toFixed(2)}<br>`;
-    });
-
-    receiptContent.innerHTML = `
-        <div style="margin-bottom:18px;">
-            <strong>Product:</strong><br>
-            <div style="border-bottom:1px solid #888; min-height:40px; padding:4px 0; text-align:right; width:100%; display:block;">
-                ${productHTML}
-            </div>
-        </div>
-
-        <div style="margin-bottom:18px;">
-            <strong>Quantity:</strong><br>
-            <div style="border-bottom:1px solid #888; min-height:40px; padding:4px 0; text-align:right; width:100%; display:block;">
-                ${quantityHTML}
-            </div>
-        </div>
-
-        <div style="margin-bottom:18px;">
-            <strong>Price:</strong><br>
-            <div style="border-bottom:1px solid #888; min-height:40px; padding:4px 0; text-align:right; width:100%; display:block;">
-                ${priceHTML}
-            </div>
-        </div>
-
-        <div style="margin-bottom:18px;">
-            <strong>Total:</strong><br>
-            <div style="border-bottom:1px solid #888; min-height:40px; padding:4px 0; font-weight:bold; color:#2e7d32; text-align:right; width:100%; display:block;">
-                $${total.toFixed(2)}
-            </div>
-        </div>
-
-        <div style="margin-bottom:25px;">
-            <strong>Date:</strong><br>
-            <div style="border-bottom:1px solid #888; padding:4px 0; text-align:right; width:100%; display:block; min-height:30px;">
-                <strong>4/5/2026</strong>
-            </div>
-        </div>
-
-        <div style="display:flex; gap:12px; margin:30px 0 20px 0;">
-            <button onclick="window.print()" 
-                    style="flex:1; background:#6B8E23; color:white; padding:10px; border:none; border-radius:6px; cursor:pointer; font-weight:bold;">
-                Print
-            </button>
-            <button onclick="alert('Download feature coming soon!')" 
-                    style="flex:1; background:#f57c00; color:white; padding:10px; border:none; border-radius:6px; cursor:pointer; font-weight:bold;">
-                Download
-            </button>
-        </div>
-
-        <a href="#" style="display:block; text-align:center; color:black; font-weight:bold; text-decoration:none; margin-top:12px;">
-            Back to Dashboard
-        </a>
-    `;
-}
-
-
-
-
-
-
-
-
 </script>
 </body>
 </html>
