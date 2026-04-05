@@ -150,6 +150,7 @@ if (isset($_GET['edit'])) {
         <ul class="nav-links">
             <li><a href="admin-dashboard.php" class="active">Users</a></li>
             <li><a href="admin-alerts.php">Alerts</a></li>
+            <li><a href="top_selling_report.php">Reports</a></li>
         </ul>
         <div class="nav-user">
             <span>Welcome, <?php echo htmlspecialchars($_SESSION['admin_username']); ?></span>
