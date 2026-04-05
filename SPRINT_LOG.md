@@ -879,6 +879,125 @@ _All planned tasks for Audit Logs were completed successfully._
 - No issues identified.
 - Audit logging system functions correctly and consistently across all tracked actions.
 
+---
+
+## Sprint Summary
+
+| Item | Details |
+|-----|--------|
+| Sprint # | Sprint 5 |
+| Sprint Dates | March 23, 2026 – April 5, 2026 |
+| Team Name | SystemSync |
+| Members Present | Godspower Ogide, Hamza Yalouli, Hannah Injety, Trevor Lovet |
+
+---
+
+### Planned Tasks
+
+**Top-Selling Products Report**
+- Build a ranked report showing best-selling products by units sold
+- Add daily, weekly, and monthly time period filters
+- Display total units sold and total revenue per product
+- Render a bar chart visualizing sales volume by product
+- Add CSV export of the ranked report
+- Add Print / Save as PDF functionality
+- Restrict access to Administrators, Managers, and Owners
+
+**Role-Based Auth & Customer Login Block**
+- Verify passwords against the database before granting POS access
+- Block Customer accounts (roleID 5) from logging in to the staff system
+- Restrict audit log access to Managers and above (roleID 1, 2, and 4)
+
+### Completed Tasks
+
+**Top-Selling Products Report**
+- Built `top_selling_report.php` with ranked product table ordered by units sold
+- Implemented daily, weekly, and monthly filter via `?period=` query parameter
+- Displayed total units sold and total revenue for each ranked product
+- Rendered a Chart.js bar chart on `#topSellingChart` using `window.TOP_SELLING_DATA`
+- Added CSV export via `?export=csv` that fires before HTML output to avoid header conflicts
+- Added Print / Save as PDF button using the browser's native print dialog
+- Enforced dual-session access control for both POS and admin sessions
+- Added "Reports" navigation link to `admin-dashboard.php`
+- Created branch: `feature/top-selling-report`
+- Opened and merged pull request into `develop`
+
+**Role-Based Auth & Customer Login Block**
+- Fixed password verification in `index.php`; previously any matching username bypassed the password check
+- Added explicit Customer block in `index.php`: accounts with roleID 5 receive "This login is for staff only" and are denied access
+- Added role guard to `audit_logs.php` restricting access to roleID 1, 2, and 4
+- Created branch: `feature/auth-security`
+- Opened and merged pull request into `develop`
+
+### Incomplete Tasks
+
+**Top-Selling Products Report**
+- None
+_All planned tasks were completed successfully._
+
+**Role-Based Auth & Customer Login Block**
+- None
+_All planned tasks were completed successfully._
+
+## Manual, Unit & Integration Testing
+
+**Top-Selling Products Report**
+
+| Test Case | Test Type | Result |
+|----------|----------|--------|
+| Report page loads correctly for Administrator | Manual | Passed |
+| Report page loads correctly for Manager | Integration | Passed |
+| Cashier is redirected away from report page | Integration | Passed |
+| Unauthenticated user is redirected to login | Integration | Passed |
+| Products are ranked by units sold descending | Unit | Passed |
+| Daily filter returns only today's sales | Unit | Passed |
+| Weekly filter returns sales from the past 7 days | Unit | Passed |
+| Monthly filter returns sales from the past 30 days | Unit | Passed |
+| Revenue totals are correct per product | Unit | Passed |
+| Bar chart renders with correct labels and values | Manual | Passed |
+| CSV export downloads with correct data | Manual | Passed |
+| CSV headers are correct: Rank, Product, Units Sold, Revenue | Unit | Passed |
+| Print dialog opens when Print button is clicked | Manual | Passed |
+| Empty period returns "No sales recorded" message | Manual | Passed |
+| Reports link appears in admin dashboard navigation | Manual | Passed |
+
+**Role-Based Auth & Customer Login Block**
+
+| Test Case | Test Type | Result |
+|----------|----------|--------|
+| Staff login succeeds with correct credentials | Integration | Passed |
+| Login fails with incorrect password | Unit | Passed |
+| Customer account is blocked with correct error message | Unit | Passed |
+| Customer session is not created after blocked login | Unit | Passed |
+| Cashier is redirected from audit_logs.php | Integration | Passed |
+| Manager can access audit_logs.php | Integration | Passed |
+| Administrator can access audit_logs.php | Integration | Passed |
+| Owner can access audit_logs.php | Integration | Passed |
+| Unauthenticated user redirected from audit_logs.php | Integration | Passed |
+
+## Bug Tracking
+
+**Top-Selling Products Report**
+
+### High-Severity Bugs
+- No high-severity bugs were found.
+
+### Issues Identified
+- No issues identified.
+
+**Role-Based Auth & Customer Login Block**
+
+### High-Severity Bugs
+- Password was never verified before granting access — any user whose username existed in the database could log in without a password. Fixed this sprint.
+
+### Issues Identified
+- No remaining issues. All access control logic verified and functioning correctly.
+
+## Notes
+- Top-selling report is fully functional with time filters, chart, CSV export, and print support
+- Role-based access is now correctly enforced on login and the audit log page
+- Work is ready for peer review and merge into the `develop` branch
+
 
 ### Contribution – Yalouli
 

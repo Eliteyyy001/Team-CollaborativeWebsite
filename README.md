@@ -102,6 +102,30 @@ The Audit Logs system includes:
 - Display of audit logs in a clear, readable table format
 - Centralized logging using reusable helper functions (`audit_helpers.php`)
 
+**Top-Selling Products Report**
+
+This feature provides managers and administrators with a ranked view of the best-selling products over a selected time period. It supports daily, weekly, and monthly filters and allows data to be exported or printed for reporting purposes.
+
+The Top-Selling Products Report includes:
+
+- Ranked product list ordered by units sold (descending)
+- Time period filter: daily, weekly, and monthly views
+- Total units sold and total revenue displayed per product
+- Visual bar chart showing sales volume by product
+- CSV export of the full ranked report
+- Print / Save as PDF functionality using the browser's native print dialog
+- Access restricted to administrators and managers (roleID 1, 2, and 4)
+
+**Role-Based Auth & Customer Login Block**
+
+This feature hardens the login system and enforces proper role-based access control across the application to prevent unauthorized access.
+
+Fixes applied include:
+
+- Password is now verified against the database before granting access (previously any matching username bypassed the password check)
+- Customers (roleID 5) are explicitly blocked from logging in to the staff POS system
+- Audit log page access is restricted to managers and above (roleID 1, 2, and 4); previously any authenticated user could view audit logs
+
 
   ## Usage Instructions
 
@@ -210,6 +234,20 @@ The Audit Logs system includes:
   - Additional details related to the action
 - Logs are displayed in descending order (most recent first).
 - Verify that each system action is recorded immediately after it occurs.
+
+**Top-Selling Products Report**
+- Log in with an Administrator, Manager, or Owner account.
+- Navigate to `top_selling_report.php` or click "Reports" in the navigation bar.
+- Use the filter buttons to switch between Daily, Weekly, and Monthly views.
+- Review the ranked product table and bar chart.
+- Click "Export CSV" to download the report as a spreadsheet.
+- Click "Print / Save as PDF" to print or save the report using the browser's print dialog.
+
+**Role-Based Auth & Customer Login Block**
+- Staff members log in at `index.php` using their username or email and password.
+- Customer accounts (roleID 5) are rejected at login with a clear error message.
+- Audit log access at `audit_logs.php` is restricted to Administrators, Managers, and Owners.
+- Cashiers and other lower-privilege roles are redirected away from the audit log page.
 
   ## Setup Steps
 
@@ -401,6 +439,40 @@ _Cannot be set up for usage till this is connected to a php and html file_
 6. Verify that:
    - New log entries appear after each action
    - Each log includes timestamp, user, action type, and details
+
+**Top-Selling Products Report**
+
+#### Prerequisites
+- XAMPP installed
+- Apache and MySQL services running
+- Freshfold database imported with `Sale`, `SaleItem`, and `Product` tables
+- At least one completed sale in the database
+
+#### Steps
+1. Start XAMPP and ensure **Apache** and **MySQL** are running.
+2. Log in at `localhost/index.php` with an Administrator, Manager, or Owner account.
+3. Navigate to `localhost/top_selling_report.php` or click "Reports" in the navigation bar.
+4. Verify the ranked product table and bar chart load correctly.
+5. Test the Daily, Weekly, and Monthly filter buttons and confirm results change.
+6. Click "Export CSV" and verify a correctly formatted file downloads.
+7. Click "Print / Save as PDF" and verify the browser print dialog opens.
+
+**Role-Based Auth & Customer Login Block**
+
+#### Prerequisites
+- XAMPP installed
+- Apache and MySQL services running
+- Freshfold database imported with `Users` and `Roles` tables
+- At least one Customer account (roleID 5) in the database for testing
+
+#### Steps
+1. Start XAMPP and ensure **Apache** and **MySQL** are running.
+2. Open `localhost/index.php` and attempt to log in with a Customer account.
+3. Verify the login is rejected with the message "This login is for staff only."
+4. Log in with a valid staff account and confirm access to `pos.php`.
+5. Log in as a Cashier (roleID 3) and navigate to `audit_logs.php` directly.
+6. Verify the Cashier is redirected away from the audit log page.
+7. Log in as a Manager or Administrator and confirm `audit_logs.php` loads correctly.
 
 
 # Sales Management System
