@@ -15,7 +15,7 @@ add_audit_log($user, "LOGOUT", "System");
 session_unset();
 session_destroy();
 
-// FIXED: Redirect to your actual login file
+// FIXED
 header("Location: login.php");
 exit;
 ?>
