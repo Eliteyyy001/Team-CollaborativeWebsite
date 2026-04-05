@@ -2,11 +2,11 @@
 //start session
 session_start();
 
-require_once __DIR__ . '/dbconnect.php';
+require_once __DIR__ . '/freshfoldDatabase/dbconnect.php';
 require_once __DIR__ . '/audit_helpers.php';
 
 if (!isset($_SESSION['userID'])) {
-    header('Location: login.php');
+    header('Location: index.php');
     exit;
 }
 // managers and above only
