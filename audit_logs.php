@@ -9,6 +9,11 @@ if (!isset($_SESSION['userID'])) {
     header('Location: login.php');
     exit;
 }
+// managers and above only
+if (!in_array((int)($_SESSION['roleID'] ?? 0), [1, 2, 4], true)) {
+    header('Location: pos.php');
+    exit;
+}
 
 $logs = [];
 $result = $conn->query("
