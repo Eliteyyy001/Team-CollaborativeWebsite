@@ -94,26 +94,7 @@ if ($stmtMoveSum) {
     $stmtMoveSum->close();
 }
 
-$topAllQty = 0;
-$topAllRevenue = 0.0;
-$stmtTopSum = $conn->prepare(
-    'SELECT COALESCE(SUM(si.quantity),0) AS qty, COALESCE(SUM(si.quantity * si.itemPrice),0) AS revenue
-     FROM SaleItem si INNER JOIN Sale s ON s.saleID = si.saleID
-     WHERE s.saleDateTime >= ? AND s.saleDateTime <= ?'
-);
-if ($stmtTopSum) {
-    $stmtTopSum->bind_param('ss', $periodStart, $periodEnd);
-    $stmtTopSum->execute();
-    $rowTs = $stmtTopSum->get_result()->fetch_assoc();
-    if ($rowTs) {
-        $topAllQty = (int)($rowTs['qty'] ?? 0);
-        $topAllRevenue = (float)($rowTs['revenue'] ?? 0);
-    }
-    $stmtTopSum->close();
-}
 
-$topRowsSubtotalQty = 0;
-$topRowsSubtotalRev = 0.0;
 
 // ---- Sales metrics ----
 $grandTotal = 0.0;
@@ -247,7 +228,7 @@ $generatedAt = date('Y-m-d H:i:s');
     <ul class="nav-links">
         <li><a href="admin-dashboard.php" >Users</a></li>
         <li><a href="sales.php">Sales</a></li>
-        <li><a href="admin_metrics.php" class="active">Admin Metrics</a></li>
+        <li><a href="admin-metrics.php" class="active">Admin Metrics</a></li>
         <li><a href="display_charts.php">Charts</a></li>
         <li><a href="audit_logs.php">Audit Logs</a></li>
     </ul>
@@ -378,7 +359,7 @@ window.ADMIN_METRICS = {
   outStock: <?php echo (int)$outOfStockCount; ?>
 };
 </script>
-<script src="admin_metrics.js"></script>
+<script src="admin-metrics.js"></script>
 
 </body>
 </html>
