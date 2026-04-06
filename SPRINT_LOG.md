@@ -998,6 +998,171 @@ _All planned tasks were completed successfully._
 - Role-based access is now correctly enforced on login and the audit log page
 - Work is ready for peer review and merge into the `develop` branch
 
+## Tasks vs. Reality
+
+### Planned Tasks
+
+**Admin Metrics & Dashboard Integration**
+- Connect dashboard to real database data
+- Implement sales metrics (revenue, orders, averages)
+- Implement inventory metrics (stock counts, product totals)
+- Add date filtering (daily and monthly views)
+- Display low-stock items dynamically
+- Display inventory movement logs
+
+**Chart Visualization**
+- Integrate Chart.js into the application
+- Create sales trend line chart (last 30 days)
+- Create stock status doughnut chart
+- Pass PHP data to JavaScript using JSON
+- Ensure charts update dynamically with database data
+
+**Print Report System**
+- Create printable report page
+- Display summary metrics (revenue, stock, time period)
+- Include charts in report view
+- Add daily sales breakdown table
+- Implement print / save as PDF functionality
+
+---
+
+### Completed Tasks
+
+**Admin Metrics & Dashboard Integration**
+- Connected dashboard to live MySQL database
+- Implemented sales metrics including:
+  - Total revenue
+  - Number of orders
+  - Average order value
+  - Today’s sales
+  - Last 7 days performance
+- Implemented inventory metrics including:
+  - Total products
+  - Total units in stock
+  - In-stock vs out-of-stock counts
+- Added dynamic date filtering (daily and monthly)
+- Implemented low-stock detection using ProductThreshold table
+- Displayed low-stock items in a table format
+- Implemented inventory movement tracking with:
+  - Product name
+  - Quantity change
+  - Transaction type
+  - User who performed the action
+  - Timestamp
+
+**Chart Visualization**
+- Integrated Chart.js using CDN
+- Created sales trend line chart displaying last 30 days of revenue
+- Created stock status doughnut chart showing in-stock vs out-of-stock products
+- Passed backend PHP data to frontend using JSON encoding
+- Ensured charts dynamically reflect database data
+- Separated chart logic into dedicated files (`admin_metrics.js`, `display_charts.js`)
+
+**Print Report System**
+- Created `print_report.php` for report generation
+- Displayed summary including:
+  - Report period
+  - Total revenue
+  - Days with sales
+  - Stock summary
+- Integrated charts into printable report view
+- Added daily sales breakdown table
+- Implemented "Print / Save as PDF" functionality
+- Added optional auto-print feature via URL parameter
+
+---
+
+### Incomplete Tasks
+
+**Admin Metrics & Dashboard Integration**
+- None  
+_All planned tasks were completed._
+
+**Chart Visualization**
+- None  
+_All planned tasks were completed._
+
+**Print Report System**
+- None  
+_All planned tasks were completed._
+
+---
+
+## Test Report
+
+**Admin Metrics & Dashboard Integration**
+
+- **Unit Testing:**  
+Tested individual queries for sales totals, inventory counts, and low-stock detection to ensure accurate results.
+
+- **Integration Testing:**  
+Verified that database data correctly flows into the dashboard and displays accurate metrics.
+
+- **Manual Testing:**  
+Manually tested date filtering, page navigation, and correct rendering of tables and metrics.
+
+---
+
+**Chart Visualization**
+
+- **Unit Testing:**  
+Tested chart data arrays (labels and values) to ensure correct formatting before rendering.
+
+- **Integration Testing:**  
+Verified that PHP data is successfully passed to JavaScript and rendered using Chart.js.
+
+- **Manual Testing:**  
+Confirmed charts display correctly, tooltips show accurate values, and no console errors occur.
+
+---
+
+**Print Report System**
+
+- **Unit Testing:**  
+Tested report data calculations such as total revenue and daily breakdown.
+
+- **Integration Testing:**  
+Verified charts render correctly inside the report page and match dashboard data.
+
+- **Manual Testing:**  
+Tested print functionality and confirmed browser print dialog opens and formats correctly.
+
+---
+
+### Manual & Integration Testing
+
+| Test Case | Result |
+|---------|--------|
+| Admin metrics page loads correctly | Passed |
+| Sales metrics display accurate values | Passed |
+| Inventory metrics display correctly | Passed |
+| Date filtering (daily/monthly) works correctly | Passed |
+| Low-stock items display when applicable | Passed |
+| Inventory movement logs display correctly | Passed |
+| Sales trend chart renders correctly | Passed |
+| Stock status chart renders correctly | Passed |
+| Chart tooltips display accurate values | Passed |
+| Charts update with database data | Passed |
+| Charts page loads without errors | Passed |
+| Print report page loads correctly | Passed |
+| Report summary displays accurate data | Passed |
+| Daily sales breakdown table populates correctly | Passed |
+| Print button opens browser print dialog | Passed |
+| No console errors during chart rendering | Passed |
+
+---
+
+## Bug Tracking
+
+### High-Severity Bugs
+- No high-severity bugs were found during Sprint 3.
+
+### Issues Identified
+- Minor issue with Chart.js loading if CDN connection fails
+- Minor UI spacing adjustments needed for chart containers
+- XAMPP environment issue prevented live demo (server configuration issue, not code-related)
+
+
 
 ### Contribution – Yalouli
 
@@ -1105,3 +1270,6 @@ _All planned tasks were completed successfully._
 ## Summary
 
 This sprint cycle established a solid backend foundation with secure access, organized routing, and reliable inventory logic, ready for future expansion.
+
+
+
