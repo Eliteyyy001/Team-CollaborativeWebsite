@@ -127,6 +127,51 @@ Fixes applied include:
 - Audit log page access is restricted to managers and above (roleID 1, 2, and 4); previously any authenticated user could view audit logs
 
 
+**Admin Metrics & Chart Visualization**
+
+This feature provides a fully functional admin analytics dashboard that connects real-time database data to visual insights using dynamic filtering and chart rendering.
+
+The Admin Metrics system includes:
+
+- Daily and monthly filtering of sales and inventory data
+- Dynamic calculation of revenue, total orders, and average order value
+- Display of total lifetime sales, today’s sales, and last 7 days performance
+- Inventory insights including total products, stock levels, and stock status
+- Low-stock monitoring using reorder thresholds
+- Real-time inventory movement tracking including product, quantity, user, and timestamp
+- Sales trend data aggregation for the last 30 days
+- Secure access using session-based role validation
+- Integration with Chart.js for data visualization
+
+
+**Charts Display Page**
+
+This feature separates visualization logic into a dedicated charts page, improving modularity and readability of the system.
+
+The Charts Display includes:
+
+- Line chart showing sales trends over the last 30 days
+- Doughnut chart displaying in-stock vs out-of-stock products
+- Data pulled dynamically from the database and encoded into JSON
+- Clean separation between backend data processing and frontend rendering
+- Use of Chart.js for interactive and responsive chart display
+
+
+**Print Report System**
+
+This feature provides a printable reporting system that allows administrators to generate and export business insights.
+
+The Print Report system includes:
+
+- Summary of sales performance over the last 30 days
+- Total revenue and number of days with recorded sales
+- Inventory stock summary (in-stock vs out-of-stock)
+- Embedded charts (sales trend and stock status) for visual reporting
+- Detailed daily sales breakdown table
+- "Print / Save as PDF" functionality using the browser’s native print dialog
+- Optional auto-print functionality via URL parameter
+
+- 
   ## Usage Instructions
 
   **Freshfold Database**
@@ -248,6 +293,34 @@ Fixes applied include:
 - Customer accounts (roleID 5) are rejected at login with a clear error message.
 - Audit log access at `audit_logs.php` is restricted to Administrators, Managers, and Owners.
 - Cashiers and other lower-privilege roles are redirected away from the audit log page.
+
+**Admin Metrics & Charts**
+
+- Log in as an Administrator or employee 
+- Navigate to `admin-metrics.php`
+- Select a time range:
+  - Choose Daily and pick a specific date
+  - Choose Monthly and pick a month
+- Click "Apply range" to update metrics
+- View:
+  - Sales metrics (revenue, orders, averages)
+  - Inventory metrics (stock levels)
+  - Low-stock alerts
+  - Inventory movement logs
+
+**Charts Display Page**
+
+- Navigate to `display_charts.php`
+- View:
+  - Sales trend line chart (last 30 days)
+  - Stock status doughnut chart
+- Hover over charts to see detailed values
+
+**Print Report System**
+
+- Navigate to `print_report.php`
+- View the report summary and charts
+- Click "Print / Save as PDF" to export the report
 
   ## Setup Steps
 
@@ -474,6 +547,61 @@ _Cannot be set up for usage till this is connected to a php and html file_
 6. Verify the Cashier is redirected away from the audit log page.
 7. Log in as a Manager or Administrator and confirm `audit_logs.php` loads correctly.
 
+
+**Admin Metrics & Chart Visualization**
+
+### Prerequisites
+- XAMPP installed
+- Apache and MySQL services running
+- Freshfold database imported
+- Tables required: `Sale`, `SaleItem`, `Product`, `ProductThreshold`, `InventoryMovement`, `Users`
+- Web browser (Chrome, Firefox, etc.)
+
+### Steps
+1. Start XAMPP and ensure **Apache** and **MySQL** are running.
+2. Confirm database connection is correctly set in `dbconnect.php`.
+3. Place `admin-metrics.php` and `admin_metrics.js` in your project directory.
+4. Log in as an Administrator or authorized user.
+5. Navigate to `http://localhost/admin-metrics.php`.
+6. Select a date range (daily or monthly) and click **Apply range**.
+7. Verify that:
+   - Sales metrics display correctly
+   - Inventory metrics display correctly
+   - Low-stock items appear when applicable
+   - Inventory movements are listed
+8. Confirm charts load using Chart.js.
+
+---
+
+**Charts Display Page**
+
+### Prerequisites
+- XAMPP installed
+- Apache and MySQL services running
+- Freshfold database imported
+- Web browser
+
+### Steps
+1. Start XAMPP and ensure **Apache** and **MySQL** are running.
+2. Place `display_charts.php` and `display_charts.js` in your project directory.
+3. Navigate to `http://localhost/display_charts.php`.
+
+
+---
+
+**Print Report System**
+
+### Prerequisites
+- XAMPP installed
+- Apache and MySQL services running
+- Freshfold database imported
+- Web browser with print capability
+
+### Steps
+1. Start XAMPP and ensure **Apache** and **MySQL** are running.
+2. Place `print_report.php` and `print_report.js` in your project directory.
+3. Navigate to `http://localhost/print_report.php`.
+4. Click **Print / Save as PDF** and confirm the browser print dialog opens.
 
 # Sales Management System
 
@@ -739,3 +867,5 @@ A built-in stock management system ensures:
 ## Author
 
 Built as a backend project to demonstrate API design, authentication, and inventory logic.
+
+
