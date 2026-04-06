@@ -2,6 +2,5 @@
 $conn = new mysqli("localhost", "root", "", "freshfold_system");
 
 if ($conn->connect_error) {
-    die("Connection failed");
+    die("Connection failed: " . $conn->connect_error);
 }
-echo "Connected successfully";
