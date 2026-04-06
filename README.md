@@ -868,4 +868,27 @@ A built-in stock management system ensures:
 
 Built as a backend project to demonstrate API design, authentication, and inventory logic.
 
+/////////////////////////////////////////////////////////////////////////////////////////////////
 
+## Contributor: Hamza (HamzaYalouli)
+
+### Sprint 5 Contributions
+- Successfully resolved merge conflicts in `logout.php` and other files during Sprint 5 integration.
+- Updated and improved the logout functionality:
+  - Added proper audit logging for logout actions using `add_audit_log()`.
+  - Saved username before destroying the session for accurate tracking.
+  - Fixed redirect to point to `login.php` instead of `index.php`.
+  - Added timezone setting and required helper files for consistency.
+- Contributed to POS UI fixes and alignment improvements in the receipt and checkout flow.
+- Performed code cleanup and ensured secure session handling in authentication-related pages.
+- Participated in final integration and testing of Sprint 5 features (POS updates, login/logout flow, and UI improvements).
+
+### Technical Tasks Completed
+- Fixed critical logout issues that affected session management and audit trail.
+- Improved security and logging in the authentication system.
+- Helped merge Sprint 5 branch (`sprint5-clean-hamza`) into `develop` branch.
+- Reviewed and tested POS receipt alignment and overall UI consistency.
+
+### Collaboration
+- Worked closely with the team to resolve git merge conflicts and integrate changes smoothly.
+- Ensured logout behavior is consistent with the audit logging system used across the project.
