@@ -642,3 +642,100 @@ cd <your-project-folder>
 ### Collaboration
 - Assisted teammates by reviewing updated pages and validating system behavior.
 - Supported the final sprint review by helping confirm feature completeness and accuracy.
+
+
+# Inventory Management API (Node.js + Express + JWT)
+
+## Overview
+
+This project is a backend API for managing product inventory. It focuses on secure access using token-based authentication and ensures accurate stock management through controlled update logic.
+
+It’s designed to demonstrate core backend concepts like middleware, routing, and API structure.
+
+---
+
+## Features
+
+* Secure API access using JWT authentication
+* Structured routing for product-related operations
+* Inventory control to prevent invalid stock updates
+* Modular backend design for scalability
+* JSON-based request and response handling
+
+---
+
+## How It Works
+
+### Authentication
+
+The API uses token-based authentication to protect routes.
+Clients must include a valid token in their request to access protected endpoints.
+
+If a request:
+
+* Includes a valid token → access is granted
+* Has no token or an invalid token → access is denied
+
+---
+
+### Product Management
+
+The API is structured to handle product-related operations such as:
+
+* Creating products
+* Viewing products
+* Updating product details
+* Deleting products
+
+(Currently uses a temporary in-memory data store.)
+
+---
+
+### Inventory Control
+
+A built-in stock management system ensures:
+
+* Product quantities are updated correctly
+* Stock levels never go below zero
+* Invalid updates are rejected
+
+---
+
+### Server Behavior
+
+* Runs on a local server
+* Accepts and processes JSON requests
+* Routes all product-related requests through a central endpoint
+
+---
+
+## Use Cases
+
+* Learning backend API development
+* Practicing authentication and middleware
+* Building a foundation for a full inventory system
+* Demonstrating REST API structure in interviews
+
+---
+
+## Future Improvements
+
+* Connect to a real database
+* Add user login and registration
+* Implement full CRUD endpoints
+* Add validation and better error handling
+* Introduce role-based permissions
+
+---
+
+## Notes
+
+* Data is not persistent and resets when the server restarts
+* Authentication relies on a shared secret key
+* Designed as a foundational project for expansion
+
+---
+
+## Author
+
+Built as a backend project to demonstrate API design, authentication, and inventory logic.
