@@ -1013,3 +1013,95 @@ _All planned tasks were completed successfully._
 
 **Issues / Blockers**
 - None
+
+# Sprint Log
+
+## Sprint 1: Setup
+
+**Goal:** Get the server running
+
+**Completed:**
+
+* Initialized the backend project
+* Set up the server environment
+* Configured request handling
+
+**Result:**
+
+* Server runs successfully and accepts requests
+
+---
+
+## Sprint 2: Authentication
+
+**Goal:** Secure the API
+
+**Completed:**
+
+* Added token-based authentication
+* Implemented request validation for access control
+* Handled unauthorized access cases
+
+**Result:**
+
+* Only authenticated users can access protected routes
+
+---
+
+## Sprint 3: Routing Structure
+
+**Goal:** Organize product-related endpoints
+
+**Completed:**
+
+* Created a dedicated routing structure
+* Separated concerns between server and routes
+
+**Result:**
+
+* Clean and scalable API structure
+
+---
+
+## Sprint 4: Inventory Logic
+
+**Goal:** Ensure accurate stock management
+
+**Completed:**
+
+* Added logic to control stock updates
+* Prevented negative inventory values
+
+**Result:**
+
+* Reliable and safe inventory handling
+
+---
+
+## Sprint 5: Integration
+
+**Goal:** Connect all components
+
+**Completed:**
+
+* Linked authentication with routes
+* Connected routing to the main server
+
+**Result:**
+
+* Fully working API foundation
+
+---
+
+## Next Steps
+
+* Add full product operations (create, read, update, delete)
+* Connect to a database
+* Improve validation and error handling
+* Expand authentication with user accounts
+
+---
+
+## Summary
+
+This sprint cycle established a solid backend foundation with secure access, organized routing, and reliable inventory logic, ready for future expansion.
