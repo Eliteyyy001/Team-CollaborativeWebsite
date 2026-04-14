@@ -1,13 +1,15 @@
 <?php
 session_start();
 
+require_once __DIR__ . '/dbconnect.php';
+require_once __DIR__ . '/audit_helpers.php';
+
 if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true || $_SESSION['roleName'] !== 'Administrator') {
     header("Location: admin-login.php");
     exit();
 }
 
-require_once 'freshfoldDatabase/dbconnect.php';
-require_once 'audit_helpers.php';
+
 
 $message = "";
 $messageType = "";
@@ -80,8 +82,11 @@ $productsResult = $conn->query("
     <nav class="navbar">
         <div class="nav-brand">Freshfold Admin</div>
         <ul class="nav-links">
-            <li><a href="admin-dashboard.php">Users</a></li>
-            <li><a href="admin-alerts.php" class="active">Alerts</a></li>
+        <li><a href="admin-dashboard.php">Users</a></li>
+        <li><a href="admin-alerts.php"class="active">Alerts</a></li>
+        <li><a href="display_charts.php">Charts</a></li>
+        <li><a href="top_selling_report.php" >Reports</a></li>
+        <li><a href="audit_logs.php">Audit Logs</a></li>
         </ul>
         <div class="nav-user">
             <span>Welcome, <?php echo htmlspecialchars($_SESSION['admin_username']); ?></span>

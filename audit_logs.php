@@ -2,17 +2,12 @@
 //start session
 session_start();
 
-require_once __DIR__ . '/freshfoldDatabase/dbconnect.php';
+require_once __DIR__ . '/dbconnect.php';
 require_once __DIR__ . '/audit_helpers.php';
 
-if (!isset($_SESSION['userID'])) {
-    header('Location: index.php');
-    exit;
-}
-// managers and above only
-if (!in_array((int)($_SESSION['roleID'] ?? 0), [1, 2, 4], true)) {
-    header('Location: pos.php');
-    exit;
+if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true || $_SESSION['roleName'] !== 'Administrator') {
+    header("Location: admin-login.php");
+    exit();
 }
 
 $logs = [];
@@ -47,7 +42,11 @@ if ($result) {
 <nav class="navbar">
     <div class="nav-brand">FreshFold POS</div>
     <ul class="nav-links">
-        <li><a href="pos.php">Make Sale</a></li>
+       
+		<li><a href="admin-dashboard.php">Users</a></li>
+        <li><a href="admin-alerts.php">Alerts</a></li>
+        <li><a href="display_charts.php">Charts</a></li>
+        <li><a href="top_selling_report.php" >Reports</a></li>
         <li><a href="sales.php">Sales</a></li>
         <li><a href="audit_logs.php" class="active">Audit Logs</a></li>
     </ul>

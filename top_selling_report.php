@@ -181,7 +181,8 @@ $generatedAt = date('Y-m-d H:i:s');
         <li><a href="admin-alerts.php">Alerts</a></li>
         <li><a href="display_charts.php">Charts</a></li>
         <li><a href="top_selling_report.php" class="active">Reports</a></li>
-        <li><a href="audit_logs.php">Audit Logs</a></li>
+        <li><a href="sales.php">Sales</a></li>
+        <li><a href="audit_logs.php" >Audit Logs</a></li>
     </ul>
     <div class="nav-user">
         <span>Welcome, <?php echo htmlspecialchars($_SESSION['admin_username'] ?? ($_SESSION['userName'] ?? '')); ?></span>

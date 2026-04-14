@@ -76,11 +76,12 @@ $chartJson = json_encode($chartPayload, $chartJsonFlags);
 <nav class="navbar">
     <div class="nav-brand">FreshFold Admin</div>
     <ul class="nav-links">
-        <li><a href="admin-dashboard.php" >Users</a></li>
+        <li><a href="admin-dashboard.php">Users</a></li>
+        <li><a href="admin-alerts.php">Alerts</a></li>
+        <li><a href="display_charts.php"class="active">Charts</a></li>
+        <li><a href="top_selling_report.php" >Reports</a></li>
         <li><a href="sales.php">Sales</a></li>
-        <li><a href="admin-metrics.php">Admin Metrics</a></li>
-        <li><a href="display_charts.php" class="active">Charts</a></li>
-        <li><a href="audit_logs.php">Audit Logs</a></li>
+        <li><a href="audit_logs.php" >Audit Logs</a></li>
     </ul>
     <div class="nav-user">
         <span>Welcome, <?php echo htmlspecialchars($_SESSION['admin_username'] ?? ($_SESSION['userName'] ?? '')); ?></span>
