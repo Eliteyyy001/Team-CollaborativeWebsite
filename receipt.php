@@ -138,7 +138,7 @@ $stmt2->close();
 
     <div class="actions">
         <button class="btn-print" onclick="window.print()">Print / Save as PDF</button>
-        <a class="back-links" href="sales.php">← Back to Sales</a>
+        <a class="back-links" href="pos.php">← Back to Sales</a>
     </div>
 </div>
 </body>

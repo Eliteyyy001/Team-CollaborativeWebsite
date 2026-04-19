@@ -9,7 +9,7 @@ if (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true
 $error = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    require_once 'freshfoldDatabase/dbconnect.php';
+    require_once __DIR__ . '/dbconnect.php';
     
     $username = trim($_POST['username']);
     $password = trim($_POST['password']);
@@ -87,7 +87,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <button type="submit" class="btn-submit btn-full">Login</button>
             </form>
             
-            <a href="index.html" class="back-link">← Back to Main Site</a>
+            <a href="index.php" class="back-link">← Back to Main Site</a>
         </div>
     </div>
 </body>

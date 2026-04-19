@@ -6,11 +6,10 @@ session_start();
 require_once __DIR__ . '/dbconnect.php';
 require_once __DIR__ . '/audit_helpers.php';
 
-if (!isset($_SESSION['userID'])) {
-    header('Location: login.php');
-    exit;
+if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true || $_SESSION['roleName'] !== 'Administrator') {
+    header("Location: admin-login.php");
+    exit();
 }
-
 $saleID = isset($_GET['saleID']) ? (int) $_GET['saleID'] : 0;
 
 // Load the sale header

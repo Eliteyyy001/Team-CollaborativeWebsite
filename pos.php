@@ -5,7 +5,7 @@
 // start session and connect database
 session_start();
 
-require_once __DIR__ . '/freshfoldDatabase/dbconnect.php';
+require_once __DIR__ . '/dbconnect.php';
 require_once __DIR__ . '/audit_helpers.php';
 
 if (!isset($_SESSION['userID'])) {
@@ -75,13 +75,12 @@ if (!empty($_SESSION['cart'])) {
         <div class="nav-brand">FreshFold POS</div>
         <ul class="nav-links">
             <li><a href="pos.php" class="active">Make Sale</a></li>
-            <li><a href="sales.php">Sales</a></li>
-            <li><a href="top_selling_report.php">Reports</a></li>
-            <li><a href="audit_logs.php">Audit Logs</a></li>
+			
+           
         </ul>
         <div class="nav-user">
             <span>Cashier: <?php echo htmlspecialchars($_SESSION['userName'] ?? ''); ?></span>
-            <a href="cart.php" class="cart-link">View Cart</a>
+            <a href="cart.php" class="btn-download">View Cart</a>
             <form method="post" action="logout.php" style="display:inline;">
                 <button type="submit" class="btn-exit">Logout</button>
             </form>
@@ -239,47 +238,11 @@ if (!empty($_SESSION['cart'])) {
             </div>
 
             <div class="panel-footer">
-                <button class="btn-exit-small">Exit</button>
+              
             </div>
         </section>
 
-        <!-- Receipt Panel -->
-        <section class="panel receipt-panel">
-            <div class="panel-header">
-                <h2>Receipt</h2>
-            </div>
-
-            <div class="receipt-box">
-                <h3>Receipt</h3>
-                <div class="receipt-row">
-                    <span>Product:</span>
-                    <span id="receiptProduct">—</span>
-                </div>
-                <div class="receipt-row">
-                    <span>Quantity:</span>
-                    <span id="receiptQty">—</span>
-                </div>
-                <div class="receipt-row">
-                    <span>Price:</span>
-                    <span id="receiptPrice">—</span>
-                </div>
-                <div class="receipt-row">
-                    <span>Total:</span>
-                    <span id="receiptTotal">—</span>
-                </div>
-                <div class="receipt-row">
-                    <span>Date:</span>
-                    <span id="receiptDate"><?= date('m/d/Y') ?></span>
-                </div>
-
-                <div class="receipt-actions">
-                    <button type="button" class="btn-print">Print</button>
-                    <button type="button" class="btn-download">Download</button>
-                </div>
-
-                <a href="index.php" class="back-link">Back to Dashboard</a>
-            </div>
-        </section>
+       
 
     </main>
 

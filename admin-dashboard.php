@@ -6,7 +6,7 @@ if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== tru
     exit();
 }
 
-require_once 'freshfoldDatabase/dbconnect.php';
+require_once __DIR__ . '/dbconnect.php';
 
 $message = "";
 $messageType = "";
@@ -148,9 +148,12 @@ if (isset($_GET['edit'])) {
     <nav class="navbar">
         <div class="nav-brand">Freshfold Admin</div>
         <ul class="nav-links">
-            <li><a href="admin-dashboard.php" class="active">Users</a></li>
-            <li><a href="admin-alerts.php">Alerts</a></li>
-            <li><a href="top_selling_report.php">Reports</a></li>
+        <li><a href="admin-dashboard.php"class="active">Users</a></li>
+        <li><a href="admin-alerts.php">Alerts</a></li>
+        <li><a href="display_charts.php">Charts</a></li>
+        <li><a href="top_selling_report.php" >Reports</a></li>
+        <li><a href="sales.php">Sales</a></li>
+        <li><a href="audit_logs.php" >Audit Logs</a></li>
         </ul>
         <div class="nav-user">
             <span>Welcome, <?php echo htmlspecialchars($_SESSION['admin_username']); ?></span>

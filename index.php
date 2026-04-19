@@ -2,7 +2,7 @@
 // Simple login + signup using the Users table user names, emails, and passwords
 
 session_start();
-require __DIR__ . '/freshfoldDatabase/dbconnect.php';
+require __DIR__ . '/dbconnect.php';
 
 
 // Messages
@@ -33,23 +33,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     $stmt->close();
 
             if ($user && $user['userPasscode'] === $password) {
-                // block customers
-                if ((int)$user['roleID'] === 5) {
-                    $loginError = 'This login is for staff only.';
-                } else {
                     $_SESSION['userID'] = (int)$user['userID'];
                     $_SESSION['userName'] = (string)$user['userName'];
                     $_SESSION['roleID'] = (int)$user['roleID'];
                     header('Location: pos.php');
                     exit;
-                }
-            } else {
+                }else {
                 $loginError = 'Wrong username/email or password!';
-            }
-        } else {
-            $loginError = 'Database error during login.';
         }
     }
+}
 }
 
 // Handle SIGNUP
@@ -109,17 +102,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 </head>
 <body>
 
-<!-- Navigation Bar -->
-<nav>
-  <ul class="navbar">
-    <li><a href="#">Home</a></li>
-    <li><a href="#">About</a></li>
-    <li><a href="#">Services</a></li>
-    <li><a href="#">Contact</a></li>
-  </ul>
-</nav>
 
-<h1>Welcome to Our Collaborative Website!</h1>
+<h1>Welcome to FreshFold Systems!</h1>
 
 <div class="login-container">
     <h1>FreshFold POS</h1>
@@ -167,6 +151,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             <input type="password" id="new_password" name="new_password" required>
         </div>
         <button type="submit" class="login-btn">Sign Up</button>
+		   <a href="admin-login.php">Staff Login</a>
     </form>
 </div>
 

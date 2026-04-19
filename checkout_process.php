@@ -4,9 +4,9 @@
 
 // start session
 session_start();
-
+// include database connection file 
 require_once __DIR__ . '/dbconnect.php';
-require_once __DIR__ . '/../audit_helpers.php';
+require_once __DIR__ . '/audit_helpers.php';
 
 $userID = current_user_id();
 if ($userID <= 0) {
@@ -51,7 +51,7 @@ if (empty($_SESSION['cart'])) {
     if (empty($checkoutItems) || $cartTotal <= 0) {
         $message = 'Could not load cart items or total is 0. Try again.';
     } else {
-        //  override total (Manager/Admin/Owner only)
+        // Optional override total (Manager/Admin/Owner only)
         $overrideTotalRaw = isset($_SESSION['override_total']) ? trim((string)$_SESSION['override_total']) : '';
         $overrideReason = isset($_SESSION['override_reason']) ? trim((string)$_SESSION['override_reason']) : '';
         $overrideApplied = false;
@@ -68,7 +68,7 @@ if (empty($_SESSION['cart'])) {
         $conn->begin_transaction();
         $ok = true;
 
-        // 1) Create the Sale header (uses  Sale table)
+        // Create the Sale header 
         $saleStmt = $conn->prepare("INSERT INTO Sale (userID, saleDateTime, totalAmount) VALUES (?, NOW(), ?)");
         if (!$saleStmt || !$saleStmt->bind_param("id", $userID, $cartTotal) || !$saleStmt->execute()) {
             $ok = false;
@@ -76,7 +76,7 @@ if (empty($_SESSION['cart'])) {
             $saleID = $conn->insert_id;
             $saleStmt->close();
 
-            // 2) For each cart item, add SaleItem, update Product stock, and log InventoryMovement
+            //  For each cart item, add SaleItem, update Product stock, and log InventoryMovement
             foreach ($checkoutItems as $item) {
                 $prodID = (int) $item['prodID'];
                 $quantity = (int) $item['quantity'];
@@ -104,7 +104,7 @@ if (empty($_SESSION['cart'])) {
                     break;
                 }
 
-                // a) Insert into SaleItem (no lineTotal column in schema)
+                //Insert into SaleItem (no lineTotal column in your schema)
                 $saleItemStmt = $conn->prepare("INSERT INTO SaleItem (saleID, prodID, quantity, itemPrice) VALUES (?, ?, ?, ?)");
                 if (!$saleItemStmt || !$saleItemStmt->bind_param("iiid", $saleID, $prodID, $quantity, $unitPrice) || !$saleItemStmt->execute()) {
                     $ok = false;
@@ -112,7 +112,7 @@ if (empty($_SESSION['cart'])) {
                 }
                 $saleItemStmt->close();
 
-                // b) Deduct inventory from Product
+                //Deduct inventory from Product
                 $updateStmt = $conn->prepare("UPDATE Product SET quantityStocked = quantityStocked - ? WHERE prodID = ?");
                 if (!$updateStmt || !$updateStmt->bind_param("ii", $quantity, $prodID) || !$updateStmt->execute()) {
                     $ok = false;
@@ -120,7 +120,7 @@ if (empty($_SESSION['cart'])) {
                 }
                 $updateStmt->close();
 
-                // c) Log inventory movement using InventoryMovement table
+                //  Log inventory movement using your InventoryMovement table
                 $qtyChange = -$quantity;
                 $movementStmt = $conn->prepare("INSERT INTO InventoryMovement (prodID, transType, transID, quantityChange, unitCost, movedAt, movedBy, prodActivityStatus) VALUES (?, 'Sale', ?, ?, ?, NOW(), ?, TRUE)");
                 if (!$movementStmt || !$movementStmt->bind_param("iiidi", $prodID, $saleID, $qtyChange, $unitPrice, $userID) || !$movementStmt->execute()) {
@@ -128,33 +128,6 @@ if (empty($_SESSION['cart'])) {
                     break;
                 }
                 $movementStmt->close();
-
-                // d) Low-stock alert check
-                $newStock = $currentStock - $quantity;
-                $alertThreshold = 5; // default threshold
-                $threshStmt = $conn->prepare("SELECT reorderPoint FROM ProductThreshold WHERE prodID = ?");
-                if ($threshStmt && $threshStmt->bind_param("i", $prodID) && $threshStmt->execute()) {
-                    $threshRow = $threshStmt->get_result()->fetch_assoc();
-                    if ($threshRow) {
-                        $alertThreshold = (int)$threshRow['reorderPoint'];
-                    }
-                    $threshStmt->close();
-                }
-                if ($newStock <= $alertThreshold) {
-                    // Skip if alert exists
-                    $dupeStmt = $conn->prepare("SELECT alertID FROM LowStockAlert WHERE prodID = ? AND resolveStatus = FALSE LIMIT 1");
-                    if ($dupeStmt && $dupeStmt->bind_param("i", $prodID) && $dupeStmt->execute()) {
-                        if ($dupeStmt->get_result()->num_rows === 0) {
-                            $alertInsert = $conn->prepare("INSERT INTO LowStockAlert (prodID, quantityOnHand, resolveStatus) VALUES (?, ?, FALSE)");
-                            if ($alertInsert) {
-                                $alertInsert->bind_param("ii", $prodID, $newStock);
-                                $alertInsert->execute();
-                                $alertInsert->close();
-                            }
-                        }
-                        $dupeStmt->close();
-                    }
-                }
             }
         }
 
@@ -177,6 +150,8 @@ if (empty($_SESSION['cart'])) {
             $_SESSION['cart'] = [];
             unset($_SESSION['override_total'], $_SESSION['override_reason']);
             $message = 'Sale completed successfully. Sale ID: ' . $saleID;
+            header('Location: receipt.php?saleID=' . (int)$saleID);
+            exit;
         } else {
             $conn->rollback();
             if (!$message) {
@@ -205,9 +180,10 @@ if (empty($_SESSION['cart'])) {
 
 <div class="back-links">
     <a href="pos.php">← Back to POS</a>
-    <a href="sales.php">View Sales History</a>
+    
 </div>
 
 </body>
 </html>
+
 
