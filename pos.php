@@ -1,251 +1,486 @@
 <?php
-// this script shows the POS screen where a cashier can select products,
-// manage the cart, and complete a sale
-
-// start session and connect database
 session_start();
+require_once __DIR__ . '/freshfoldDatabase/dbconnect.php';
 
-require_once __DIR__ . '/dbconnect.php';
-require_once __DIR__ . '/audit_helpers.php';
-
-if (!isset($_SESSION['userID'])) {
-    header('Location: login.php');
+if (!isset($_SESSION['userID']) || !isset($_SESSION['userName'])) {
+    header("Location: index.php");
     exit;
 }
 
-if (!isset($_SESSION['cart'])) {
-    $_SESSION['cart'] = [];
-}
+$connectedMsg = "Connected successfully — " . date("m/d/Y, g:i:s A");
 
-// Load categories for filter dropdown 
-$categories = [];
-$dbError = '';
-$catResult = $conn->query("SELECT catID, catName FROM `Category` ORDER BY catName");
-if ($catResult && $catResult->num_rows > 0) {
-    while ($row = $catResult->fetch_assoc()) {
-        $categories[] = $row;
-    }
-} elseif ($catResult === false) {
-    $dbError = 'Category query failed.';
-}
+// 12 Products
+$products = [
+    ['id' => 1,  'name' => 'Box Legend Folding Board',      'price' => 11.99, 'stock' => 10],
+    ['id' => 2,  'name' => 'Downey Fabric Softner',         'price' => 7.99,  'stock' => 75],
+    ['id' => 3,  'name' => 'Downey Sensitive Detergent',    'price' => 8.89,  'stock' => 43],
+    ['id' => 4,  'name' => 'FlipFold',                      'price' => 12.99, 'stock' => 8],
+    ['id' => 5,  'name' => 'Tide Dryer Sheets',             'price' => 4.99,  'stock' => 246],
+    ['id' => 6,  'name' => 'Tide Stain Fighting Detergent', 'price' => 6.69,  'stock' => 51],
+    ['id' => 7,  'name' => 'Wool Dryer Balls',              'price' => 7.99,  'stock' => 108],
+    ['id' => 8,  'name' => 'Ironing Board',                 'price' => 29.99, 'stock' => 9],
+    ['id' => 9,  'name' => 'Clothes Hangers Pack',          'price' => 8.49,  'stock' => 120],
+    ['id' => 10, 'name' => 'Laundry Detergent Pods',        'price' => 14.99, 'stock' => 6],
+    ['id' => 11, 'name' => 'Fabric Spray',                  'price' => 6.29,  'stock' => 35],
+    ['id' => 12, 'name' => 'Shoe Rack',                     'price' => 19.99, 'stock' => 8]
+];
 
-// Load products from database 
-$products = [];
-$sql = "SELECT p.prodID, p.prodName, p.prodCost, p.catID, p.quantityStocked, c.catName 
-        FROM `Product` p 
-        LEFT JOIN `Category` c ON p.catID = c.catID 
-        ORDER BY p.prodName";
-$result = $conn->query($sql);
-if ($result && $result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
-        $products[] = $row;
-    }
-} elseif ($result === false) {
-    $dbError = $dbError ?: 'Product query failed.';
-}
-
-// Load cart items for display 
-$cartItems = [];
-$cartTotal = 0;
-if (!empty($_SESSION['cart'])) {
-    $idsArray = array_map('intval', array_keys($_SESSION['cart']));
-    $ids = implode(",", $idsArray);
-    $cartResult = $conn->query("SELECT prodID, prodName, prodCost FROM `Product` WHERE prodID IN ($ids)");
-    if ($cartResult) {
-        while ($row = $cartResult->fetch_assoc()) {
-            $row['quantity'] = (int)$_SESSION['cart'][(int)$row['prodID']];
-            $cartTotal += (float)$row['prodCost'] * $row['quantity'];
-            $cartItems[] = $row;
-        }
-    }
+function getStatus($stock) {
+    if ($stock <= 25) return ['LOW STOCK', '#e67e22', '#fff6e9'];
+    return ['IN STOCK', '#27ae60', '#e9fff3'];
 }
 ?>
+
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FreshFold POS - Make Sale</title>
-    <link rel="stylesheet" href="pos.css">
+    <title>FreshFold POS</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+        .header {
+            background: #1f2933;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 3px solid #f39c12;
+        }
+        .header-left { font-size: 18px; font-weight: bold; }
+        .header-center { flex: 1; text-align: center; }
+        .header-right { font-size: 13px; text-align: right; }
+        .connected {
+            font-size: 12px;
+            color: #000000;
+            text-align: center;
+            padding: 10px 0 5px;
+        }
+        .nav a {
+            color: white;
+            padding: 6px 12px;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 14px;
+            margin: 0 2px;
+        }
+        .nav a.active {
+            background: #f39c12;
+            color: #1f2933;
+            font-weight: bold;
+        }
+        .main {
+            display: flex;
+            gap: 12px;
+            padding: 15px;
+            max-width: 1450px;
+            margin: 0 auto;
+        }
+        .panel {
+            background: #FFF8DC;
+            border: 2px solid #d4b56a;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            height: 78vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .products { flex: 1.2; }
+        .make-sale { flex: 1.05; }
+        .receipt { flex: 0.95; }
+        .panel h2 {
+            background:#e6d5a8;
+            color: #2c3e50;
+            padding: 10px;
+            margin: -15px -15px 15px -15px;
+            border-radius: 6px 6px 0 0;
+            text-align: center;
+            font-size: 18px;
+        }
+        .search {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-bottom: 8px;
+            background: white;
+        }
+        .filters {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+        .filters select {
+            padding: 6px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            flex: 1;
+            background: #BDEDFF;
+            font-size: 13px;
+        }
+        .products table, #cartTable {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+        .products th, #cartTable th {
+            background: #f4d88c;
+            padding: 8px;
+            text-align: left;
+            border-bottom: 2px solid #d4b56a;
+        }
+        .products td, #cartTable td {
+            padding: 8px;
+            border-bottom: 1px solid #eee;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+        .add-btn, .remove-btn {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .add-btn { background: #27ae60; color: white; }
+        .remove-btn { background: #e74c3c; color: white; }
+        label { display: block; margin: 8px 0 4px; font-weight: bold; font-size: 13px; }
+        input[type="text"], select, input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background: #F7E7CE;
+            font-size: 13px;
+        }
+        .btn {
+            padding: 10px 14px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            margin: 6px 4px 6px 0;
+        }
+        .btn-primary { background: #27ae60; color: white; }
+        .btn-secondary { background: #2980b9; color: white; }
+        .btn-danger { background: #e74c3c; color: white; }
+        .total {
+            font-size: 16px;
+            font-weight: bold;
+            text-align: right;
+            margin: 10px 0;
+        }
+        .receipt-body {
+            font-size: 13px;
+            line-height: 1.8;
+            border: 1px dashed #d4b56a;
+            padding: 12px;
+            flex: 1;
+            background: #fffaf0;
+        }
+    </style>
 </head>
 <body>
 
-    <!-- Navigation Bar -->
-    <nav class="navbar">
-        <div class="nav-brand">FreshFold POS</div>
-        <ul class="nav-links">
-            <li><a href="pos.php" class="active">Make Sale</a></li>
-			
-           
-        </ul>
-        <div class="nav-user">
-            <span>Cashier: <?php echo htmlspecialchars($_SESSION['userName'] ?? ''); ?></span>
-            <a href="cart.php" class="btn-download">View Cart</a>
-            <form method="post" action="logout.php" style="display:inline;">
-                <button type="submit" class="btn-exit">Logout</button>
-            </form>
+<div class="connected">
+    <?= htmlspecialchars($connectedMsg) ?>
+</div>
+
+<div class="header">
+    <div class="header-left">FreshFold POS</div>
+    <div class="header-center">
+        <div class="nav">
+            <a href="dashboard.php">Dashboard</a>
+            <a href="pos.php" class="active">Make Sale</a>
+            <a href="products.php">Products</a>
+            <a href="reports.php">Reports</a>
+            <a href="sales.php">Sales</a>
+            <a href="audit_logs.php">Audit Logs</a>
         </div>
-    </nav>
+    </div>
+    <div class="header-right">
+        Cashier: <strong><?= htmlspecialchars($_SESSION['userName']) ?></strong><br>
+        <a href="logout.php" style="color:#ff9999; text-decoration:none;">Logout</a>
+    </div>
+</div>
 
-    <!-- Main POS Layout -->
-    <main class="pos-main">
+<div class="main">
 
-        <!-- Product List Panel -->
-        <section class="panel product-panel">
-            <div class="panel-header">
-                <h2>Products</h2>
-            </div>
-            
-            <div class="search-bar">
-                <input type="text" id="productSearch" placeholder="Search">
-            </div>
+    <!-- PRODUCTS PANEL -->
+    <div class="panel products">
+        <h2>Products</h2>
+        <input type="text" id="search" class="search" placeholder="Search products..." onkeyup="filterProducts()">
+        <div class="filters">
+            <select><option>All Categories</option></select>
+            <select><option>Sort: Price</option></select>
+        </div>
+        <table>
+            <thead>
+            <tr>
+                <th>Product</th>
+                <th>Price</th>
+                <th>Stock</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <?php foreach ($products as $p): ?>
+                <?php 
+                $displayStock = (int)$p['stock'];
+                [$statusText, $statusColor, $statusBg] = getStatus($displayStock); 
+                ?>
+                <tr class="product-row" data-name="<?= strtolower(htmlspecialchars($p['name'])) ?>">
+                    <td><?= htmlspecialchars($p['name']) ?></td>
+                    <td>$<?= number_format($p['price'], 2) ?></td>
+                    <td><?= $displayStock ?></td>
+                    <td>
+                        <span class="status-badge" style="color:<?= $statusColor ?>;background:<?= $statusBg ?>;">
+                            <?= $statusText ?>
+                        </span>
+                    </td>
+                    <td>
+                        <button class="add-btn"
+                                onclick="addToCart(<?= (int)$p['id'] ?>, '<?= addslashes(htmlspecialchars($p['name'])) ?>', <?= (float)$p['price'] ?>, <?= $displayStock ?>)">
+                            Add
+                        </button>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
 
-            <!-- Filter and Sort -->
-            <div class="filter-sort-row">
-                <div class="filter-group">
-                    <label>Filter:</label>
-                    <select id="categoryFilter">
-                        <option value="">All Categories</option>
-                        <?php foreach ($categories as $cat): ?>
-                            <option value="<?= htmlspecialchars($cat['catName']) ?>"><?= htmlspecialchars($cat['catName']) ?></option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
-                <div class="sort-group">
-                    <label>Sort:</label>
-                    <select id="sortBy">
-                        <option value="price">Price</option>
-                        <option value="name">Name</option>
-                        <option value="stock">Stock</option>
-                    </select>
-                </div>
-            </div>
+    <!-- MAKE SALE PANEL -->
+    <div class="panel make-sale">
+        <h2>Make Sale</h2>
+        <label>Product</label>
+        <select id="productSelect" onchange="updatePrice()">
+            <option value="">Select Product</option>
+            <?php foreach ($products as $p): ?>
+                <option value="<?= (int)$p['id'] ?>"
+                        data-price="<?= (float)$p['price'] ?>"
+                        data-name="<?= htmlspecialchars($p['name']) ?>"
+                        data-stock="<?= (int)$p['stock'] ?>">
+                    <?= htmlspecialchars($p['name']) ?>
+                </option>
+            <?php endforeach; ?>
+        </select>
+        <label>Quantity</label>
+        <input type="number" id="quantity" value="1" min="1">
+        <label>Price</label>
+        <input type="text" id="priceShow" readonly value="$0.00">
+        
+        <div style="margin: 15px 0;">
+            <button class="btn btn-primary" onclick="addFromMakeSale()">Add to Cart</button>
+            <button class="btn btn-secondary" onclick="completeSale()">Complete Sale</button>
+        </div>
 
-            <!-- Product Table  -->
-            <table class="product-table">
-                <thead>
-                    <tr>
-                        <th>Product Name</th>
-                        <th>Price</th>
-                        <th>Stock</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php if ($dbError): ?>
-                        <tr><td colspan="4"><?= htmlspecialchars($dbError) ?> Run seed_products.sql if needed.</td></tr>
-                    <?php elseif (empty($products)): ?>
-                        <tr><td colspan="4">No products in database. Add INSERT statements in seed_products.sql.</td></tr>
-                    <?php else: ?>
-                        <?php foreach ($products as $p): ?>
-                            <tr data-product-id="<?= (int)$p['prodID'] ?>"
-                                data-price="<?= number_format((float)$p['prodCost'], 2, '.', '') ?>"
-                                data-stock="<?= (int)($p['quantityStocked'] ?? 0) ?>"
-                                data-category="<?= htmlspecialchars($p['catName'] ?? '') ?>"
-                                data-name="<?= htmlspecialchars(strtolower($p['prodName'])) ?>">
-                                <td><?= htmlspecialchars($p['prodName']) ?></td>
-                                <td>$<?= number_format((float)$p['prodCost'], 2) ?></td>
-                                <td><?= (int)($p['quantityStocked'] ?? 0) ?></td>
-                                <td>
-                                    <form method="post" action="cart.php" style="display:inline;">
-                                        <input type="hidden" name="add" value="<?= (int)$p['prodID'] ?>">
-                                        <input type="hidden" name="qty" value="1">
-                                        <input type="hidden" name="from" value="pos">
-                                        <button type="submit" class="btn-add">Add</button>
-                                    </form>
-                                </td>
-                            </tr>
-                        <?php endforeach; ?>
-                    <?php endif; ?>
-                </tbody>
-            </table>
-        </section>
+        <h3>Cart Items</h3>
+        <table id="cartTable">
+            <thead>
+            <tr>
+                <th>Item</th>
+                <th>Qty</th>
+                <th>Price</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+        <div class="total">Total Price: $<span id="totalAmount">0.00</span></div>
+        <button class="btn btn-danger" onclick="clearCart()">Cancel Sale</button>
+    </div>
 
-        <!-- Cart Panel -->
-        <section class="panel cart-panel">
-            <div class="panel-header">
-                <h2>Make Sale</h2>
-            </div>
+    <!-- RECEIPT PANEL -->
+    <div class="panel receipt">
+        <h2>Receipt</h2>
+        <div class="receipt-body" id="receiptBody" style="background:#fffaf0;">
+            <p><strong>FreshFold POS</strong></p>
+            <p><strong>Date:</strong> <span id="recDate"><?= date("m/d/Y") ?></span></p>
+            <hr>
+            <div id="receiptItems"></div>
+            <hr>
+            <p style="text-align:right; font-weight:bold; font-size:15px;">
+                Total: $<span id="recTotal">0.00</span>
+            </p>
+        </div>
+        <div style="display:flex; gap:10px; margin-top:12px;">
+            <button class="btn btn-secondary" style="flex:1; background:#2ecc71; color:white;" onclick="printReceipt()">Print</button>
+            <button class="btn btn-warning" style="flex:1; background:#e67e22; color:white;" onclick="downloadReceipt()">Download</button>
+        </div>
+        <div style="margin-top:10px; text-align:center;">
+            <button class="btn btn-light" onclick="window.location.href='dashboard.php'">Back to Dashboard</button>
+        </div>
+    </div>
+</div>
 
-            <!-- Add one product to cart  -->
-            <form method="post" action="cart.php">
-                <input type="hidden" name="from" value="pos">
-                <div class="form-group">
-                    <label>Product:</label>
-                    <select id="selectedProduct" name="add">
-                        <option value="">Select</option>
-                        <?php foreach ($products as $p): ?>
-                            <option value="<?= (int)$p['prodID'] ?>" data-price="<?= number_format((float)$p['prodCost'], 2, '.', '') ?>"><?= htmlspecialchars($p['prodName']) ?> - $<?= number_format((float)$p['prodCost'], 2) ?></option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Quantity:</label>
-                    <input type="number" id="quantity" name="qty" value="1" min="1">
-                </div>
-                <div class="form-group">
-                    <label>Price:</label>
-                    <input type="text" id="price" value="$0.00" readonly>
-                </div>
-                <p class="helper-text">Helper: "Enter quantity ≥ 1"</p>
-                <button type="submit" class="btn-submit">Submit Sale</button>
-            </form>
+<script>
+    let cart = [];
 
-            <!-- Cart Items Table -->
-            <div class="cart-items">
-                <h3>Cart Items</h3>
-                <table class="cart-table">
-                    <thead>
-                        <tr>
-                            <th>Item</th>
-                            <th>Qty</th>
-                            <th>Price</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody id="cartBody">
-                        <?php if (empty($cartItems)): ?>
-                            <tr class="cart-empty-row"><td colspan="4">Your cart is empty. Add items above or from the product list.</td></tr>
-                        <?php else: ?>
-                            <?php foreach ($cartItems as $item): ?>
-                                <tr data-product-id="<?= (int)$item['prodID'] ?>">
-                                    <td><?= htmlspecialchars($item['prodName']) ?></td>
-                                    <td><?= (int)$item['quantity'] ?></td>
-                                    <td>$<?= number_format((float)$item['prodCost'] * (int)$item['quantity'], 2) ?></td>
-                                    <td>
-                                        <form method="post" action="cart.php" style="display:inline;">
-                                            <input type="hidden" name="from" value="pos">
-                                            <button type="submit" class="btn-remove" name="remove" value="<?= (int)$item['prodID'] ?>">X</button>
-                                        </form>
-                                    </td>
-                                </tr>
-                            <?php endforeach; ?>
-                        <?php endif; ?>
-                    </tbody>
-                </table>
-            </div>
+    function addToCart(id, name, price, stock) {
+        price = parseFloat(price);
+        stock = parseInt(stock);
 
-            <div class="cart-total">
-                <strong>Total: $<span id="cartTotalDisplay"><?= number_format($cartTotal, 2) ?></span></strong>
-            </div>
+        let existing = cart.find(item => item.id === id);
+        let current = existing ? existing.qty : 0;
+        let newQty = current + 1;
 
-            <!-- Cancel clears the cart  -->
-            <div class="cart-actions">
-                <form method="post" action="cart.php" style="display:inline;">
-                    <input type="hidden" name="from" value="pos">
-                    <button type="submit" name="clear" value="1" class="btn-cancel">Cancel</button>
-                </form>
-            </div>
+        if (newQty > stock) {
+            alert(`❌ Cannot add more!\n${name} only has ${stock} in stock.`);
+            return;
+        }
 
-            <div class="panel-footer">
-              
-            </div>
-        </section>
+        if (stock <= 10) {
+            if (!confirm(`⚠️ LOW STOCK ALERT!\n${name} has only ${stock} left.\nDo you still want to add?`)) return;
+        }
 
-       
+        if (existing) existing.qty = newQty;
+        else cart.push({id, name, price, qty: 1, stock});
 
-    </main>
+        renderCart();
+    }
 
-    <script src="pos.js"></script>
+    function addFromMakeSale() {
+        let select = document.getElementById("productSelect");
+        if (!select.value) return alert("Please select a product!");
+
+        let option = select.options[select.selectedIndex];
+        let id = parseInt(select.value);
+        let name = option.getAttribute("data-name");
+        let price = parseFloat(option.getAttribute("data-price"));
+        let stock = parseInt(option.getAttribute("data-stock") || 0);
+        let qty = parseInt(document.getElementById("quantity").value) || 1;
+
+        if (qty <= 0) return alert("Quantity must be at least 1.");
+
+        let existing = cart.find(item => item.id === id);
+        let current = existing ? existing.qty : 0;
+        let newQty = current + qty;
+
+        if (newQty > stock) {
+            alert(`❌ Not enough stock!\n${name} only has ${stock} left.`);
+            return;
+        }
+
+        if (stock <= 10) {
+            if (!confirm(`⚠️ LOW STOCK ALERT!\n${name} has only ${stock} left.\nDo you still want to add ${qty} units?`)) return;
+        }
+
+        if (existing) existing.qty = newQty;
+        else cart.push({id, name, price, qty, stock});
+
+        renderCart();
+        document.getElementById("quantity").value = 1;
+    }
+
+    function updatePrice() {
+        let select = document.getElementById("productSelect");
+        let option = select.options[select.selectedIndex];
+        let price = option && option.dataset.price ? "$" + parseFloat(option.dataset.price).toFixed(2) : "$0.00";
+        document.getElementById("priceShow").value = price;
+    }
+
+    function renderCart() {
+        let tbody = document.querySelector("#cartTable tbody");
+        tbody.innerHTML = "";
+        let total = 0;
+
+        cart.forEach((item, index) => {
+            let itemTotal = item.price * item.qty;
+            tbody.innerHTML += `
+                <tr>
+                    <td>${item.name}</td>
+                    <td>${item.qty}</td>
+                    <td>$${itemTotal.toFixed(2)}</td>
+                    <td><button class="remove-btn" onclick="removeFromCart(${index})">Remove</button></td>
+                </tr>`;
+            total += itemTotal;
+        });
+
+        document.getElementById("totalAmount").textContent = total.toFixed(2);
+    }
+
+    function removeFromCart(index) {
+        if (confirm("Remove this item from cart?")) {
+            cart.splice(index, 1);
+            renderCart();
+        }
+    }
+
+    function completeSale() {
+        if (cart.length === 0) return alert("Cart is empty!");
+
+        let lowStock = cart.filter(item => item.stock <= 10);
+        if (lowStock.length > 0) {
+            let msg = "⚠️ LOW STOCK ALERT!\n\n";
+            lowStock.forEach(item => msg += `• ${item.name} → Only ${item.stock} left\n`);
+            msg += "\nDo you still want to complete this sale?";
+            if (!confirm(msg)) return;
+        }
+
+        let total = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+        updateReceipt(cart, total);
+
+        alert("✅ Sale completed successfully!");
+    }
+
+    function updateReceipt(cartItems, total) {
+        let html = '';
+        cartItems.forEach(item => {
+            html += `<p><strong>${item.name}</strong> × ${item.qty} &nbsp;&nbsp; $${(item.price * item.qty).toFixed(2)}</p>`;
+        });
+
+        document.getElementById("receiptItems").innerHTML = html;
+        document.getElementById("recTotal").textContent = total.toFixed(2);
+        document.getElementById("recDate").textContent = new Date().toLocaleDateString();
+    }
+
+    function clearCart() {
+        if (confirm("Clear the entire cart?")) {
+            cart = [];
+            renderCart();
+            document.getElementById("receiptItems").innerHTML = '';
+            document.getElementById("recTotal").textContent = "0.00";
+        }
+    }
+
+    function printReceipt() { window.print(); }
+
+    function downloadReceipt() {
+        let content = "FreshFold POS Receipt\n\n";
+        cart.forEach(item => {
+            content += `${item.name} × ${item.qty}   $${(item.price * item.qty).toFixed(2)}\n`;
+        });
+        content += `\nTotal: $${document.getElementById("recTotal").textContent}\n`;
+        content += `Date: ${document.getElementById("recDate").textContent}\n\nThank you!`;
+
+        let blob = new Blob([content], {type: "text/plain"});
+        let url = URL.createObjectURL(blob);
+        let a = document.createElement("a");
+        a.href = url;
+        a.download = "receipt.txt";
+        a.click();
+        URL.revokeObjectURL(url);
+    }
+
+    function filterProducts() {
+        let term = document.getElementById("search").value.toLowerCase();
+        document.querySelectorAll(".product-row").forEach(row => {
+            row.style.display = row.getAttribute("data-name").includes(term) ? "" : "none";
+        });
+    }
+</script>
 </body>
 </html>

@@ -11,7 +11,7 @@ if (!isset($_SESSION['userID']) || !isset($_SESSION['userName'])) {
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Sales History - FreshFold POS</title>
+    <title>Reports - FreshFold POS</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -59,6 +59,7 @@ if (!isset($_SESSION['userID']) || !isset($_SESSION['userName'])) {
             width: 100%;
             border-collapse: collapse;
             background: white;
+            margin-top: 15px;
         }
         th, td {
             padding: 12px;
@@ -71,11 +72,13 @@ if (!isset($_SESSION['userID']) || !isset($_SESSION['userName'])) {
         tr:hover {
             background-color: #f5e9d3;
         }
-        .no-data {
+        .report-card {
+            background: white;
+            border: 1px solid #d4b56a;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
             text-align: center;
-            padding: 40px;
-            color: #666;
-            font-style: italic;
         }
     </style>
 </head>
@@ -87,8 +90,8 @@ if (!isset($_SESSION['userID']) || !isset($_SESSION['userName'])) {
         <a href="dashboard.php">Dashboard</a>
         <a href="pos.php">Make Sale</a>
         <a href="products.php">Products</a>
-        <a href="reports.php">Reports</a>
-        <a href="sales.php" class="active">Sales</a>
+        <a href="reports.php" class="active">Reports</a>
+        <a href="sales.php">Sales</a>
         <a href="audit_logs.php">Audit Logs</a>
     </div>
     <div>
@@ -98,43 +101,34 @@ if (!isset($_SESSION['userID']) || !isset($_SESSION['userName'])) {
 </div>
 
 <div class="panel">
-    <h2>Sales History</h2>
+    <h2>Reports</h2>
 
-    <table>
-        <thead>
-            <tr>
-                <th>Date & Time</th>
-                <th>Cashier</th>
-                <th>Total Amount</th>
-                <th>Number of Items</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            <!-- Sample sales - you can connect to real sales table later -->
-            <tr>
-                <td>2026-04-20 13:05:12</td>
-                <td><?= htmlspecialchars($_SESSION['userName']) ?></td>
-                <td>$223.82</td>
-                <td>2</td>
-                <td><button onclick="alert('Sale details - Coming soon')">View</button></td>
-            </tr>
-            <tr>
-                <td>2026-04-20 12:58:45</td>
-                <td><?= htmlspecialchars($_SESSION['userName']) ?></td>
-                <td>$89.50</td>
-                <td>3</td>
-                <td><button onclick="alert('Sale details - Coming soon')">View</button></td>
-            </tr>
-            <tr>
-                <td>2026-04-20 12:30:10</td>
-                <td><?= htmlspecialchars($_SESSION['userName']) ?></td>
-                <td>$156.75</td>
-                <td>4</td>
-                <td><button onclick="alert('Sale details - Coming soon')">View</button></td>
-            </tr>
-        </tbody>
-    </table>
+    <div class="report-card">
+        <h3>Daily Sales Summary</h3>
+        <p><strong>Date:</strong> <?= date("m/d/Y") ?></p>
+        <p>Total Sales: <strong>$0.00</strong></p>
+        <p>Total Transactions: <strong>0</strong></p>
+        <button onclick="alert('Daily Sales Report - Coming Soon')">Generate Report</button>
+    </div>
+
+    <div class="report-card">
+        <h3>Top Selling Products</h3>
+        <p>This Month</p>
+        <button onclick="alert('Top Selling Products Report - Coming Soon')">View Report</button>
+    </div>
+
+    <div class="report-card">
+        <h3>Low Stock Items</h3>
+        <p>Items with stock ≤ 25</p>
+        <button onclick="alert('Low Stock Report - Coming Soon')">View Low Stock</button>
+    </div>
+
+    <div class="report-card">
+        <h3>Monthly Sales Trend</h3>
+        <p>Summary of last 30 days</p>
+        <button onclick="alert('Monthly Sales Trend - Coming Soon')">Generate Trend</button>
+    </div>
+
 </div>
 
 </body>

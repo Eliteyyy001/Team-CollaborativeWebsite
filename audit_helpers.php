@@ -1,7 +1,15 @@
 <?php
+// Start session if not already started
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// FIXED: Correct database connection file
+require_once('dbconnect.php');
+
 /**
- omits the need to add insert statements to all files using audit logging.
- uses AuditLog table
+ * Inserts an audit log entry.
+ * Uses AuditLog table.
  */
 function audit_log(mysqli $conn, int $performedByUserID, string $actionType, ?string $affectedEntity = null): void
 {
@@ -19,7 +27,7 @@ function audit_log(mysqli $conn, int $performedByUserID, string $actionType, ?st
         $entity = null;
     }
 
-    $stmt = $conn->prepare("INSERT INTO AuditLog (performedByUserID, actionType, affectedEntity) VALUES (?, ?, ?)");
+    $stmt = $conn->prepare("INSERT INTO auditlog (performedByUserID, actionType, affectedEntity) VALUES (?, ?, ?)");
     if (!$stmt) {
         return;
     }
@@ -41,7 +49,6 @@ function current_user_role_id(): int
 
 function can_override_totals(): bool
 {
-  
     $roleID = current_user_role_id();
     return in_array($roleID, [1, 2, 4], true);
 }
