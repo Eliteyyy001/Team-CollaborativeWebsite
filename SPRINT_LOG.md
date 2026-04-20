@@ -36,16 +36,6 @@
 - Submit pull request into develop branch
 
 
-### Hamza – Sprint 6 Contributions
-- Tested the FreshFold POS login page
-- Recorded POS login demo attempts
-- Verified README accuracy (no updates needed)
-- Checked GitHub repo structure
-- Confirmed Sprint 5 files were merged
-- Reviewed team deliverables (User Manual, Sprint Log, Presentation)
-- Helped ensure repo was clean for final submission
-
-
   **POS UI Design**
 - Design POS wireframe
 - Build POS screens for cashiers
