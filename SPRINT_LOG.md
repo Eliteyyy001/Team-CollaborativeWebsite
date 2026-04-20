@@ -1273,3 +1273,56 @@ This sprint cycle established a solid backend foundation with secure access, org
 
 
 
+## Sprint Summary
+
+| Item | Details |
+|-----|--------|
+| Sprint # | Sprint 6 |
+| Sprint Dates | April 6,2026 – April 19,2026 |
+| Team Name | SystemSync |
+| Members Present | Godspower Ogide, Hamza Yalouli, Hannah Injety, Trevor Lovet |
+
+---
+
+
+## Tasks vs. Reality
+
+### Planned Tasks
+- Fix any minor errors or make any minor changes for smoother flow of processes and better look
+- Begin working on user manual
+- Complete a draft of user manual 
+
+### Completed Tasks
+- Fixed all minor errors in pos.php, cart.php, sales.php, index.php, audit_logs.php, admin-login.php, admin-dashboard.php, checkout_process.php, receipt.php, admin-alerts.php, top_selling_report.php, display_charts.php, pos.css, sale_detail.php
+
+### Incomplete Tasks
+- User manual incomplete
+
+## Test Report
+
+**All Files**
+
+- **Unit Testing:**  
+Tested individual queries for adding items to cart, stock counts, admin dashboard display, customer dashboard display, logins, account creation to ensure accurate results.
+
+- **Integration Testing:**  
+Verified that database data correctly flows into the dashboard and displays accurate data.
+
+- **Manual Testing:**  
+_None_
+
+## Bug Tracking
+
+### High-Severity Bugs
+
+-_None found_
+
+### Issues Identified
+- Receipt panel was removed because it did not need to be displayed in pos.php
+- Admin log in was not functioning correctly
+- Could not create accounts in log in page
+- Could not get to the admin log in page initially
+---
+
+
+
