@@ -77,6 +77,7 @@ $chartJson = json_encode($chartPayload, $chartJsonFlags);
     <div class="nav-brand">FreshFold Admin</div>
     <ul class="nav-links">
         <li><a href="admin-dashboard.php">Users</a></li>
+		<li><a href="products.php">Products</a></li>
         <li><a href="admin-alerts.php">Alerts</a></li>
         <li><a href="display_charts.php"class="active">Charts</a></li>
         <li><a href="top_selling_report.php" >Reports</a></li>
