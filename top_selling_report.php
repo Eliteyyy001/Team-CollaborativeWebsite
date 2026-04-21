@@ -178,9 +178,10 @@ $generatedAt = date('Y-m-d H:i:s');
     <div class="nav-brand">FreshFold Admin</div>
     <ul class="nav-links">
         <li><a href="admin-dashboard.php">Users</a></li>
+		<li><a href="products.php">Products</a></li>
         <li><a href="admin-alerts.php">Alerts</a></li>
         <li><a href="display_charts.php">Charts</a></li>
-        <li><a href="top_selling_report.php" class="active">Reports</a></li>
+        <li><a href="top_selling_report.php"class="active">Reports</a></li>
         <li><a href="sales.php">Sales</a></li>
         <li><a href="audit_logs.php" >Audit Logs</a></li>
     </ul>
