@@ -52,6 +52,7 @@ if ($totalsResult && $totalsResult->num_rows > 0) {
         <div class="nav-brand">Freshfold Admin</div>
         <ul class="nav-links">
         <li><a href="admin-dashboard.php">Users</a></li>
+		<li><a href="products.php">Products</a></li>
         <li><a href="admin-alerts.php">Alerts</a></li>
         <li><a href="display_charts.php">Charts</a></li>
         <li><a href="top_selling_report.php" >Reports</a></li>
@@ -96,10 +97,7 @@ if ($totalsResult && $totalsResult->num_rows > 0) {
     </tbody>
 </table>
 <p><strong>Total of all sales:</strong> $<?php echo number_format($grandTotal, 2); ?></p>
-<p>
-    <a href="admin-dashboard.php">← Back to Dashboard</a>
-    | <a href="logout.php">Logout</a>
-</p>
+
 
 
 </body>
