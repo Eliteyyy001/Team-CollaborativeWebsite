@@ -44,15 +44,17 @@ if ($result) {
     <ul class="nav-links">
        
 		<li><a href="admin-dashboard.php">Users</a></li>
+		<li><a href="products.php">Products</a></li>
         <li><a href="admin-alerts.php">Alerts</a></li>
         <li><a href="display_charts.php">Charts</a></li>
-        <li><a href="top_selling_report.php" >Reports</a></li>
+        <li><a href="top_selling_report.php">Reports</a></li>
         <li><a href="sales.php">Sales</a></li>
-        <li><a href="audit_logs.php" class="active">Audit Logs</a></li>
+        <li><a href="audit_logs.php"class="active">Audit Logs</a></li>
     </ul>
     <div class="nav-user">
         <span><?php echo htmlspecialchars($_SESSION['userName'] ?? ''); ?></span>
         <form method="post" action="logout.php" style="display:inline;">
+			<span>Welcome, <?php echo htmlspecialchars($_SESSION['admin_username']); ?></span>
             <button type="submit" class="btn-exit">Logout</button>
         </form>
     </div>
